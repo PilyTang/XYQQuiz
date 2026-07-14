@@ -1,0 +1,20 @@
+[
+  {
+    "source_id": "1",
+    "question": "梦幻西游中，有多少个种族？",
+    "answer": "3",
+    "normalized_question": "梦幻西游中有多少个种族"
+  },
+  {
+    "source_id": "2",
+    "question": "等级到多少级能参加科举第二阶段？",
+    "answer": "30",
+    "normalized_question": "等级到多少级能参加科举第二阶段"
+  },
+  {
+    "source_id": "3",
+    "question": "等级达到多少能参加科举第二阶段？",
+    "answer": "30",
+    "normalized_question": "等级达到多少能参加科举第二阶段"
+  }
+]

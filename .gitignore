@@ -1,0 +1,43 @@
+# Local Codex/worktree state
+.superpowers/
+.worktrees/
+docs/superpowers/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Build and release outputs
+build/
+dist/
+release/
+
+# Mutable portable/runtime state
+config.json
+diagnostics/
+logs/
+state-backups/
+.config-*.tmp
+.data-*.tmp
+.state-migration-*.tmp
+
+# Private recognition corpus (kept locally, never published)
+tests/fixtures/recognition/manifest.json
+tests/fixtures/recognition/*.png
+tests/fixtures/recognition/*.jpg
+tests/fixtures/recognition/*.jpeg
+incoming/
+
+# Editors and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

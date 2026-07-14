@@ -1,0 +1,24 @@
+XYQQuiz Third-Party Notices
+===========================
+
+The PolyForm Noncommercial License 1.0.0 in LICENSE applies only to original
+XYQQuiz project code, except where a file states otherwise. It does not
+relicense or grant rights to the third-party content described below.
+
+This distribution contains Python and third-party packages including FastAPI,
+Uvicorn, websockets, windows-capture, NumPy, OpenCV, RapidOCR, ONNX Runtime,
+RapidFuzz, HTTPX, pyjson5, Pydantic, and their transitive dependencies.
+Their license files and package metadata are retained in the bundled runtime
+where supplied by the corresponding distributions.
+
+The bundled Keju question-bank snapshot is derived from the public NetEase
+Keju page at https://w.163.com/h5/xyq/dtk/index.html#/keju. Source URL,
+retrieval metadata, record counts, filtering audit, and SHA-256 are retained
+with the bundled generation. The project code license does not grant rights
+to the question-bank content, NetEase content, game screenshots or screenshot-
+derived layout anchors, game assets, names, logos, trademarks, or any other
+third-party material. Any permitted use of those materials depends on the
+rights and terms applicable to the corresponding material.
+
+XYQQuiz is an unofficial display assistant. It is not affiliated with or
+endorsed by NetEase.

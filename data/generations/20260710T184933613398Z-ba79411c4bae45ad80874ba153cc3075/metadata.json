@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "generation_id": "20260710T184933613398Z-ba79411c4bae45ad80874ba153cc3075",
+  "source_url": "https://w.163.com/h5/xyq/dtk/",
+  "chunk_url": "https://w.163.com/h5/xyq/dtk/static/js/exp.b65575c0.js",
+  "module_id": 8733,
+  "record_count": 2586,
+  "raw_record_count": 2587,
+  "published_record_count": 2586,
+  "filtered_ids": [
+    "1602"
+  ],
+  "unique_source_id_count": 2586,
+  "unique_normalized_question_count": 2572,
+  "normalized_duplicate_rate": 0.005413766434648105,
+  "sha256": "ed25d489f7ec462ab23a4f156b10b37b239f990649f98a0998ad81b5c84ddc0a",
+  "updated_at": "2026-07-10T18:49:34.108620+00:00"
+}

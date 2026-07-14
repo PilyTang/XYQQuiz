@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xyq-quiz"
+version = "0.1.0"
+description = "Windows 本地运行的梦幻西游科举答题辅助显示工具"
+readme = "README.md"
+license = "PolyForm-Noncommercial-1.0.0"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.txt"]
+authors = [{ name = "XYQQuiz Contributors" }]
+requires-python = ">=3.11"
+keywords = ["xyq", "quiz", "ocr", "windows"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Operating System :: Microsoft :: Windows :: Windows 10",
+  "Operating System :: Microsoft :: Windows :: Windows 11",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.34,<1",
+  "websockets>=15,<16",
+  "windows-capture>=2,<3",
+  "numpy>=1.26,<3",
+  "opencv-python>=4.9,<5",
+  "rapidocr>=3.8,<4",
+  "onnxruntime>=1.20,<2",
+  "rapidfuzz>=3.9,<4",
+  "httpx>=0.28,<1",
+  "pyjson5>=1.6,<2",
+  "pydantic>=2.10,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "pytest-asyncio>=0.25,<1"]
+release = ["pyinstaller==6.21.0"]
+
+[project.scripts]
+xyq-quiz = "xyq_quiz.launcher:main"
+xyq-quiz-calibrate = "xyq_quiz.tools.calibrate:main"
+xyq-quiz-import-fixture = "xyq_quiz.tools.import_fixture:main"
+xyq-quiz-benchmark = "xyq_quiz.acceptance.benchmark:main"
+xyq-quiz-live-acceptance = "xyq_quiz.acceptance.live:main"
+xyq-quiz-check-fixtures = "xyq_quiz.tools.check_fixtures:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+filterwarnings = [
+  'ignore:^Using `httpx` with `starlette\.testclient` is deprecated; install `httpx2` instead\.$:starlette.exceptions.StarletteDeprecationWarning:^fastapi\.testclient$',
+]

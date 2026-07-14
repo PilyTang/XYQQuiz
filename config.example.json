@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "window": {
+    "process_names": ["mhtab.exe"],
+    "class_names": ["MHXYMainFrame"]
+  },
+  "capture": {
+    "preview_fps": 30,
+    "black_frame_count": 10
+  },
+  "match": {
+    "question_score": 92,
+    "question_gap": 5,
+    "option_score": 90
+  },
+  "recognition": {
+    "ocr_workers": 1
+  },
+  "web": {
+    "host": "127.0.0.1",
+    "port": 8765
+  },
+  "data_dir": "data",
+  "layout_path": "data/layouts/keju-default.json",
+  "layout_paths": [
+    "data/layouts/keju-exam-stable.json",
+    "data/layouts/keju-picture-stable.json",
+    "data/layouts/keju-default.json",
+    "data/layouts/keju-picture.json"
+  ],
+  "diagnostics_dir": "diagnostics",
+  "log_path": "logs/app.log"
+}

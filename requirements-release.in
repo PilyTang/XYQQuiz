@@ -1,0 +1,13 @@
+fastapi==0.139.0
+httpx==0.28.1
+numpy==2.4.6
+onnxruntime==1.27.0
+opencv-python==4.13.0.92
+pydantic==2.13.4
+pyinstaller==6.21.0
+pyjson5==1.6.9
+RapidFuzz==3.14.5
+rapidocr==3.9.1
+uvicorn==0.51.0
+websockets==15.0.1
+windows-capture==2.0.0

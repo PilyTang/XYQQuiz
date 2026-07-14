@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>梦幻西游科举助手</title>
+    <link rel="stylesheet" href="/app.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="preview-panel" aria-label="游戏预览">
+        <div class="canvas-stack">
+          <canvas id="frameCanvas"></canvas>
+          <canvas id="overlayCanvas"></canvas>
+          <p id="previewHint">等待游戏画面…</p>
+        </div>
+      </section>
+      <aside class="sidebar">
+        <header><p class="eyebrow">本机识别状态</p><h1>科举答题助手</h1></header>
+        <dl class="status-grid">
+          <div><dt>阶段</dt><dd id="phase">—</dd></div>
+          <div><dt>采集</dt><dd id="capturePhase">—</dd></div>
+          <div class="wide"><dt>OCR 题目</dt><dd id="question">等待识别</dd></div>
+          <div class="wide"><dt>官方答案</dt><dd id="answer">—</dd></div>
+          <div><dt>题目分数</dt><dd id="questionScore">—</dd></div>
+          <div><dt>选项分数</dt><dd id="optionScore">—</dd></div>
+          <div class="wide"><dt>耗时</dt><dd id="timings">—</dd></div>
+        </dl>
+        <div class="actions">
+          <button id="updateButton" type="button" disabled>更新题库</button>
+          <button id="diagnosticsButton" type="button" class="secondary" disabled>保存识别诊断</button>
+          <button id="environmentDiagnosticsButton" type="button" class="secondary" disabled>导出环境诊断</button>
+          <button id="shutdownButton" type="button" class="secondary" disabled>退出程序</button>
+        </div>
+        <p id="errorMessage" role="alert"></p>
+      </aside>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,1 @@
+(()=>{var t={};t.u=e=>"static/js/"+({17:"chunk-common",306:"exp"}[e]||e)+"."+{17:"11111111",306:"b65575c0"}[e]+".js";const routes=[{path:"/signin",component:()=>t.e(17).then(t.bind(t,6419))},{path:"/keju",component:()=>Promise.all([t.e(17),t.e(306)]).then(t.bind(t,8733))}];})();

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "current": 1,
+  "readable": [1],
+  "migratable": [0],
+  "migration_implementation": "xyq_quiz.runtime.portable"
+}
