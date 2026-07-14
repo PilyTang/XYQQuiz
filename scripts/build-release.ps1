@@ -13,7 +13,8 @@ if (Test-Path -LiteralPath $ProjectPython) {
     $PythonPath = (Resolve-Path -LiteralPath $ProjectPython).Path
 }
 else {
-    $PythonCommand = Get-Command $Python -CommandType Application -ErrorAction Stop
+    $PythonCommand = Get-Command $Python -CommandType Application -ErrorAction Stop |
+        Select-Object -First 1
     $PythonPath = $PythonCommand.Source
 }
 $BuildRoot = Join-Path $ProjectRoot "build\portable-release"

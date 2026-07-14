@@ -31,6 +31,7 @@ def test_release_script_generates_manifest_zip_and_sha256() -> None:
     assert "full 40-character Git commit SHA" in script
     assert "clean Git worktree" in script
     assert "Get-Command $Python -CommandType Application" in script
+    assert "Select-Object -First 1" in script
 
 
 def test_pyinstaller_excludes_upstream_sbom_with_build_machine_paths() -> None:
