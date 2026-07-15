@@ -26,6 +26,7 @@ from xyq_quiz.launcher import (
     validate_recognition_asset_bundle,
     build_services,
 )
+from xyq_quiz.runtime.paths import RuntimePaths
 
 
 def test_reserve_loopback_port_reports_conflict_and_releases_socket() -> None:
@@ -126,6 +127,50 @@ def test_build_services_uses_fixed_single_ocr_worker() -> None:
     services = build_services(config)
     try:
         assert services.pipeline._executor._max_workers == 1
+    finally:
+        services.pipeline.close()
+
+
+def test_build_services_merges_portable_local_questions_without_diagnostic_text(
+    tmp_path: Path,
+) -> None:
+    user_data = tmp_path / "user-data"
+    user_data.mkdir()
+    (user_data / "questions.json").write_text(
+        '{"schema_version":1,"records":[{"id":"startup-local",'
+        '"question":"启动时本地题目","answer":"启动时本地答案",'
+        '"mode":"supplement","enabled":true,"answer_aliases":[]}]}'
+        "\n",
+        encoding="utf-8",
+    )
+    discovered = RuntimePaths.discover()
+    paths = RuntimePaths(
+        app_root=tmp_path,
+        resource_root=discovered.resource_root,
+        defaults_root=discovered.defaults_root,
+        config_path=tmp_path / "config.json",
+        data_dir=discovered.data_dir,
+        user_data_dir=user_data,
+        logs_dir=tmp_path / "logs",
+        diagnostics_dir=tmp_path / "diagnostics",
+        frozen=False,
+    )
+    config = AppConfig(
+        layout_paths=[
+            Path("data/layouts/keju-default.json"),
+            Path("data/layouts/keju-picture.json"),
+        ]
+    )
+
+    services = build_services(config, runtime_paths=paths)
+    try:
+        match = services.pipeline._matcher.match_question("启动时本地题目")
+        assert match is not None
+        assert match.record.answer == "启动时本地答案"
+        metadata = services.snapshot_diagnostic_metadata()
+        assert metadata["local_questions"]["record_count"] == 1
+        assert "启动时本地题目" not in str(metadata)
+        assert "启动时本地答案" not in str(metadata)
     finally:
         services.pipeline.close()
 

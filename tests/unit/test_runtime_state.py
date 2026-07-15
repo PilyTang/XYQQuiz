@@ -1,12 +1,17 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import threading
 import time
 
 import pytest
 
 from xyq_quiz.capture.models import Rect
-from xyq_quiz.recognition.models import RecognitionResult, RecognitionTimings
+from xyq_quiz.recognition.models import (
+    ConfidenceLevel,
+    RecognitionResult,
+    RecognitionTimings,
+)
 from xyq_quiz.runtime.state import RuntimePhase, RuntimeStore
 
 
@@ -62,6 +67,8 @@ def test_uncertain_result_has_no_overlay(store: RuntimeStore) -> None:
     assert snapshot.phase is RuntimePhase.UNCERTAIN
     assert snapshot.overlay is None
     assert snapshot.question_text == "题目"
+    assert snapshot.confidence_level is ConfidenceLevel.NONE
+    assert snapshot.confidence_score == 0.0
 
 
 def test_answered_result_publishes_normalized_overlay(store: RuntimeStore) -> None:
@@ -72,7 +79,38 @@ def test_answered_result_publishes_normalized_overlay(store: RuntimeStore) -> No
     assert snapshot.phase is RuntimePhase.ANSWERED
     assert snapshot.overlay == pytest.approx((0.2, 0.2, 0.2, 0.2))
     assert snapshot.option_index == 1
+    assert snapshot.high_confidence is True
+    assert snapshot.confidence_level is ConfidenceLevel.HIGH
+    assert snapshot.confidence_score == 98.0
     assert snapshot.timings == RecognitionTimings(1.0, 2.0, 3.0, 6.0)
+
+
+def test_candidate_result_keeps_normalized_overlay_and_score(
+    store: RuntimeStore,
+) -> None:
+    generation = store.begin_question("hash", 20, frame_size=(100, 50))
+    candidate = replace(
+        recognition_result(generation, high_confidence=False),
+        official_answer="乙",
+        question_score=88.0,
+        option_score=72.0,
+        option_index=1,
+        overlay_rect=Rect(20, 10, 20, 10),
+        confidence_level=ConfidenceLevel.CANDIDATE,
+        confidence_score=68.5,
+        confidence_reason="选项文字匹配较弱，显示唯一候选",
+    )
+
+    assert store.complete(generation, candidate)
+
+    snapshot = store.snapshot()
+    assert snapshot.phase is RuntimePhase.CANDIDATE
+    assert snapshot.overlay == pytest.approx((0.2, 0.2, 0.2, 0.2))
+    assert snapshot.option_index == 1
+    assert snapshot.high_confidence is False
+    assert snapshot.confidence_level is ConfidenceLevel.CANDIDATE
+    assert snapshot.confidence_score == 68.5
+    assert snapshot.confidence_reason == "选项文字匹配较弱，显示唯一候选"
 
 
 def test_clear_event_is_published_within_state_transition(store: RuntimeStore) -> None:
@@ -88,6 +126,9 @@ def test_clear_event_is_published_within_state_transition(store: RuntimeStore) -
     assert snapshot.overlay is None
     assert snapshot.phase is RuntimePhase.MONITORING
     assert snapshot.question_text == ""
+    assert snapshot.confidence_level is ConfidenceLevel.NONE
+    assert snapshot.confidence_score == 0.0
+    assert snapshot.confidence_reason is None
     assert snapshot.clear_monotonic_ns is not None
     assert snapshot.message == "dialog_missing"
 

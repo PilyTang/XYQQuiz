@@ -1,4 +1,6 @@
 from pathlib import Path
+import re
+import tomllib
 
 
 ROOT = Path(__file__).parents[2]
@@ -32,6 +34,34 @@ def test_release_script_generates_manifest_zip_and_sha256() -> None:
     assert "clean Git worktree" in script
     assert "Get-Command $Python -CommandType Application" in script
     assert "Select-Object -First 1" in script
+    assert "check_public_tree.py" in script
+    assert "Assert-NoPrivateRuntimePayload" in script
+    assert "Assert-NoPrivateZipEntries" in script
+    assert '"user-data"' in script
+    assert '"diagnostics"' in script
+    assert '"questions.json"' in script
+
+
+def test_release_version_metadata_is_consistent() -> None:
+    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    version = project["project"]["version"]
+    package_init = (ROOT / "src" / "xyq_quiz" / "__init__.py").read_text(
+        encoding="utf-8"
+    )
+    release_script = (ROOT / "scripts" / "build-release.ps1").read_text(
+        encoding="utf-8"
+    )
+    version_info = (ROOT / "packaging" / "version_info.txt").read_text(
+        encoding="utf-8"
+    )
+
+    assert version == "0.2.0"
+    assert re.search(rf'^__version__ = "{re.escape(version)}"$', package_init, re.M)
+    assert f'[string]$Version = "{version}"' in release_script
+    assert "filevers=(0, 2, 0, 0)" in version_info
+    assert "prodvers=(0, 2, 0, 0)" in version_info
+    assert f"StringStruct('FileVersion', '{version}')" in version_info
+    assert f"StringStruct('ProductVersion', '{version}')" in version_info
 
 
 def test_pyinstaller_excludes_upstream_sbom_with_build_machine_paths() -> None:

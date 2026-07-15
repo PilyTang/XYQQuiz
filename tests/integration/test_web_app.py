@@ -15,12 +15,18 @@ from fastapi.testclient import TestClient
 from fastapi import WebSocketDisconnect
 
 from xyq_quiz.capture.hub import LatestFrameHub
-from xyq_quiz.capture.models import CapturedFrame, CapturePhase, CaptureStatus
+from xyq_quiz.capture.models import CapturedFrame, CapturePhase, CaptureStatus, Rect
 from xyq_quiz.config import MatchConfig
 from xyq_quiz.diagnostics import DiagnosticSnapshot, DiagnosticWriter
+from xyq_quiz.knowledge.local import LocalQuestionStore
 from xyq_quiz.knowledge.models import QuestionRecord
 from xyq_quiz.knowledge.store import QuestionBank
-from xyq_quiz.knowledge.updater import UpdateResult
+from xyq_quiz.knowledge.updater import UpdateResult, load_current_generation
+from xyq_quiz.recognition.models import (
+    ConfidenceLevel,
+    RecognitionResult,
+    RecognitionTimings,
+)
 from xyq_quiz.runtime.state import RuntimePhase, RuntimeStore
 from xyq_quiz.web.app import Services, _stream_frames, _stream_state, create_app
 from xyq_quiz.web.security import LocalWebSecurity, SESSION_COOKIE, TOKEN_HEADER
@@ -166,6 +172,7 @@ def _write_generation(data_dir: Path, generation_id: str, question: str) -> None
 
 def _services(tmp_path: Path, *, updater_error: Exception | None = None) -> ServiceFixture:
     _write_generation(tmp_path, "new-generation", "新问题")
+    generation = load_current_generation(tmp_path)
     events: list[str] = []
     pipeline = FakePipeline(events)
     runtime = RuntimeStore()
@@ -178,6 +185,11 @@ def _services(tmp_path: Path, *, updater_error: Exception | None = None) -> Serv
         pipeline=pipeline,
         updater=FakeUpdater(tmp_path, error=updater_error),
         match_config=MatchConfig(question_score=92, question_gap=5, option_score=90),
+        local_question_store=LocalQuestionStore(
+            tmp_path / "user-data" / "questions.json"
+        ),
+        official_bank=generation.question_bank,
+        official_metadata=generation.metadata,
         preview_width=4,
     )
     return ServiceFixture(services, events, pipeline)
@@ -280,8 +292,53 @@ def test_state_websocket_sends_current_then_clear_overlay_without_new_frame(
 
     assert current["phase"] == "MONITORING"
     assert current["capture"]["phase"] == "CAPTURING"
+    assert current["confidence_level"] == "NONE"
+    assert current["confidence_score"] == 0.0
     assert cleared["overlay"] is None
     assert cleared["message"] == "dialog_missing"
+
+
+def test_state_websocket_serializes_candidate_overlay_confidence(
+    tmp_path: Path,
+) -> None:
+    fixture = _services(tmp_path)
+    generation = fixture.services.runtime.begin_question(
+        "candidate",
+        frame_id=10,
+        frame_size=(100, 50),
+    )
+    fixture.services.runtime.complete(
+        generation,
+        RecognitionResult(
+            generation_id=generation,
+            frame_id=10,
+            question_text="题目",
+            option_texts=("甲", "乙", "丙", "丁"),
+            official_answer="乙",
+            question_score=88.0,
+            question_runner_up_score=70.0,
+            option_score=72.0,
+            option_runner_up_score=60.0,
+            high_confidence=False,
+            option_index=1,
+            overlay_rect=Rect(20, 10, 20, 10),
+            timings=RecognitionTimings(1.0, 2.0, 3.0, 6.0),
+            confidence_level=ConfidenceLevel.CANDIDATE,
+            confidence_score=68.5,
+            confidence_reason="唯一候选，选项匹配较弱",
+        ),
+    )
+
+    with TestClient(create_app(fixture.services)) as client:
+        with client.websocket_connect("/ws/state") as socket:
+            current = socket.receive_json()
+
+    assert current["phase"] == "CANDIDATE"
+    assert current["overlay"] == pytest.approx([0.2, 0.2, 0.2, 0.2])
+    assert current["high_confidence"] is False
+    assert current["confidence_level"] == "CANDIDATE"
+    assert current["confidence_score"] == 68.5
+    assert current["confidence_reason"] == "唯一候选，选项匹配较弱"
 
 
 def test_state_stream_does_not_resend_when_version_wait_times_out(
@@ -355,6 +412,274 @@ def test_failed_update_keeps_old_matcher_and_returns_structured_error(
     }
 
 
+def test_local_question_crud_rebuilds_combined_matcher_immediately(
+    tmp_path: Path,
+) -> None:
+    fixture = _services(tmp_path)
+
+    with TestClient(create_app(fixture.services)) as client:
+        initial = client.get("/api/local-questions")
+        assert initial.status_code == 200
+        assert initial.json()["sha256"] is None
+
+        supplement = client.post(
+            "/api/local-questions",
+            json={
+                "sha256": None,
+                "id": "local-extra",
+                "mode": "supplement",
+                "question": "本地新增问题",
+                "answer": "本地答案",
+                "answer_aliases": ["答案别名"],
+                "enabled": True,
+                "target_source_id": None,
+            },
+        )
+        assert supplement.status_code == 201
+        supplement_payload = supplement.json()
+        assert supplement_payload["records"][0]["answer_aliases"] == ["答案别名"]
+        assert fixture.pipeline.matchers[-1].match_question(
+            "本地新增问题"
+        ).record.answer == "本地答案"
+
+        override = client.post(
+            "/api/local-questions",
+            json={
+                "sha256": supplement_payload["sha256"],
+                "id": "local-override",
+                "mode": "override",
+                "question": "新问题",
+                "answer": "本地覆盖答案",
+                "answer_aliases": ["覆盖别名"],
+                "enabled": True,
+                "target_source_id": None,
+            },
+        )
+        assert override.status_code == 201
+        override_payload = override.json()
+        assert override_payload["records"][1]["target_source_id"] == "1"
+        assert fixture.pipeline.matchers[-1].match_question(
+            "新问题"
+        ).record.answer == "本地覆盖答案"
+
+        disabled = client.put(
+            "/api/local-questions/local-extra",
+            json={
+                "sha256": override_payload["sha256"],
+                "mode": "supplement",
+                "question": "本地新增问题",
+                "answer": "修改后的答案",
+                "answer_aliases": [],
+                "enabled": False,
+                "target_source_id": None,
+            },
+        )
+        assert disabled.status_code == 200
+        disabled_payload = disabled.json()
+        assert all(
+            record.source_id != "local:local-extra"
+            for record in fixture.pipeline.matchers[-1]._bank.records
+        )
+
+        deleted_override = client.request(
+            "DELETE",
+            "/api/local-questions/local-override",
+            json={"sha256": disabled_payload["sha256"]},
+        )
+        assert deleted_override.status_code == 200
+        assert fixture.pipeline.matchers[-1].match_question(
+            "新问题"
+        ).record.answer == "新答案"
+
+        deleted_supplement = client.request(
+            "DELETE",
+            "/api/local-questions/local-extra",
+            json={"sha256": deleted_override.json()["sha256"]},
+        )
+        assert deleted_supplement.status_code == 200
+        assert deleted_supplement.json()["records"] == []
+
+    stored = json.loads(
+        (tmp_path / "user-data" / "questions.json").read_text("utf-8")
+    )
+    assert stored == {"schema_version": 1, "records": []}
+
+
+def test_local_question_sha_conflict_never_overwrites_newer_file(tmp_path: Path) -> None:
+    fixture = _services(tmp_path)
+
+    with TestClient(create_app(fixture.services)) as client:
+        created = client.post(
+            "/api/local-questions",
+            json={
+                "sha256": None,
+                "question": "先写入的题目",
+                "answer": "先写入的答案",
+            },
+        )
+        assert created.status_code == 201
+        path = tmp_path / "user-data" / "questions.json"
+        before = path.read_bytes()
+
+        stale = client.post(
+            "/api/local-questions",
+            json={
+                "sha256": None,
+                "question": "不应写入的题目",
+                "answer": "不应写入的答案",
+            },
+        )
+
+    assert stale.status_code == 409
+    assert stale.json()["current_sha256"] == created.json()["sha256"]
+    assert path.read_bytes() == before
+
+
+def test_local_question_post_and_put_keep_create_update_semantics(tmp_path: Path) -> None:
+    fixture = _services(tmp_path)
+
+    with TestClient(create_app(fixture.services)) as client:
+        missing = client.put(
+            "/api/local-questions/not-there",
+            json={
+                "sha256": None,
+                "question": "不存在",
+                "answer": "不存在",
+            },
+        )
+        created = client.post(
+            "/api/local-questions",
+            json={
+                "sha256": None,
+                "id": "fixed-id",
+                "question": "已存在",
+                "answer": "原答案",
+            },
+        )
+        duplicate = client.post(
+            "/api/local-questions",
+            json={
+                "sha256": created.json()["sha256"],
+                "id": "fixed-id",
+                "question": "不应覆盖",
+                "answer": "不应覆盖",
+            },
+        )
+
+    assert missing.status_code == 404
+    assert created.status_code == 201
+    assert duplicate.status_code == 409
+    document = json.loads(
+        (tmp_path / "user-data" / "questions.json").read_text("utf-8")
+    )
+    assert document["records"][0]["answer"] == "原答案"
+
+
+def test_official_update_and_local_write_share_one_mutation_lock(tmp_path: Path) -> None:
+    fixture = _services(tmp_path)
+    update_entered = threading.Event()
+    update_release = threading.Event()
+    original_update = fixture.services.updater.update
+
+    def gated_update():
+        update_entered.set()
+        assert update_release.wait(timeout=2)
+        return original_update()
+
+    fixture.services.updater.update = gated_update  # type: ignore[method-assign]
+    responses: dict[str, object] = {}
+
+    with TestClient(create_app(fixture.services)) as client:
+        update_thread = threading.Thread(
+            target=lambda: responses.__setitem__(
+                "update",
+                client.post("/api/question-bank/update"),
+            )
+        )
+        update_thread.start()
+        assert update_entered.wait(timeout=2)
+
+        local_thread = threading.Thread(
+            target=lambda: responses.__setitem__(
+                "local",
+                client.post(
+                    "/api/local-questions",
+                    json={
+                        "sha256": None,
+                        "question": "锁内补题",
+                        "answer": "锁内答案",
+                    },
+                ),
+            )
+        )
+        local_thread.start()
+        time.sleep(0.05)
+        assert local_thread.is_alive()
+        assert not (tmp_path / "user-data" / "questions.json").exists()
+
+        update_release.set()
+        update_thread.join(timeout=2)
+        local_thread.join(timeout=2)
+
+    assert responses["update"].status_code == 200  # type: ignore[union-attr]
+    assert responses["local"].status_code == 201  # type: ignore[union-attr]
+    assert fixture.pipeline.matchers[-1].match_question("锁内补题") is not None
+
+
+def test_corrupt_local_file_keeps_official_bank_and_is_never_overwritten(
+    tmp_path: Path,
+) -> None:
+    fixture = _services(tmp_path)
+    path = tmp_path / "user-data" / "questions.json"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(b'{"schema_version": 1, "records": [broken')
+    before = path.read_bytes()
+
+    with TestClient(create_app(fixture.services)) as client:
+        update = client.post("/api/question-bank/update")
+        listing = client.get("/api/local-questions")
+        write = client.post(
+            "/api/local-questions",
+            json={
+                "sha256": None,
+                "question": "不能覆盖损坏文件",
+                "answer": "不能写入",
+            },
+        )
+
+    assert update.status_code == 200
+    assert fixture.pipeline.matchers[-1].match_question("新问题") is not None
+    assert listing.status_code == 409
+    assert listing.json()["writable"] is False
+    assert "继续使用官方题库" in listing.json()["error"]
+    assert write.status_code == 409
+    assert write.json()["writable"] is False
+    assert "禁止覆盖" in write.json()["error"]
+    assert path.read_bytes() == before
+
+
+def test_diagnostic_metadata_contains_only_local_summary(tmp_path: Path) -> None:
+    fixture = _services(tmp_path)
+
+    with TestClient(create_app(fixture.services)) as client:
+        created = client.post(
+            "/api/local-questions",
+            json={
+                "sha256": None,
+                "question": "诊断中不能出现的私有题目",
+                "answer": "诊断中不能出现的私有答案",
+            },
+        )
+
+    assert created.status_code == 201
+    metadata = fixture.services.snapshot_diagnostic_metadata()
+    serialized = json.dumps(metadata, ensure_ascii=False)
+    assert metadata["local_questions"]["record_count"] == 1
+    assert metadata["local_questions"]["sha256"] == created.json()["sha256"]
+    assert "私有题目" not in serialized
+    assert "私有答案" not in serialized
+
+
 def test_update_and_diagnostic_metadata_are_one_atomic_knowledge_version(
     tmp_path: Path,
 ) -> None:
@@ -417,14 +742,30 @@ def test_static_b_layout_contract(tmp_path: Path) -> None:
     assert html.status_code == css.status_code == javascript.status_code == 200
     assert 'id="frameCanvas"' in html.text
     assert 'id="overlayCanvas"' in html.text
+    assert 'id="confidenceLevel"' in html.text
+    assert 'id="confidenceScore"' in html.text
+    assert 'id="confidenceReason"' in html.text
+    assert 'class="local-bank-panel"' in html.text
+    assert 'id="localQuestionForm"' in html.text
+    assert 'id="localQuestionList"' in html.text
+    assert "不会随诊断文件或发布包导出" in html.text
     assert "overlayCtx.clearRect" in javascript.text
     assert "state.overlay" in javascript.text
+    assert "confidencePresentation" in javascript.text
+    assert "hsl(${hue.toFixed(1)}, 85%, 52%)" in javascript.text
+    assert "overlayCtx.setLineDash" in javascript.text
+    assert "评分 ${Math.round(presentation.score)}/100" in javascript.text
+    assert 'alpha: level === "HIGH" ? 1 : 0.68' in javascript.text
     assert 'style.aspectRatio = `${bitmap.width} / ${bitmap.height}`' in javascript.text
     assert "let activeFrameDecode = false" in javascript.text
     assert "let pendingFrameBuffer = null" in javascript.text
     assert "function createLatestFrameDecoder(decodeFrame, renderFrame)" in javascript.text
     assert "const frameDecoder = createLatestFrameDecoder(decodeFrame, renderFrame)" in javascript.text
     assert "frameDecoder.enqueue(data)" in javascript.text
+    assert 'apiFetch("/api/local-questions", {method: "GET"})' in javascript.text
+    assert 'method: recordId ? "PUT" : "POST"' in javascript.text
+    assert 'method: "DELETE", body: {sha256: localQuestionSha256}' in javascript.text
+    assert "list.replaceChildren()" in javascript.text
     assert "frameSocket.onmessage = ({data}) =>" in javascript.text
     assert "frameSocket.onmessage = async" not in javascript.text
     assert "window.confirm" in javascript.text
@@ -442,6 +783,8 @@ def test_static_b_layout_contract(tmp_path: Path) -> None:
     assert bitmap_ready < stale_check < frame_advance < draw
     assert "250" in javascript.text and "5000" in javascript.text
     assert "#overlayCanvas" in css.text and "position: absolute" in css.text
+    assert '#confidenceLevel[data-level="CANDIDATE"]' in css.text
+    assert '#confidenceLevel[data-level="HIGH"]' in css.text
     assert "@media (max-width: 960px)" in css.text
 
 
@@ -564,10 +907,15 @@ def test_secure_app_rejects_wrong_host_origin_and_missing_token(
             headers={"Origin": security.expected_origin},
             json={},
         )
+        missing_local_token = client.get(
+            "/api/local-questions",
+            headers={"Origin": security.expected_origin},
+        )
 
     assert bad_host.status_code == 400
     assert bad_origin.status_code == 403
     assert missing_token.status_code == 403
+    assert missing_local_token.status_code == 403
     assert fixture.pipeline.matchers == []
 
 

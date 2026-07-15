@@ -37,6 +37,23 @@ def test_public_tree_audit_accepts_placeholders_and_source_text(tmp_path: Path) 
     assert audit_paths(tmp_path, (source,)) == []
 
 
+def test_public_tree_audit_rejects_mutable_runtime_data_case_insensitively(
+    tmp_path: Path,
+) -> None:
+    local_questions = PurePosixPath("User-Data/questions.json")
+    diagnostic = PurePosixPath(r"DIAGNOSTICS\recognition.zip")
+    for relative in (local_questions, diagnostic):
+        normalized = PurePosixPath(relative.as_posix().replace("\\", "/"))
+        path = tmp_path.joinpath(*normalized.parts)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"private runtime data")
+
+    findings = audit_paths(tmp_path, (local_questions, diagnostic))
+
+    assert any("User-Data/questions.json" in item for item in findings)
+    assert any("DIAGNOSTICS/recognition.zip" in item for item in findings)
+
+
 def test_public_tree_audit_requires_polyform_noncommercial_license(
     tmp_path: Path,
 ) -> None:

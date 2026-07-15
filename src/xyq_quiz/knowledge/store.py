@@ -3,25 +3,62 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from types import MappingProxyType
-from typing import Any, Self
+from typing import Any, Mapping, Self
 
-from xyq_quiz.knowledge.models import QuestionRecord, normalize_text
+from xyq_quiz.knowledge.models import (
+    QuestionRecord,
+    QuestionRecordMetadata,
+    normalize_text,
+)
 
 
 class QuestionBank:
-    def __init__(self, records: list[QuestionRecord]) -> None:
+    def __init__(
+        self,
+        records: list[QuestionRecord],
+        *,
+        record_metadata: Mapping[str, QuestionRecordMetadata] | None = None,
+    ) -> None:
         self.records = tuple(records)
+        source_ids: set[str] = set()
         exact: dict[str, QuestionRecord] = {}
+        groups: dict[str, list[QuestionRecord]] = {}
         for record in records:
+            if record.source_id in source_ids:
+                raise ValueError(f"duplicate source_id: {record.source_id}")
+            source_ids.add(record.source_id)
             exact.setdefault(record.normalized_question, record)
+            groups.setdefault(record.normalized_question, []).append(record)
         self.exact = MappingProxyType(exact)
-        self.normalized_questions = tuple(
-            record.normalized_question for record in records
+        self.groups = MappingProxyType(
+            {key: tuple(group) for key, group in groups.items()}
+        )
+        self.normalized_questions = tuple(groups)
+
+        supplied_metadata = dict(record_metadata or {})
+        unknown_source_ids = set(supplied_metadata) - source_ids
+        if unknown_source_ids:
+            unknown = sorted(unknown_source_ids)[0]
+            raise ValueError(f"metadata references unknown source_id: {unknown}")
+        self.record_metadata = MappingProxyType(
+            {
+                source_id: supplied_metadata.get(
+                    source_id,
+                    QuestionRecordMetadata(),
+                )
+                for source_id in source_ids
+            }
         )
 
     @property
     def count(self) -> int:
         return len(self.records)
+
+    def records_for(self, normalized_question: str) -> tuple[QuestionRecord, ...]:
+        return self.groups.get(normalized_question, ())
+
+    def metadata_for(self, source_id: str) -> QuestionRecordMetadata:
+        return self.record_metadata.get(source_id, QuestionRecordMetadata())
 
     @classmethod
     def load(cls, path: Path) -> Self:

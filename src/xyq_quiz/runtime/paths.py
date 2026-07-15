@@ -15,6 +15,7 @@ class RuntimePaths:
     defaults_root: Path
     config_path: Path
     data_dir: Path
+    user_data_dir: Path
     logs_dir: Path
     diagnostics_dir: Path
     frozen: bool
@@ -46,6 +47,7 @@ class RuntimePaths:
             defaults_root=defaults_root,
             config_path=app_root / "config.json",
             data_dir=app_root / "data",
+            user_data_dir=app_root / "user-data",
             logs_dir=app_root / "logs",
             diagnostics_dir=app_root / "diagnostics",
             frozen=is_frozen,
@@ -59,6 +61,10 @@ class RuntimePaths:
     @property
     def default_data_dir(self) -> Path:
         return self.defaults_root / "data"
+
+    @property
+    def local_questions_path(self) -> Path:
+        return self.user_data_dir / "questions.json"
 
 
 def initialize_portable_state(paths: RuntimePaths) -> None:
@@ -87,6 +93,7 @@ def initialize_portable_state(paths: RuntimePaths) -> None:
             if temporary.exists():
                 shutil.rmtree(temporary)
 
+    paths.user_data_dir.mkdir(parents=True, exist_ok=True)
     paths.logs_dir.mkdir(parents=True, exist_ok=True)
     paths.diagnostics_dir.mkdir(parents=True, exist_ok=True)
 

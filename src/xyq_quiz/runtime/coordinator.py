@@ -6,6 +6,7 @@ from concurrent.futures import Executor, Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
 import hashlib
 import threading
+import time
 from typing import Protocol
 
 import cv2
@@ -14,8 +15,16 @@ from numpy.typing import NDArray
 
 from xyq_quiz.capture.hub import LatestFrameHub
 from xyq_quiz.capture.models import CapturedFrame, CapturePhase, CaptureStatus, Rect
-from xyq_quiz.recognition.models import DetectedLayout, RecognitionResult
+from xyq_quiz.recognition.models import (
+    ConfidenceLevel,
+    DetectedLayout,
+    RecognitionResult,
+)
 from xyq_quiz.runtime.state import RuntimePhase, RuntimeStore
+
+
+_LAYOUT_MISSING_GRACE_SECONDS = 0.15
+_RECOGNITION_RETRY_SECONDS = 0.20
 
 
 class CaptureStatusSource(Protocol):
@@ -140,12 +149,24 @@ class RecognitionCoordinator:
         last_frame_id = 0
         observed_hash: str | None = None
         observed_identity: _QuizCacheIdentity | None = None
-        observed_layout: tuple[tuple[int, int, int, int], ...] | None = None
-        layout_missing: bool | None = None
+        observed_layout: _FrameLayoutIdentity | None = None
+        layout_missing_since: float | None = None
+        layout_missing_cleared = False
         candidate_count = 0
         active_hash: str | None = None
         active_identity: _QuizCacheIdentity | None = None
-        pending: tuple[str, _QuizCacheIdentity, CapturedFrame, int, int] | None = None
+        active_generation: int | None = None
+        active_result_level: ConfidenceLevel | None = None
+        last_attempt_at: float | None = None
+        pending: tuple[
+            str,
+            _QuizCacheIdentity,
+            CapturedFrame,
+            DetectedLayout,
+            float,
+            int,
+            int,
+        ] | None = None
         running: tuple[
             str,
             _QuizCacheIdentity,
@@ -165,17 +186,44 @@ class RecognitionCoordinator:
                 candidate_count = 0
                 active_hash = None
                 active_identity = None
+                active_generation = None
+                active_result_level = None
+                last_attempt_at = None
                 pending = None
+
+            if (
+                layout_missing_since is not None
+                and not layout_missing_cleared
+                and time.monotonic() - layout_missing_since
+                >= _LAYOUT_MISSING_GRACE_SECONDS
+            ):
+                self._store.clear_question("dialog_missing")
+                observed_hash = None
+                observed_identity = None
+                observed_layout = None
+                candidate_count = 0
+                active_hash = None
+                active_identity = None
+                active_generation = None
+                active_result_level = None
+                last_attempt_at = None
+                pending = None
+                layout_missing_cleared = True
+
             capture_status = self._capture_service.status()
             if capture_status.phase is not CapturePhase.CAPTURING:
                 self._publish_capture_phase(capture_status)
                 observed_hash = None
                 observed_identity = None
                 observed_layout = None
-                layout_missing = None
+                layout_missing_since = None
+                layout_missing_cleared = False
                 candidate_count = 0
                 active_hash = None
                 active_identity = None
+                active_generation = None
+                active_result_level = None
+                last_attempt_at = None
                 pending = None
                 self._stop_event.wait(0.02)
                 continue
@@ -198,13 +246,19 @@ class RecognitionCoordinator:
                     observed_hash = None
                     observed_identity = None
                     observed_layout = None
-                    layout_missing = None
+                    layout_missing_since = None
+                    layout_missing_cleared = False
                     candidate_count = 0
                     active_hash = None
                     active_identity = None
+                    active_generation = None
+                    active_result_level = None
+                    last_attempt_at = None
                     pending = None
                 else:
+                    layout_started = time.perf_counter()
                     layout = self._layout_detector.detect(frame.bgr)
+                    layout_ms = (time.perf_counter() - layout_started) * 1000.0
                     if self._stop_event.is_set():
                         break
                     capture_status = self._capture_service.status()
@@ -213,24 +267,23 @@ class RecognitionCoordinator:
                         observed_hash = None
                         observed_identity = None
                         observed_layout = None
-                        layout_missing = None
+                        layout_missing_since = None
+                        layout_missing_cleared = False
                         candidate_count = 0
                         active_hash = None
                         active_identity = None
+                        active_generation = None
+                        active_result_level = None
+                        last_attempt_at = None
                         pending = None
                     elif layout is None:
-                        if layout_missing is not True:
-                            self._store.clear_question("dialog_missing")
-                        observed_hash = None
-                        observed_identity = None
-                        observed_layout = None
-                        layout_missing = True
-                        candidate_count = 0
-                        active_hash = None
-                        active_identity = None
-                        pending = None
+                        if layout_missing_since is None:
+                            layout_missing_since = time.monotonic()
+                            layout_missing_cleared = False
                     else:
-                        layout_signature = _layout_signature(layout)
+                        layout_missing_since = None
+                        layout_missing_cleared = False
+                        layout_signature = _frame_layout_identity(frame.bgr, layout)
                         layout_changed = (
                             observed_layout is not None
                             and layout_signature != observed_layout
@@ -242,16 +295,25 @@ class RecognitionCoordinator:
                             candidate_count = 0
                             active_hash = None
                             active_identity = None
+                            active_generation = None
+                            active_result_level = None
+                            last_attempt_at = None
                             pending = None
                         observed_layout = layout_signature
-                        layout_missing = False
                         question_hash = _quiz_stability_signature(frame.bgr, layout)
                         identity = _quiz_cache_identity(frame.bgr, layout)
-                        identity_changed = (
-                            observed_identity is None
-                            or not _same_quiz_identity(identity, observed_identity)
+                        question_changed = (
+                            observed_hash is not None
+                            and not _same_question_signature(
+                                question_hash,
+                                observed_hash,
+                            )
                         )
-                        if question_hash != observed_hash or identity_changed:
+                        if observed_hash is None:
+                            observed_hash = question_hash
+                            observed_identity = identity
+                            candidate_count = 1
+                        elif question_changed:
                             if observed_hash is not None or active_hash is not None:
                                 self._store.clear_question("question_changed")
                             observed_hash = question_hash
@@ -259,26 +321,40 @@ class RecognitionCoordinator:
                             candidate_count = 1
                             active_hash = None
                             active_identity = None
+                            active_generation = None
+                            active_result_level = None
+                            last_attempt_at = None
                             pending = None
-                        elif (
-                            active_hash != question_hash
-                            or active_identity is None
-                            or not _same_quiz_identity(identity, active_identity)
-                        ):
-                            candidate_count += 1
-                            if candidate_count >= 2:
-                                active_hash = question_hash
+                        else:
+                            if (
+                                observed_identity is not None
+                                and _same_quiz_identity(identity, observed_identity)
+                            ):
+                                candidate_count += 1
+                            else:
+                                observed_identity = identity
+                                candidate_count = 1
+
+                        if not question_changed and candidate_count >= 2:
+                            identity_needs_recognition = (
+                                active_identity is None
+                                or not _same_quiz_identity(identity, active_identity)
+                            )
+                            if active_hash is None:
+                                active_hash = observed_hash
                                 active_identity = identity
                                 generation = self._store.begin_question(
-                                    question_hash,
+                                    active_hash,
                                     frame.frame_id,
                                     frame_size=(frame.bgr.shape[1], frame.bgr.shape[0]),
                                 )
+                                active_generation = generation
+                                active_result_level = None
                                 with self._cache_lock:
                                     cache_epoch = self._cache_epoch
-                                    cached_entry = self._cache.get(question_hash)
+                                    cached_entry = self._cache.get(active_hash)
                                     if cached_entry is not None:
-                                        self._cache.move_to_end(question_hash)
+                                        self._cache.move_to_end(active_hash)
                                     cached = (
                                         cached_entry.result
                                         if cached_entry is not None
@@ -303,14 +379,87 @@ class RecognitionCoordinator:
                                             overlay_rect=overlay_rect,
                                         ),
                                     )
+                                    active_result_level = ConfidenceLevel.HIGH
                                 else:
                                     pending = (
-                                        question_hash,
+                                        active_hash,
                                         identity,
                                         frame,
+                                        layout,
+                                        layout_ms,
                                         generation,
                                         cache_epoch,
                                     )
+                            elif identity_needs_recognition:
+                                # The question is unchanged, but its options are
+                                # not byte-identical.  Keep the existing overlay
+                                # while two matching frames settle, then remap.
+                                active_identity = identity
+                                generation = active_generation
+                                if generation is not None:
+                                    with self._cache_lock:
+                                        cache_epoch = self._cache_epoch
+                                        cached_entry = self._cache.get(active_hash)
+                                        if cached_entry is not None:
+                                            self._cache.move_to_end(active_hash)
+                                        cached = (
+                                            cached_entry.result
+                                            if cached_entry is not None
+                                            and _same_quiz_identity(
+                                                identity,
+                                                cached_entry.identity,
+                                            )
+                                            else None
+                                        )
+                                    if cached is not None and cached.high_confidence:
+                                        overlay_rect = (
+                                            layout.option_rects[cached.option_index]
+                                            if cached.option_index is not None
+                                            else None
+                                        )
+                                        if self._store.complete(
+                                            generation,
+                                            replace(
+                                                cached,
+                                                generation_id=generation,
+                                                frame_id=frame.frame_id,
+                                                overlay_rect=overlay_rect,
+                                            ),
+                                        ):
+                                            active_result_level = ConfidenceLevel.HIGH
+                                    else:
+                                        pending = (
+                                            active_hash,
+                                            identity,
+                                            frame,
+                                            layout,
+                                            layout_ms,
+                                            generation,
+                                            cache_epoch,
+                                        )
+                            elif (
+                                active_generation is not None
+                                and active_result_level
+                                in {ConfidenceLevel.NONE, ConfidenceLevel.CANDIDATE}
+                                and running is None
+                                and pending is None
+                                and (
+                                    last_attempt_at is None
+                                    or time.monotonic() - last_attempt_at
+                                    >= _RECOGNITION_RETRY_SECONDS
+                                )
+                            ):
+                                # A retry deliberately reuses the generation so
+                                # a candidate overlay remains visible in-flight.
+                                pending = (
+                                    active_hash,
+                                    identity,
+                                    frame,
+                                    layout,
+                                    layout_ms,
+                                    active_generation,
+                                    cache_epoch,
+                                )
 
             # New frame transitions above always invalidate stale generations first.
             if self._stop_event.is_set():
@@ -327,7 +476,14 @@ class RecognitionCoordinator:
                 try:
                     result = future.result()
                 except Exception as exc:
-                    self._store.fail(generation, str(exc))
+                    if (
+                        active_generation == generation
+                        and active_hash == result_hash
+                        and active_identity is not None
+                        and _same_quiz_identity(result_identity, active_identity)
+                        and self._store.fail(generation, str(exc))
+                    ):
+                        active_result_level = ConfidenceLevel.NONE
                 else:
                     if result.high_confidence:
                         with self._cache_lock:
@@ -339,13 +495,22 @@ class RecognitionCoordinator:
                                 self._cache.move_to_end(result_hash)
                                 while len(self._cache) > 128:
                                     self._cache.popitem(last=False)
-                    self._store.complete(generation, result)
+                    if (
+                        active_generation == generation
+                        and active_hash == result_hash
+                        and active_identity is not None
+                        and _same_quiz_identity(result_identity, active_identity)
+                        and self._store.complete(generation, result)
+                    ):
+                        active_result_level = result.confidence_level
 
             if running is None and pending is not None:
                 (
                     question_hash,
                     recognition_identity,
                     recognition_frame,
+                    recognition_layout,
+                    recognition_layout_ms,
                     generation,
                     cache_epoch,
                 ) = pending
@@ -354,11 +519,25 @@ class RecognitionCoordinator:
                     executor = self._executor
                     if self._stop_event.is_set() or executor is None:
                         return
-                    future = executor.submit(
-                        self._pipeline.recognize,
-                        recognition_frame,
-                        generation,
+                    recognize_with_layout = getattr(
+                        self._pipeline,
+                        "recognize_with_layout",
+                        None,
                     )
+                    if callable(recognize_with_layout):
+                        future = executor.submit(
+                            recognize_with_layout,
+                            recognition_frame,
+                            generation,
+                            recognition_layout,
+                            recognition_layout_ms,
+                        )
+                    else:
+                        future = executor.submit(
+                            self._pipeline.recognize,
+                            recognition_frame,
+                            generation,
+                        )
                 running = (
                     question_hash,
                     recognition_identity,
@@ -366,6 +545,7 @@ class RecognitionCoordinator:
                     cache_epoch,
                     future,
                 )
+                last_attempt_at = time.monotonic()
 
     def _current_cache_epoch(self) -> int:
         with self._cache_lock:
@@ -385,20 +565,46 @@ def _quiz_stability_signature(
     frame: NDArray[np.uint8],
     layout: DetectedLayout,
 ) -> str:
-    """Build a coarse stability bucket; cache reuse also requires full identity."""
-    digest = hashlib.blake2b(digest_size=20)
-    digest.update((layout.profile_name or "").encode("utf-8"))
-    for rect in (layout.question_rect, *layout.option_rects):
-        digest.update(f"{rect.x},{rect.y},{rect.width},{rect.height};".encode("ascii"))
-        crop = frame[
-            rect.y : rect.y + rect.height,
-            rect.x : rect.x + rect.width,
-        ]
-        gray = crop if crop.ndim == 2 else cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-        normalized = cv2.resize(gray, (33, 16), interpolation=cv2.INTER_AREA)
-        gradients = normalized[:, 1:] > normalized[:, :-1]
-        digest.update(np.packbits(gradients).tobytes())
-    return digest.hexdigest()
+    """Fingerprint only the question ROI for tolerant continuity decisions.
+
+    Options are intentionally excluded: animation, hover state, and delayed
+    rendering in those boxes must not look like a new question.  Cache reuse
+    remains guarded independently by :func:`_quiz_cache_identity`.
+    """
+    rect = layout.question_rect
+    metadata = hashlib.blake2b(digest_size=8)
+    metadata.update((layout.profile_name or "").encode("utf-8"))
+    metadata.update(f"{rect.x},{rect.y},{rect.width},{rect.height}".encode("ascii"))
+    crop = frame[
+        rect.y : rect.y + rect.height,
+        rect.x : rect.x + rect.width,
+    ]
+    gray = crop if crop.ndim == 2 else cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    normalized = cv2.resize(gray, (33, 16), interpolation=cv2.INTER_AREA)
+    gradients = normalized[:, 1:] > normalized[:, :-1]
+    packed = np.packbits(gradients).tobytes()
+    return f"{metadata.hexdigest()}:{packed.hex()}"
+
+
+def _same_question_signature(left: str, right: str) -> bool:
+    """Return whether two question fingerprints are perceptually equivalent."""
+    if left == right:
+        return True
+    try:
+        left_metadata, left_payload = left.split(":", 1)
+        right_metadata, right_payload = right.split(":", 1)
+        left_bits = bytes.fromhex(left_payload)
+        right_bits = bytes.fromhex(right_payload)
+    except (ValueError, TypeError):
+        return False
+    if left_metadata != right_metadata or len(left_bits) != len(right_bits):
+        return False
+    changed_bits = sum(
+        (left_byte ^ right_byte).bit_count()
+        for left_byte, right_byte in zip(left_bits, right_bits, strict=True)
+    )
+    total_bits = len(left_bits) * 8
+    return changed_bits <= max(4, round(total_bits * 0.06))
 
 
 def _quiz_cache_identity(
@@ -433,6 +639,13 @@ class _QuizCacheIdentity:
 
 
 @dataclass(frozen=True, slots=True)
+class _FrameLayoutIdentity:
+    profile_name: str
+    frame_size: tuple[int, int]
+    layout_signature: tuple[tuple[int, int, int, int], ...]
+
+
+@dataclass(frozen=True, slots=True)
 class _CachedRecognition:
     identity: _QuizCacheIdentity
     result: RecognitionResult
@@ -443,6 +656,18 @@ def _same_quiz_identity(
     right: _QuizCacheIdentity,
 ) -> bool:
     return left == right
+
+
+def _frame_layout_identity(
+    frame: NDArray[np.uint8],
+    layout: DetectedLayout,
+) -> _FrameLayoutIdentity:
+    height, width = frame.shape[:2]
+    return _FrameLayoutIdentity(
+        profile_name=layout.profile_name or "",
+        frame_size=(width, height),
+        layout_signature=_layout_signature(layout),
+    )
 
 
 def _layout_signature(

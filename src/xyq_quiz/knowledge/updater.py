@@ -18,14 +18,14 @@ from urllib.parse import urljoin, urlparse
 import httpx
 import pyjson5
 
+from xyq_quiz import __version__
+from xyq_quiz.knowledge.models import QuestionRecord, normalize_text
+from xyq_quiz.knowledge.store import QuestionBank
 from xyq_quiz.runtime.portable import (
     STATE_SCHEMA_VERSION,
     migrate_metadata_document,
     migrate_pointer_document,
 )
-
-from xyq_quiz.knowledge.models import QuestionRecord, normalize_text
-from xyq_quiz.knowledge.store import QuestionBank
 
 
 DEFAULT_SOURCE_URL = "https://w.163.com/h5/xyq/dtk/"
@@ -546,7 +546,7 @@ class QuestionBankUpdater:
                 shutil.rmtree(staging_dir)
 
     def _fetch(self) -> tuple[str, str, int]:
-        headers = {"User-Agent": "XYQQuiz/0.1"}
+        headers = {"User-Agent": f"XYQQuiz/{__version__}"}
         with httpx.Client(
             timeout=15,
             follow_redirects=True,

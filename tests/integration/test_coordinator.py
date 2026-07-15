@@ -21,6 +21,7 @@ from xyq_quiz.capture.models import (
     Rect,
 )
 from xyq_quiz.recognition.models import (
+    ConfidenceLevel,
     DetectedLayout,
     RecognitionResult,
     RecognitionTimings,
@@ -124,6 +125,75 @@ class ImmediatePipeline(GatedPipeline):
         return result(generation_id, frame.frame_id, marker)
 
 
+class LayoutAwareImmediatePipeline(ImmediatePipeline):
+    def __init__(self) -> None:
+        super().__init__()
+        self.received_layouts: list[DetectedLayout] = []
+        self.received_layout_ms: list[float] = []
+
+    def recognize_with_layout(
+        self,
+        frame: CapturedFrame,
+        generation_id: int,
+        layout: DetectedLayout,
+        layout_ms: float,
+    ) -> RecognitionResult:
+        self.received_layouts.append(layout)
+        self.received_layout_ms.append(layout_ms)
+        return super().recognize(frame, generation_id)
+
+
+class SecondCallGatedPipeline(ImmediatePipeline):
+    def __init__(self) -> None:
+        super().__init__()
+        self.second_started = threading.Event()
+        self.second_gate = threading.Event()
+
+    def recognize(
+        self,
+        frame: CapturedFrame,
+        generation_id: int,
+    ) -> RecognitionResult:
+        marker = int(frame.bgr[0, 9, 0])
+        with self._lock:
+            self.calls.append(marker)
+            call_number = len(self.calls)
+        if call_number == 2:
+            self.second_started.set()
+            if not self.second_gate.wait(timeout=2):
+                raise TimeoutError("second recognition gate was not released")
+        return result(generation_id, frame.frame_id, marker)
+
+
+class RetryingPipeline(ImmediatePipeline):
+    def __init__(self, first_level: ConfidenceLevel) -> None:
+        super().__init__()
+        self.first_level = first_level
+        self.second_started = threading.Event()
+        self.second_gate = threading.Event()
+
+    def recognize(
+        self,
+        frame: CapturedFrame,
+        generation_id: int,
+    ) -> RecognitionResult:
+        marker = int(frame.bgr[0, 9, 0])
+        with self._lock:
+            self.calls.append(marker)
+            call_number = len(self.calls)
+        if call_number == 1:
+            return result_at_level(
+                generation_id,
+                frame.frame_id,
+                marker,
+                self.first_level,
+            )
+        self.second_started.set()
+        if not self.second_gate.wait(timeout=2):
+            raise TimeoutError("retry gate was not released")
+        return result(generation_id, frame.frame_id, marker)
+
+
 class RecordingExecutor:
     def __init__(self) -> None:
         self.futures: list[Future[RecognitionResult]] = []
@@ -166,8 +236,35 @@ def result(generation: int, frame_id: int, marker: int) -> RecognitionResult:
     )
 
 
+def result_at_level(
+    generation: int,
+    frame_id: int,
+    marker: int,
+    level: ConfidenceLevel,
+) -> RecognitionResult:
+    drawable = level is ConfidenceLevel.CANDIDATE
+    return RecognitionResult(
+        generation_id=generation,
+        frame_id=frame_id,
+        question_text=f"题目-{marker}",
+        option_texts=("甲", "乙", "丙", "丁"),
+        official_answer="乙",
+        question_score=72.0,
+        question_runner_up_score=60.0,
+        option_score=70.0,
+        option_runner_up_score=63.0,
+        high_confidence=False,
+        option_index=1 if drawable else None,
+        overlay_rect=LAYOUT.option_rects[1] if drawable else None,
+        timings=RecognitionTimings(1.0, 2.0, 3.0, 6.0),
+        confidence_level=level,
+        confidence_score=66.0 if drawable else 0.0,
+        confidence_reason="test_retry",
+    )
+
+
 def frame(frame_id: int, marker: int) -> CapturedFrame:
-    image = np.zeros((10, 36, 3), dtype=np.uint8)
+    image = np.zeros((12, 36, 3), dtype=np.uint8)
     # A seeded question pattern gives each marker a stable dHash.
     rng = np.random.default_rng(marker)
     image[:8, :9] = rng.integers(0, 256, size=(8, 9, 1), dtype=np.uint8)
@@ -192,8 +289,7 @@ def frame_with_option_change(
 
 def frame_with_background_change(frame_id: int, marker: int) -> CapturedFrame:
     captured = frame(frame_id, marker)
-    image = np.zeros((12, 36, 3), dtype=np.uint8)
-    image[:10] = captured.bgr
+    image = captured.bgr.copy()
     image[10:] = 255
     return CapturedFrame.create(frame_id, time.monotonic_ns(), image)
 
@@ -214,6 +310,25 @@ def make_coordinator(pipeline):
     store = RuntimeStore()
     coordinator = RecognitionCoordinator(capture, hub, detector, pipeline, store)
     return capture, hub, detector, pipeline, store, coordinator
+
+
+def test_coordinator_passes_measured_layout_to_capable_pipeline() -> None:
+    _capture, hub, detector, pipeline, store, coordinator = make_coordinator(
+        LayoutAwareImmediatePipeline()
+    )
+    coordinator.start()
+    try:
+        publish_detected(hub, detector, frame(1, 7))
+        publish_detected(hub, detector, frame(2, 7))
+        wait_until(lambda: store.snapshot().phase is RuntimePhase.ANSWERED)
+
+        assert pipeline.calls == [7]
+        assert pipeline.received_layouts == [LAYOUT]
+        assert len(pipeline.received_layout_ms) == 1
+        assert pipeline.received_layout_ms[0] >= 0.0
+        assert detector.calls == 2
+    finally:
+        coordinator.stop()
 
 
 def publish_detected(
@@ -304,21 +419,78 @@ def test_background_change_outside_all_rois_reuses_recognition() -> None:
 
 
 def test_change_in_any_option_roi_invalidates_cached_recognition() -> None:
-    _capture, hub, detector, pipeline, _store, coordinator = make_coordinator(
-        ImmediatePipeline()
+    _capture, hub, detector, pipeline, store, coordinator = make_coordinator(
+        SecondCallGatedPipeline()
     )
     coordinator.start()
     try:
         publish_detected(hub, detector, frame(1, 3))
         publish_detected(hub, detector, frame(2, 3))
-        wait_until(lambda: pipeline.calls == [3])
+        wait_until(lambda: store.snapshot().phase is RuntimePhase.ANSWERED)
+        answered = store.snapshot()
 
         publish_detected(hub, detector, frame_with_option_change(3, 3, 2))
-        publish_detected(hub, detector, frame_with_option_change(4, 3, 2))
-        wait_until(lambda: len(pipeline.calls) == 2)
+        assert pipeline.calls == [3]
+        assert store.snapshot().generation_id == answered.generation_id
+        assert store.snapshot().overlay == answered.overlay
 
+        publish_detected(hub, detector, frame_with_option_change(4, 3, 2))
+        assert pipeline.second_started.wait(timeout=0.5)
+        while_relocating = store.snapshot()
+        assert while_relocating.generation_id == answered.generation_id
+        assert while_relocating.phase is RuntimePhase.ANSWERED
+        assert while_relocating.overlay == answered.overlay
+
+        pipeline.second_gate.set()
+        wait_until(lambda: store.snapshot().frame_id == 4)
         assert pipeline.calls == [3, 3]
+        assert store.snapshot().generation_id == answered.generation_id
     finally:
+        pipeline.second_gate.set()
+        coordinator.stop()
+
+
+@pytest.mark.parametrize(
+    ("first_level", "first_phase"),
+    [
+        (ConfidenceLevel.NONE, RuntimePhase.UNCERTAIN),
+        (ConfidenceLevel.CANDIDATE, RuntimePhase.CANDIDATE),
+    ],
+)
+def test_uncertain_results_retry_without_clearing_candidate_overlay(
+    first_level: ConfidenceLevel,
+    first_phase: RuntimePhase,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(coordinator_module, "_RECOGNITION_RETRY_SECONDS", 0.04)
+    _capture, hub, detector, pipeline, store, coordinator = make_coordinator(
+        RetryingPipeline(first_level)
+    )
+    coordinator.start()
+    try:
+        publish_detected(hub, detector, frame(1, 13))
+        publish_detected(hub, detector, frame(2, 13))
+        wait_until(lambda: store.snapshot().phase is first_phase)
+        first = store.snapshot()
+
+        publish_detected(hub, detector, frame(3, 13))
+        time.sleep(0.01)
+        assert pipeline.calls == [13]
+
+        time.sleep(0.04)
+        publish_detected(hub, detector, frame(4, 13))
+        assert pipeline.second_started.wait(timeout=0.5)
+        retrying = store.snapshot()
+        assert retrying.generation_id == first.generation_id
+        assert retrying.phase is first_phase
+        assert retrying.overlay == first.overlay
+
+        pipeline.second_gate.set()
+        wait_until(lambda: store.snapshot().phase is RuntimePhase.ANSWERED)
+        assert pipeline.calls == [13, 13]
+        assert store.snapshot().generation_id == first.generation_id
+    finally:
+        pipeline.second_gate.set()
         coordinator.stop()
 
 
@@ -553,7 +725,7 @@ def test_worker_timeout_still_shuts_down_executor_and_cancels_pending() -> None:
         coordinator.stop(timeout=0.5)
 
 
-def test_layout_disappearance_publishes_clear_within_100ms() -> None:
+def test_short_layout_disappearance_preserves_overlay_then_persistent_loss_clears() -> None:
     _capture, hub, detector, _pipeline, store, coordinator = make_coordinator(
         ImmediatePipeline()
     )
@@ -564,11 +736,24 @@ def test_layout_disappearance_publishes_clear_within_100ms() -> None:
         wait_until(lambda: store.snapshot().phase is RuntimePhase.ANSWERED)
 
         detector.present = False
-        changed_at = time.monotonic()
         publish_detected(hub, detector, frame(3, 5))
+        transient = store.snapshot()
+        assert transient.phase is RuntimePhase.ANSWERED
+        assert transient.overlay is not None
+
+        time.sleep(0.05)
+        detector.present = True
+        publish_detected(hub, detector, frame(4, 5))
+        assert store.snapshot().generation_id == transient.generation_id
+        assert store.snapshot().overlay == transient.overlay
+
+        detector.present = False
+        changed_at = time.monotonic()
+        publish_detected(hub, detector, frame(5, 5))
         wait_until(lambda: store.snapshot().phase is RuntimePhase.MONITORING)
 
-        assert time.monotonic() - changed_at < 0.1
+        elapsed = time.monotonic() - changed_at
+        assert 0.12 <= elapsed < 0.35
         assert store.snapshot().overlay is None
         assert store.snapshot().clear_monotonic_ns is not None
     finally:
@@ -612,6 +797,53 @@ def test_layout_coordinate_change_clears_and_invalidates_cached_answer() -> None
         coordinator.stop()
 
 
+def test_layout_profile_change_clears_immediately() -> None:
+    _capture, hub, detector, _pipeline, store, coordinator = make_coordinator(
+        ImmediatePipeline()
+    )
+    coordinator.start()
+    try:
+        publish_detected(hub, detector, frame(1, 6))
+        publish_detected(hub, detector, frame(2, 6))
+        wait_until(lambda: store.snapshot().phase is RuntimePhase.ANSWERED)
+        detector.layout = DetectedLayout(
+            question_rect=LAYOUT.question_rect,
+            option_rects=LAYOUT.option_rects,
+            anchor_scores=LAYOUT.anchor_scores,
+            profile_name="other-profile",
+        )
+
+        publish_detected(hub, detector, frame(3, 6))
+        wait_until(lambda: store.snapshot().message == "layout_changed")
+        assert store.snapshot().overlay is None
+    finally:
+        coordinator.stop()
+
+
+def test_frame_resolution_change_clears_immediately() -> None:
+    _capture, hub, detector, _pipeline, store, coordinator = make_coordinator(
+        ImmediatePipeline()
+    )
+    coordinator.start()
+    try:
+        publish_detected(hub, detector, frame(1, 6))
+        publish_detected(hub, detector, frame(2, 6))
+        wait_until(lambda: store.snapshot().phase is RuntimePhase.ANSWERED)
+        original = frame(3, 6)
+        resized = np.zeros((13, original.bgr.shape[1], 3), dtype=np.uint8)
+        resized[: original.bgr.shape[0]] = original.bgr
+
+        publish_detected(
+            hub,
+            detector,
+            CapturedFrame.create(3, time.monotonic_ns(), resized),
+        )
+        wait_until(lambda: store.snapshot().message == "layout_changed")
+        assert store.snapshot().overlay is None
+    finally:
+        coordinator.stop()
+
+
 def test_initial_missing_layout_publishes_clear_transition() -> None:
     _capture, hub, detector, _pipeline, store, coordinator = make_coordinator(
         ImmediatePipeline()
@@ -620,6 +852,8 @@ def test_initial_missing_layout_publishes_clear_transition() -> None:
     coordinator.start()
     try:
         publish_detected(hub, detector, frame(1, 7))
+        assert store.snapshot().message is None
+        wait_until(lambda: store.snapshot().message == "dialog_missing")
 
         snapshot = store.snapshot()
         assert snapshot.phase is RuntimePhase.MONITORING

@@ -12,7 +12,7 @@ from xyq_quiz.capture.models import CapturedFrame, Rect
 from xyq_quiz.knowledge.matcher import QuestionMatcher
 from xyq_quiz.knowledge.models import OptionMatch, QuestionMatch, QuestionRecord
 from xyq_quiz.knowledge.store import QuestionBank
-from xyq_quiz.recognition.models import DetectedLayout, OCRText
+from xyq_quiz.recognition.models import ConfidenceLevel, DetectedLayout, OCRText
 from xyq_quiz.recognition.ocr import OCRRole
 from xyq_quiz.recognition.pipeline import RecognitionPipeline
 
@@ -23,8 +23,10 @@ FIXTURE_PATH = Path(__file__).parents[1] / "fixtures" / "questions-small.json"
 class FakeLayoutDetector:
     def __init__(self, layout: DetectedLayout | None) -> None:
         self.layout = layout
+        self.calls = 0
 
     def detect(self, _image: np.ndarray) -> DetectedLayout | None:
+        self.calls += 1
         return self.layout
 
 
@@ -92,6 +94,38 @@ class RoleAwareMarkerOCR(MarkerOCR):
         return super().recognize(image)
 
 
+class ScriptedRoleOCR:
+    def __init__(
+        self,
+        question_outputs: Sequence[str],
+        option_outputs: Sequence[str],
+    ) -> None:
+        self.question_outputs = list(question_outputs)
+        self.option_outputs = list(option_outputs)
+        self.roles: list[OCRRole] = []
+        self.raw_shapes: list[tuple[int, ...]] = []
+
+    def recognize(self, _image: np.ndarray) -> OCRText:
+        raise AssertionError("role-aware path expected")
+
+    def recognize_region(
+        self,
+        image: np.ndarray,
+        role: OCRRole,
+        *,
+        fallback_image: np.ndarray,
+    ) -> OCRText:
+        del fallback_image
+        self.roles.append(role)
+        self.raw_shapes.append(image.shape)
+        outputs = (
+            self.question_outputs if role is OCRRole.QUESTION else self.option_outputs
+        )
+        if not outputs:
+            raise AssertionError(f"unexpected {role.value} OCR call")
+        return OCRText(outputs.pop(0), 0.96, 1.0)
+
+
 class AliasMatcher:
     def __init__(self, answer: str, mapped: Mapping[str, int]) -> None:
         self.record = QuestionRecord("alias", "别名题", answer, "别名题")
@@ -139,6 +173,27 @@ class ReplacingMatcher(AliasMatcher):
         if self.release is not None and not self.release.wait(timeout=2):
             raise TimeoutError("matcher was not released")
         return result
+
+
+class CandidateMatcher(AliasMatcher):
+    def unique_option_candidate(
+        self,
+        _question: QuestionMatch,
+        _options: Sequence[str],
+        *,
+        score_cutoff: float,
+        minimum_gap: float,
+    ) -> OptionMatch:
+        assert score_cutoff < 80
+        assert minimum_gap > 0
+        return OptionMatch(78.0, 60.0, 1)
+
+    def is_high_confidence(
+        self,
+        question: QuestionMatch | None,
+        option: OptionMatch | None,
+    ) -> bool:
+        return False
 
 
 @pytest.fixture
@@ -190,6 +245,27 @@ def test_pipeline_default_uses_one_executor_thread_for_all_five_crops(
     assert result.timings.ocr_ms >= 0
     assert result.timings.match_ms >= 0
     assert result.timings.total_ms >= result.timings.ocr_ms
+
+
+def test_pipeline_uses_pre_detected_layout_without_detecting_again(
+    layout: DetectedLayout,
+    frame: CapturedFrame,
+) -> None:
+    matcher = QuestionMatcher(QuestionBank.load(FIXTURE_PATH), 92, 5, 90)
+    ocr = MarkerOCR(
+        {1: "梦幻西游中有多少个种族", 2: "2", 3: "3", 4: "4", 5: "5"}
+    )
+    detector = FakeLayoutDetector(layout)
+    pipeline = RecognitionPipeline(detector, ocr, matcher)
+    try:
+        result = pipeline.recognize_with_layout(frame, 4, layout, 12.5)
+    finally:
+        pipeline.close()
+
+    assert detector.calls == 0
+    assert result.high_confidence is True
+    assert result.option_index == 1
+    assert result.timings.layout_ms == 12.5
 
 
 def test_pipeline_recognizes_three_option_xiangshi_layout() -> None:
@@ -407,6 +483,143 @@ def test_pipeline_returns_uncertain_without_overlay(
     assert result.overlay_rect is None
 
 
+def test_question_ocr_expands_before_reading_options() -> None:
+    fallback_layout = DetectedLayout(
+        question_rect=Rect(35, 15, 110, 30),
+        option_rects=(
+            Rect(20, 65, 55, 20),
+            Rect(85, 65, 55, 20),
+            Rect(20, 95, 55, 20),
+            Rect(85, 95, 55, 20),
+        ),
+        anchor_scores=(1.0, 1.0),
+    )
+    fallback_frame = CapturedFrame.create(
+        91,
+        123_500,
+        np.zeros((120, 160, 3), dtype=np.uint8),
+    )
+    matcher = QuestionMatcher(QuestionBank.load(FIXTURE_PATH), 92, 5, 90)
+    ocr = ScriptedRoleOCR(
+        ["无法识别", "梦幻西游中有多少个种族"],
+        ["2", "3", "4", "5"],
+    )
+    pipeline = RecognitionPipeline(FakeLayoutDetector(fallback_layout), ocr, matcher)
+    try:
+        result = pipeline.recognize(fallback_frame, 21)
+    finally:
+        pipeline.close()
+
+    assert result.high_confidence is True
+    assert result.option_index == 1
+    assert ocr.roles == [OCRRole.QUESTION, OCRRole.QUESTION] + [
+        OCRRole.OPTION
+    ] * 4
+    assert ocr.raw_shapes[1][0] > ocr.raw_shapes[0][0]
+    assert len(pipeline.latest_crops()) == 5
+
+
+def test_question_ocr_uses_panel_wide_third_level() -> None:
+    fallback_layout = DetectedLayout(
+        question_rect=Rect(35, 15, 110, 30),
+        option_rects=(
+            Rect(20, 65, 55, 20),
+            Rect(85, 65, 55, 20),
+            Rect(20, 95, 55, 20),
+            Rect(85, 95, 55, 20),
+        ),
+        anchor_scores=(1.0, 1.0),
+    )
+    fallback_frame = CapturedFrame.create(
+        92,
+        123_501,
+        np.zeros((120, 160, 3), dtype=np.uint8),
+    )
+    matcher = QuestionMatcher(QuestionBank.load(FIXTURE_PATH), 92, 5, 90)
+    ocr = ScriptedRoleOCR(
+        ["无法识别", "仍然无法识别", "梦幻西游中有多少个种族"],
+        ["2", "3", "4", "5"],
+    )
+    pipeline = RecognitionPipeline(FakeLayoutDetector(fallback_layout), ocr, matcher)
+    try:
+        result = pipeline.recognize(fallback_frame, 22)
+    finally:
+        pipeline.close()
+
+    assert result.high_confidence is True
+    assert ocr.roles[:3] == [OCRRole.QUESTION] * 3
+    assert ocr.raw_shapes[2][1] > ocr.raw_shapes[1][1]
+
+
+def test_unmatched_question_skips_all_option_ocr() -> None:
+    fallback_layout = DetectedLayout(
+        question_rect=Rect(35, 15, 110, 30),
+        option_rects=(
+            Rect(20, 65, 55, 20),
+            Rect(85, 65, 55, 20),
+            Rect(20, 95, 55, 20),
+            Rect(85, 95, 55, 20),
+        ),
+        anchor_scores=(1.0, 1.0),
+    )
+    fallback_frame = CapturedFrame.create(
+        93,
+        123_502,
+        np.zeros((120, 160, 3), dtype=np.uint8),
+    )
+    matcher = QuestionMatcher(QuestionBank.load(FIXTURE_PATH), 92, 5, 90)
+    ocr = ScriptedRoleOCR(["无法识别", "无效文本", "还是没有"], [])
+    pipeline = RecognitionPipeline(FakeLayoutDetector(fallback_layout), ocr, matcher)
+    try:
+        result = pipeline.recognize(fallback_frame, 23)
+    finally:
+        pipeline.close()
+
+    assert ocr.roles == [OCRRole.QUESTION] * 3
+    assert result.confidence_level is ConfidenceLevel.NONE
+    assert result.option_texts == ("", "", "", "")
+    assert result.overlay_rect is None
+    # Saved diagnostics still contain the attempted question crop and all
+    # option regions even though the option regions were not sent to OCR.
+    assert len(pipeline.latest_crops()) == 5
+
+
+def test_unique_lower_score_option_is_exposed_as_candidate_overlay(
+    layout: DetectedLayout,
+    frame: CapturedFrame,
+) -> None:
+    matcher = CandidateMatcher("3", {})
+    ocr = MarkerOCR({1: "候选题", 2: "2", 3: "3", 4: "4", 5: "5"})
+    pipeline = RecognitionPipeline(FakeLayoutDetector(layout), ocr, matcher)
+    try:
+        result = pipeline.recognize(frame, 24)
+    finally:
+        pipeline.close()
+
+    assert result.high_confidence is False
+    assert result.confidence_level is ConfidenceLevel.CANDIDATE
+    assert result.option_index == 1
+    assert result.overlay_rect == layout.option_rects[1]
+    assert 0 < result.confidence_score < 100
+
+
+def test_literal_ascii_comma_answer_is_tried_before_legacy_aliases(
+    layout: DetectedLayout,
+    frame: CapturedFrame,
+) -> None:
+    matcher = AliasMatcher("3,36", {"3,36": 2})
+    ocr = MarkerOCR({1: "复合答案题", 2: "2", 3: "3", 4: "3,36", 5: "36"})
+    pipeline = RecognitionPipeline(FakeLayoutDetector(layout), ocr, matcher)
+    try:
+        result = pipeline.recognize(frame, 25)
+    finally:
+        pipeline.close()
+
+    assert matcher.map_calls == ["3,36"]
+    assert result.high_confidence is True
+    assert result.option_index == 2
+
+
 def test_ascii_comma_aliases_must_converge_on_one_option(
     layout: DetectedLayout,
     frame: CapturedFrame,
@@ -419,7 +632,7 @@ def test_ascii_comma_aliases_must_converge_on_one_option(
     finally:
         pipeline.close()
 
-    assert matcher.map_calls == ["蝎子", "蝎子精"]
+    assert matcher.map_calls == [" 蝎子, ,蝎子精 ", "蝎子", "蝎子精"]
     assert result.high_confidence is True
     assert result.option_index == 1
     assert result.overlay_rect == layout.option_rects[1]
@@ -437,7 +650,7 @@ def test_ascii_comma_aliases_mapping_to_different_options_are_uncertain(
     finally:
         pipeline.close()
 
-    assert matcher.map_calls == ["蝎子", "蝎子精"]
+    assert matcher.map_calls == ["蝎子,蝎子精", "蝎子", "蝎子精"]
     assert result.high_confidence is False
     assert result.option_index is None
     assert result.overlay_rect is None
@@ -455,7 +668,7 @@ def test_ascii_comma_aliases_all_failing_are_uncertain(
     finally:
         pipeline.close()
 
-    assert matcher.map_calls == ["蝎子", "蝎子精"]
+    assert matcher.map_calls == ["蝎子,蝎子精", "蝎子", "蝎子精"]
     assert result.high_confidence is False
     assert result.option_index is None
     assert result.overlay_rect is None

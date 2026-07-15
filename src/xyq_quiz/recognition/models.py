@@ -1,9 +1,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import StrEnum
+import math
 from pathlib import Path
 
 from xyq_quiz.capture.models import Rect
+
+
+class ConfidenceLevel(StrEnum):
+    """Presentation-safe recognition confidence tiers.
+
+    ``confidence_score`` is a relative 0-100 score used for display and
+    ranking.  It is deliberately not described as a probability.
+    """
+
+    NONE = "NONE"
+    CANDIDATE = "CANDIDATE"
+    HIGH = "HIGH"
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,3 +92,31 @@ class RecognitionResult:
     overlay_rect: Rect | None
     timings: RecognitionTimings
     source_id: str | None = None
+    confidence_level: ConfidenceLevel = ConfidenceLevel.NONE
+    confidence_score: float | None = None
+    confidence_reason: str | None = None
+
+    def __post_init__(self) -> None:
+        # Preserve compatibility with callers that only know the v0.1
+        # ``high_confidence`` flag.  New callers can express a drawable, lower
+        # confidence candidate without setting that legacy flag.
+        level = self.confidence_level
+        if not isinstance(level, ConfidenceLevel):
+            level = ConfidenceLevel(level)
+        if self.high_confidence:
+            level = ConfidenceLevel.HIGH
+        elif level is ConfidenceLevel.HIGH:
+            object.__setattr__(self, "high_confidence", True)
+        object.__setattr__(self, "confidence_level", level)
+
+        score = self.confidence_score
+        if score is None:
+            score = (
+                min(self.question_score, self.option_score)
+                if level is not ConfidenceLevel.NONE
+                else 0.0
+            )
+        score = float(score)
+        if not math.isfinite(score) or not 0.0 <= score <= 100.0:
+            raise ValueError("confidence_score must be finite and between 0 and 100")
+        object.__setattr__(self, "confidence_score", score)

@@ -24,6 +24,9 @@
           <div class="wide"><dt>官方答案</dt><dd id="answer">—</dd></div>
           <div><dt>题目分数</dt><dd id="questionScore">—</dd></div>
           <div><dt>选项分数</dt><dd id="optionScore">—</dd></div>
+          <div><dt>定位状态</dt><dd id="confidenceLevel" data-level="NONE">未定位</dd></div>
+          <div><dt>综合可信评分</dt><dd id="confidenceScore">0/100</dd></div>
+          <div class="wide"><dt>可信说明</dt><dd id="confidenceReason">—</dd></div>
           <div class="wide"><dt>耗时</dt><dd id="timings">—</dd></div>
         </dl>
         <div class="actions">
@@ -32,6 +35,46 @@
           <button id="environmentDiagnosticsButton" type="button" class="secondary" disabled>导出环境诊断</button>
           <button id="shutdownButton" type="button" class="secondary" disabled>退出程序</button>
         </div>
+        <details class="local-bank-panel">
+          <summary>本地补题 <span id="localQuestionCount">0 条</span></summary>
+          <p class="panel-help">仅保存在本机 user-data，不会随诊断文件或发布包导出。</p>
+          <p id="localQuestionError" class="panel-error" role="alert"></p>
+          <form id="localQuestionForm">
+            <input id="localQuestionId" type="hidden">
+            <label>
+              模式
+              <select id="localQuestionMode">
+                <option value="supplement">补充题目</option>
+                <option value="override">覆盖官方答案</option>
+              </select>
+            </label>
+            <label id="localQuestionTargetField" hidden>
+              官方 source_id（可留空按题目自动匹配）
+              <input id="localQuestionTarget" type="text" autocomplete="off">
+            </label>
+            <label>
+              题目
+              <textarea id="localQuestionText" rows="3" required></textarea>
+            </label>
+            <label>
+              答案
+              <input id="localQuestionAnswer" type="text" required autocomplete="off">
+            </label>
+            <label>
+              答案别名（每行一个）
+              <textarea id="localQuestionAliases" rows="2"></textarea>
+            </label>
+            <label class="checkbox-label">
+              <input id="localQuestionEnabled" type="checkbox" checked>
+              启用此题
+            </label>
+            <div class="local-form-actions">
+              <button id="localQuestionSave" type="submit" disabled>保存本地题目</button>
+              <button id="localQuestionCancel" type="button" class="secondary" hidden>取消编辑</button>
+            </div>
+          </form>
+          <div id="localQuestionList" class="local-question-list" aria-live="polite"></div>
+        </details>
         <p id="errorMessage" role="alert"></p>
       </aside>
     </main>

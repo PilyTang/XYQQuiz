@@ -24,6 +24,7 @@ release/
 config.json
 diagnostics/
 logs/
+user-data/
 state-backups/
 .config-*.tmp
 .data-*.tmp

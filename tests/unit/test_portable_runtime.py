@@ -31,6 +31,8 @@ def test_frozen_paths_use_executable_root_and_internal_bundle(tmp_path: Path) ->
     assert paths.default_config_path == app_root / "_internal" / "defaults" / "config.json"
     assert paths.config_path == app_root / "config.json"
     assert paths.data_dir == app_root / "data"
+    assert paths.user_data_dir == app_root / "user-data"
+    assert paths.local_questions_path == app_root / "user-data" / "questions.json"
 
 
 def test_source_paths_do_not_depend_on_current_working_directory(tmp_path: Path) -> None:
@@ -61,6 +63,7 @@ def test_missing_portable_state_is_seeded_without_overwriting_existing_state(
     initialize_portable_state(paths)
     assert paths.config_path.read_text("utf-8") == '{"schema_version":1}'
     assert (paths.data_dir / "current.json").is_file()
+    assert paths.user_data_dir.is_dir()
     assert paths.logs_dir.is_dir()
     assert paths.diagnostics_dir.is_dir()
 

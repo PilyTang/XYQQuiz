@@ -1,23 +1,26 @@
 # XYQQuiz
 
-XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》科举答题辅助显示工具。它通过 Windows Graphics Capture 读取游戏窗口，在浏览器里显示实时预览，并在题目、题库答案和选项都达到高置信度时框出答案。
+XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》科举答题辅助显示工具。它通过 Windows Graphics Capture 读取游戏窗口，在浏览器里显示实时预览，并根据题目、题库答案和选项的综合评分框出候选答案。
 
 > 本项目不会自动点击、不会向游戏发送输入、不会读取游戏进程内存，也不会注入游戏或在游戏窗口内绘制。请自行确认并遵守游戏规则。
 
 ## 功能
 
 - 自动寻找 `mhtab.exe` / `MHXYMainFrame` 游戏窗口并显示本地实时预览。
-- OCR 识别题目和 3～4 个选项，使用内置离线科举题库匹配答案。
-- 兼容普通文字题、图片题、不同题面高度和多种窗口分辨率。
-- 只在高置信度匹配时显示答案框；信息不足时保持无框状态。
+- 先独立识别题目，再定位 3～4 个选项，使用内置离线科举题库匹配答案。
+- 布局分析可按分辨率自适应缩放，预览和 OCR 仍使用原始画面。
+- 题目 OCR 按精确区域、扩展区域和面板题目带逐级容错；题面不可信时不会盲目识别选项。
+- 通过时间连续性保留同题状态、短暂容忍布局抖动，并对候选结果定时重试。
+- 候选框按综合评分由绿色渐变到红色：低评分为半透明虚线，高评分为较粗实线；评分不是正确概率。
+- 支持本地补题和答案修正，本地数据与官方题库分开保存在 `user-data\questions.json`。
 - 支持单实例启动、端口冲突提示、题库原子更新和一键退出。
 - 可按需保存识别诊断或不含游戏画面的环境诊断。
 
-当前版本为 `0.1.0`。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。会试和殿试已有实际界面适配，乡试仅做了兼容性实现，仍缺少活动现场回归。
+当前版本为 `0.2.0`。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。目前以科举主流程的实际活动验证为准；乡试和殿试只有兼容性实现与有限样本验证，不承诺已经覆盖全部现场界面，仍需后续活动回归。
 
 ## 直接使用 Windows 便携版
 
-1. 从 GitHub Releases 下载 `XYQQuiz-v0.1.0-win10-win11-x64.zip` 和同名 `.sha256`。
+1. 从 GitHub Releases 下载 `XYQQuiz-v0.2.0-win10-win11-x64.zip` 和同名 `.sha256`。
 2. 完整解压到一个新目录，不要直接在压缩包里运行。
 3. 双击 `XYQQuiz.exe`，首次捕获时允许 UAC 管理员权限请求。
 4. 等待浏览器自动打开；游戏题面出现后，答案框会显示在网页预览中。
@@ -34,6 +37,7 @@ XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》科举答题辅助
 - “保存识别诊断”包含当前完整游戏画面、题目/选项裁剪、识别状态和日志尾部。点击前会显示隐私确认；分享前仍应自行检查角色名、聊天和其他个人信息。
 - “导出环境诊断”不包含游戏画面或题库正文，主要用于排查系统、配置和依赖问题。
 - 诊断文件只写在本地 `diagnostics\`，程序不会自动上传。
+- 本地补题只写入 `user-data\questions.json`。发布 ZIP 不预置该文件，诊断中也不会导出本地题目正文。
 
 命令行自检：
 
@@ -79,28 +83,28 @@ Copy-Item config.example.json config.json
 
 ```powershell
 .venv\Scripts\python.exe -m pip install --require-hashes -r requirements-release.txt
-.\scripts\build-release.ps1 -Version 0.1.0 -Commit working-tree -AllowDevelopmentCommit
+.\scripts\build-release.ps1 -Version 0.2.0 -Commit working-tree -AllowDevelopmentCommit
 ```
 
 正式发布构建必须从干净提交运行，并传入完整 40 位 Git SHA：
 
 ```powershell
-.\scripts\build-release.ps1 -Version 0.1.0 -Commit (git rev-parse HEAD)
+.\scripts\build-release.ps1 -Version 0.2.0 -Commit (git rev-parse HEAD)
 ```
 
-产物位于 `release\`，包括 ZIP 和 SHA-256 文件。GitHub 的 `v*` 标签工作流会先做公开内容审计和完整测试，再使用标签对应的真实提交 SHA 构建并创建 Release。
+产物位于 `release\`，包括 ZIP 和 SHA-256 文件。构建脚本会审计公开树和最终 ZIP，拒绝打入 `user-data\`、`diagnostics\` 或本地 `questions.json`。GitHub 的 `v*` 标签工作流会先做公开内容审计和完整测试，再使用标签对应的真实提交 SHA 构建并创建 Release。
 
 ## 更新与升级
 
 程序启动不会自动联网。网页中的“更新题库”会从公开网易科举页面获取新数据，完整校验后原子切换 generation；失败时保留当前可用题库。
 
-升级程序时请解压到全新目录，再按需复制旧目录中的 `config.json`、`data`、`logs` 和 `diagnostics`。不要把新版 EXE 或 `_internal` 覆盖到旧目录。
+升级程序时请解压到全新目录，再按需复制旧目录中的 `config.json`、`data`、`user-data`、`logs` 和 `diagnostics`。不要把新版 EXE 或 `_internal` 覆盖到旧目录。
 
 ## 已知限制
 
 - 游戏 UI、字体、DPI、动画遮挡或极端分辨率变化可能导致识别失败。
 - 题目不在题库、OCR 置信度不足，或正确答案无法和选项唯一匹配时，可能已显示 OCR 题目但不会画框；这是预期的安全降级。
-- 乡试尚未完成活动现场验证。
+- 乡试和殿试尚未完成覆盖全部界面的活动现场验证；当前发布承诺以已经实际验证的科举主流程为准。
 - 首版没有代码签名，Windows SmartScreen 可能显示“未知发布者”。请只从项目 Release 下载并核对 SHA-256，不要全局关闭安全软件。
 
 ## 许可证与第三方内容

@@ -18,6 +18,7 @@ from xyq_quiz.recognition.layout import (
     LayoutProfile,
     MultiProfileLayoutDetector,
     PanelGeometryLayoutDetector,
+    ResolutionAdaptiveLayoutDetector,
     TemplateLayoutDetector,
     build_layout_detector,
 )
@@ -237,6 +238,154 @@ class _ScoredDetector:
         )
 
 
+class _RecordingLayoutDetector:
+    def __init__(self) -> None:
+        self.frames: list[np.ndarray] = []
+
+    def detect(self, frame: np.ndarray) -> DetectedLayout:
+        self.frames.append(frame)
+        height, width = frame.shape[:2]
+        return DetectedLayout(
+            question_rect=Rect(100, 50, 200, 100),
+            option_rects=(
+                Rect(0, 0, 1, 1),
+                Rect(width - 1, 0, 1, 1),
+                Rect(0, height - 1, 1, 1),
+                Rect(width - 1, height - 1, 1, 1),
+            ),
+            anchor_scores=(0.99,),
+            profile_name="recording",
+        )
+
+
+@pytest.mark.parametrize(
+    ("source_size", "analysis_size", "expected_question"),
+    [
+        ((3840, 2160), (1600, 900), Rect(240, 120, 480, 240)),
+        ((2560, 1600), (1600, 1000), Rect(160, 80, 320, 160)),
+        ((3440, 1440), (1600, 670), Rect(215, 107, 430, 216)),
+    ],
+)
+def test_resolution_adaptive_detector_scales_analysis_and_restores_coordinates(
+    source_size: tuple[int, int],
+    analysis_size: tuple[int, int],
+    expected_question: Rect,
+) -> None:
+    source_width, source_height = source_size
+    analysis_width, analysis_height = analysis_size
+    frame = np.zeros((source_height, source_width, 3), dtype=np.uint8)
+    inner = _RecordingLayoutDetector()
+
+    layout = ResolutionAdaptiveLayoutDetector(inner).detect(frame)
+
+    assert layout is not None
+    assert inner.frames[0].shape == (analysis_height, analysis_width, 3)
+    assert layout.question_rect == expected_question
+    assert layout.profile_name == "recording"
+    assert layout.anchor_scores == (0.99,)
+    for rect in (layout.question_rect, *layout.option_rects):
+        assert 0 <= rect.x < source_width
+        assert 0 <= rect.y < source_height
+        assert rect.x + rect.width <= source_width
+        assert rect.y + rect.height <= source_height
+    assert layout.option_rects[-1].x + layout.option_rects[-1].width == source_width
+    assert layout.option_rects[-1].y + layout.option_rects[-1].height == source_height
+
+
+def test_resolution_adaptive_detector_keeps_native_frame_without_copy() -> None:
+    frame = np.zeros((900, 1600, 3), dtype=np.uint8)
+    inner = _RecordingLayoutDetector()
+
+    layout = ResolutionAdaptiveLayoutDetector(inner).detect(frame)
+
+    assert layout is not None
+    assert inner.frames == [frame]
+    assert inner.frames[0] is frame
+    assert layout.question_rect == Rect(100, 50, 200, 100)
+
+
+def test_resolution_adaptive_detector_keeps_one_pixel_analysis_height_safe() -> None:
+    class FullFrameDetector:
+        def detect(self, frame: np.ndarray) -> DetectedLayout:
+            height, width = frame.shape[:2]
+            rect = Rect(0, 0, width, height)
+            return DetectedLayout(rect, (rect,) * 4, (1.0,), "full-frame")
+
+    frame = np.zeros((1, 3200, 3), dtype=np.uint8)
+
+    layout = ResolutionAdaptiveLayoutDetector(FullFrameDetector()).detect(frame)
+
+    assert layout is not None
+    assert layout.question_rect == Rect(0, 0, 3200, 1)
+    assert layout.option_rects == (Rect(0, 0, 3200, 1),) * 4
+
+
+@pytest.mark.parametrize(
+    "source_size",
+    [
+        (2560, 1440),
+        (3440, 1440),
+        (3840, 2160),
+    ],
+)
+def test_resolution_adaptive_panel_geometry_survives_high_resolution(
+    source_size: tuple[int, int],
+) -> None:
+    source_width, source_height = source_size
+    base_boxes = (
+        (390, 420, 190, 55),
+        (590, 420, 190, 55),
+        (390, 510, 190, 55),
+        (590, 510, 190, 55),
+    )
+    boxes = tuple(
+        (
+            round(x * source_width / 1000),
+            round(y * source_height / 800),
+            round(width * source_width / 1000),
+            round(height * source_height / 800),
+        )
+        for x, y, width, height in base_boxes
+    )
+    frame = np.zeros((source_height, source_width, 3), dtype=np.uint8)
+    for x, y, width, height in boxes:
+        frame[y : y + height, x : x + width] = (236, 215, 213)
+
+    layout = ResolutionAdaptiveLayoutDetector(
+        PanelGeometryLayoutDetector()
+    ).detect(frame)
+
+    assert layout is not None
+    assert len(layout.option_rects) == 4
+    for actual, expected in zip(layout.option_rects, boxes, strict=True):
+        x, y, width, height = expected
+        assert actual.x + actual.width / 2 == pytest.approx(
+            x + width / 2,
+            abs=max(4, source_width * 0.003),
+        )
+        assert actual.y + actual.height / 2 == pytest.approx(
+            y + height / 2,
+            abs=max(4, source_height * 0.003),
+        )
+
+
+@pytest.mark.parametrize(
+    "frame",
+    [
+        np.zeros((0, 3200, 3), dtype=np.uint8),
+        np.zeros((100,), dtype=np.uint8),
+    ],
+)
+def test_resolution_adaptive_detector_rejects_empty_or_invalid_frames(
+    frame: np.ndarray,
+) -> None:
+    class RejectDetector:
+        def detect(self, _frame: np.ndarray) -> None:
+            raise AssertionError("invalid frame must not reach the inner detector")
+
+    assert ResolutionAdaptiveLayoutDetector(RejectDetector()).detect(frame) is None
+
+
 def test_multi_profile_rejects_failed_profile_and_selects_best_total_score() -> None:
     detector = MultiProfileLayoutDetector(
         (
@@ -304,14 +453,14 @@ def test_multi_profile_accepts_quality_gap_at_configured_margin() -> None:
     assert layout.profile_name == "best"
 
 
-def test_single_profile_builder_keeps_template_detector_compatibility(
+def test_single_profile_builder_keeps_native_size_detection_compatibility(
     tmp_path: Path,
 ) -> None:
     profile_path, frame = _write_profile(tmp_path)
 
     detector = build_layout_detector((LayoutProfile.load(profile_path),))
 
-    assert isinstance(detector, TemplateLayoutDetector)
+    assert isinstance(detector, ResolutionAdaptiveLayoutDetector)
     assert detector.detect(frame) is not None
 
 

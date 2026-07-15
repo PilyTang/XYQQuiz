@@ -46,6 +46,8 @@ from xyq_quiz.capture.hub import LatestFrameHub
 from xyq_quiz.capture.service import CaptureService
 from xyq_quiz.config import AppConfig
 from xyq_quiz.diagnostics import DiagnosticWriter, EnvironmentDiagnosticWriter
+from xyq_quiz.knowledge.knowledge import load_knowledge_snapshot
+from xyq_quiz.knowledge.local import LocalQuestionStore
 from xyq_quiz.knowledge.matcher import QuestionMatcher
 from xyq_quiz.knowledge.updater import QuestionBankUpdater, load_current_generation
 from xyq_quiz.recognition.layout import (
@@ -352,10 +354,16 @@ def build_services(
     layout_profiles = validate_recognition_asset_bundle(
         config.effective_layout_paths
     )
+    paths = runtime_paths or RuntimePaths.discover()
     current = load_current_generation(config.data_dir)
+    local_question_store = LocalQuestionStore(paths.local_questions_path)
+    knowledge = load_knowledge_snapshot(
+        current.question_bank,
+        local_question_store,
+    )
     match = config.match
     matcher = QuestionMatcher(
-        current.question_bank,
+        knowledge.bank,
         match.question_score,
         match.question_gap,
         match.option_score,
@@ -376,7 +384,6 @@ def build_services(
         pipeline,
         runtime,
     )
-    paths = runtime_paths or RuntimePaths.discover()
     return Services(
         hub=hub,
         runtime=runtime,
@@ -385,6 +392,9 @@ def build_services(
         pipeline=pipeline,
         updater=QuestionBankUpdater(config.data_dir),
         match_config=config.match,
+        local_question_store=local_question_store,
+        official_bank=current.question_bank,
+        official_metadata=current.metadata,
         diagnostic_writer=DiagnosticWriter(
             config.diagnostics_dir,
             log_path=config.log_path,
@@ -397,7 +407,10 @@ def build_services(
             log_path=config.log_path,
         ),
         diagnostic_config=config,
-        diagnostic_metadata=current.metadata,
+        diagnostic_metadata=Services.diagnostic_metadata_for(
+            current.metadata,
+            knowledge,
+        ),
     )
 
 

@@ -5,7 +5,11 @@ from enum import StrEnum
 import threading
 import time
 
-from xyq_quiz.recognition.models import RecognitionResult, RecognitionTimings
+from xyq_quiz.recognition.models import (
+    ConfidenceLevel,
+    RecognitionResult,
+    RecognitionTimings,
+)
 
 
 class RuntimePhase(StrEnum):
@@ -13,6 +17,7 @@ class RuntimePhase(StrEnum):
     MONITORING = "MONITORING"
     RECOGNIZING = "RECOGNIZING"
     ANSWERED = "ANSWERED"
+    CANDIDATE = "CANDIDATE"
     UNCERTAIN = "UNCERTAIN"
     CAPTURE_EMPTY = "CAPTURE_EMPTY"
     ERROR = "ERROR"
@@ -35,6 +40,9 @@ class RuntimeSnapshot:
     high_confidence: bool = False
     option_index: int | None = None
     overlay: tuple[float, float, float, float] | None = None
+    confidence_level: ConfidenceLevel = ConfidenceLevel.NONE
+    confidence_score: float = 0.0
+    confidence_reason: str | None = None
     timings: RecognitionTimings | None = None
     message: str | None = None
     clear_monotonic_ns: int | None = None
@@ -96,23 +104,34 @@ class RuntimeStore:
             if generation_id != self._snapshot.generation_id:
                 return False
             overlay = None
-            answered = (
-                result.high_confidence
+            drawable = (
+                result.confidence_level
+                in {ConfidenceLevel.CANDIDATE, ConfidenceLevel.HIGH}
                 and result.option_index is not None
                 and result.overlay_rect is not None
                 and self._frame_size is not None
             )
-            if answered:
+            if drawable:
                 frame_width, frame_height = self._frame_size
                 overlay = result.overlay_rect.normalized(frame_width, frame_height)
+            high_confidence = (
+                drawable and result.confidence_level is ConfidenceLevel.HIGH
+            )
+            confidence_level = (
+                result.confidence_level if drawable else ConfidenceLevel.NONE
+            )
             self._publish_locked(
                 replace(
                     self._snapshot,
                     frame_id=result.frame_id,
                     phase=(
                         RuntimePhase.ANSWERED
-                        if answered
-                        else RuntimePhase.UNCERTAIN
+                        if high_confidence
+                        else (
+                            RuntimePhase.CANDIDATE
+                            if drawable
+                            else RuntimePhase.UNCERTAIN
+                        )
                     ),
                     question_text=result.question_text,
                     option_texts=result.option_texts,
@@ -121,9 +140,16 @@ class RuntimeStore:
                     question_runner_up_score=result.question_runner_up_score,
                     option_score=result.option_score,
                     option_runner_up_score=result.option_runner_up_score,
-                    high_confidence=answered,
-                    option_index=result.option_index if answered else None,
+                    high_confidence=high_confidence,
+                    option_index=result.option_index if drawable else None,
                     overlay=overlay,
+                    confidence_level=confidence_level,
+                    confidence_score=(
+                        float(result.confidence_score)
+                        if result.confidence_score is not None
+                        else 0.0
+                    ),
+                    confidence_reason=result.confidence_reason,
                     timings=result.timings,
                     message=None,
                 )
@@ -199,6 +225,9 @@ class RuntimeStore:
                     overlay=None,
                     high_confidence=False,
                     option_index=None,
+                    confidence_level=ConfidenceLevel.NONE,
+                    confidence_score=0.0,
+                    confidence_reason=message,
                     message=message,
                 )
             )

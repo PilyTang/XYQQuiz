@@ -9,6 +9,7 @@ from xyq_quiz.recognition.models import DetectedLayout
 from xyq_quiz.runtime.coordinator import (
     _quiz_cache_identity,
     _quiz_stability_signature,
+    _same_question_signature,
     _same_quiz_identity,
 )
 
@@ -146,3 +147,59 @@ def test_stability_signature_is_stable_under_light_jpeg_compression() -> None:
         original,
         LAYOUT,
     ) == _quiz_stability_signature(compressed, LAYOUT)
+
+
+@pytest.mark.parametrize("option_index", range(4))
+def test_question_signature_ignores_option_changes(option_index: int) -> None:
+    original = _base_frame()
+    changed = _with_small_change(f"option_{option_index}")
+
+    assert _quiz_stability_signature(original, LAYOUT) == (
+        _quiz_stability_signature(changed, LAYOUT)
+    )
+    assert not _same_quiz_identity(
+        _quiz_cache_identity(original, LAYOUT),
+        _quiz_cache_identity(changed, LAYOUT),
+    )
+
+
+@pytest.mark.parametrize(
+    "region",
+    [
+        "question_digit",
+        "question_punctuation",
+        "question_stroke",
+        "question_o_to_q",
+        "question_single_pixel",
+    ],
+)
+def test_question_signature_tolerates_small_rendering_changes(region: str) -> None:
+    assert _same_question_signature(
+        _quiz_stability_signature(_base_frame(), LAYOUT),
+        _quiz_stability_signature(_with_small_change(region), LAYOUT),
+    )
+
+
+def test_question_signature_rejects_obviously_different_question() -> None:
+    original = _base_frame()
+    changed = original.copy()
+    rect = LAYOUT.question_rect
+    changed[
+        rect.y : rect.y + rect.height,
+        rect.x : rect.x + rect.width,
+    ] = (228, 224, 216)
+    cv2.putText(
+        changed,
+        "COMPLETELY DIFFERENT",
+        (310, 245),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        1.0,
+        (35, 35, 35),
+        2,
+        cv2.LINE_AA,
+    )
+
+    assert not _same_question_signature(
+        _quiz_stability_signature(original, LAYOUT),
+        _quiz_stability_signature(changed, LAYOUT),
+    )

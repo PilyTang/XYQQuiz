@@ -418,6 +418,65 @@ class _Detector(Protocol):
     def detect(self, frame: NDArray[np.uint8]) -> DetectedLayout | None: ...
 
 
+class ResolutionAdaptiveLayoutDetector:
+    """Run layout analysis on a bounded-width frame and restore native ROIs.
+
+    Only layout analysis is resized. Returned rectangles always use the source
+    frame coordinate system so OCR, previews, and overlays retain native pixels.
+    """
+
+    def __init__(
+        self,
+        detector: _Detector,
+        *,
+        max_analysis_width: int = 1600,
+    ) -> None:
+        if (
+            not isinstance(max_analysis_width, int)
+            or isinstance(max_analysis_width, bool)
+            or max_analysis_width <= 0
+        ):
+            raise ValueError("max_analysis_width must be a positive integer")
+        self._detector = detector
+        self._max_analysis_width = max_analysis_width
+
+    def detect(self, frame: NDArray[np.uint8]) -> DetectedLayout | None:
+        if frame.ndim not in (2, 3) or frame.size == 0:
+            return None
+        source_height, source_width = frame.shape[:2]
+        if source_width <= self._max_analysis_width:
+            return self._detector.detect(frame)
+
+        analysis_width = self._max_analysis_width
+        analysis_height = max(
+            1,
+            round(source_height * analysis_width / source_width),
+        )
+        analysis_frame = cv2.resize(
+            frame,
+            (analysis_width, analysis_height),
+            interpolation=cv2.INTER_AREA,
+        )
+        layout = self._detector.detect(analysis_frame)
+        if layout is None:
+            return None
+
+        def restore(rect: Rect) -> Rect:
+            return _restore_analysis_rect(
+                rect,
+                analysis_width,
+                analysis_height,
+                source_width,
+                source_height,
+            )
+
+        return replace(
+            layout,
+            question_rect=restore(layout.question_rect),
+            option_rects=tuple(restore(rect) for rect in layout.option_rects),
+        )
+
+
 class MultiProfileLayoutDetector:
     """Select the strongest complete anchor match from named layout profiles."""
 
@@ -728,6 +787,28 @@ def _clamp_rect(
     return Rect(left, top, right - left, bottom - top)
 
 
+def _restore_analysis_rect(
+    rect: Rect,
+    analysis_width: int,
+    analysis_height: int,
+    source_width: int,
+    source_height: int,
+) -> Rect:
+    scale_x = source_width / analysis_width
+    scale_y = source_height / analysis_height
+    left = min(source_width - 1, max(0, math.floor(rect.x * scale_x)))
+    top = min(source_height - 1, max(0, math.floor(rect.y * scale_y)))
+    right = min(
+        source_width,
+        max(left + 1, math.ceil((rect.x + rect.width) * scale_x)),
+    )
+    bottom = min(
+        source_height,
+        max(top + 1, math.ceil((rect.y + rect.height) * scale_y)),
+    )
+    return Rect(left, top, right - left, bottom - top)
+
+
 def _layout_quality(layout: DetectedLayout) -> float:
     average = sum(layout.anchor_scores) / len(layout.anchor_scores)
     weakest = min(layout.anchor_scores)
@@ -736,16 +817,24 @@ def _layout_quality(layout: DetectedLayout) -> float:
 
 def build_layout_detector(
     profiles: Sequence[LayoutProfile],
-) -> TemplateLayoutDetector | FallbackLayoutDetector:
+) -> ResolutionAdaptiveLayoutDetector:
     if not profiles:
         raise ValueError("at least one layout profile is required")
     if len(profiles) == 1:
-        return TemplateLayoutDetector(profiles[0])
-    return FallbackLayoutDetector(
-        PanelGeometryLayoutDetector(),
-        MultiProfileLayoutDetector(
-            tuple((profile.name, TemplateLayoutDetector(profile)) for profile in profiles)
-        ),
+        detector: _Detector = TemplateLayoutDetector(profiles[0])
+    else:
+        detector = FallbackLayoutDetector(
+            PanelGeometryLayoutDetector(),
+            MultiProfileLayoutDetector(
+                tuple(
+                    (profile.name, TemplateLayoutDetector(profile))
+                    for profile in profiles
+                )
+            ),
+        )
+    return ResolutionAdaptiveLayoutDetector(
+        detector,
+        max_analysis_width=1600,
     )
 
 
@@ -822,6 +911,7 @@ __all__ = [
     "LayoutProfile",
     "MultiProfileLayoutDetector",
     "PanelGeometryLayoutDetector",
+    "ResolutionAdaptiveLayoutDetector",
     "TemplateLayoutDetector",
     "build_layout_detector",
     "validate_anchor_templates",

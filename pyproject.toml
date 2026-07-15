@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xyq-quiz"
-version = "0.1.0"
+version = "0.2.0"
 description = "Windows 本地运行的梦幻西游科举答题辅助显示工具"
 readme = "README.md"
 license = "PolyForm-Noncommercial-1.0.0"

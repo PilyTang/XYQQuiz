@@ -12,9 +12,11 @@ from typing import Iterable
 
 FORBIDDEN_PATH_PREFIXES = (
     "build/",
+    "diagnostics/",
     "dist/",
     "release/",
     "docs/superpowers/",
+    "user-data/",
 )
 PRIVATE_FIXTURE_PREFIX = "tests/fixtures/recognition/"
 PRIVATE_FIXTURE_NAMES = {"manifest.json"}
@@ -90,6 +92,7 @@ def audit_paths(root: Path, paths: Iterable[PurePosixPath]) -> list[str]:
     findings: list[str] = []
     folded_seen: dict[str, str] = {}
     for relative in paths:
+        relative = PurePosixPath(relative.as_posix().replace("\\", "/"))
         rendered = relative.as_posix()
         folded = rendered.casefold()
         previous = folded_seen.get(folded)
