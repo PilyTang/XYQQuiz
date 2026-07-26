@@ -84,6 +84,11 @@ class CaptureService:
                 minimum_update_interval_ms=math.ceil(
                     1000 / self._capture_fps
                 ),
+                # ``minimum_update_interval`` is only a best-effort WGC hint
+                # and is ignored by some driver/library combinations.  Keep a
+                # second, process-local deadline so OCR never copies every
+                # incoming preview frame when the native throttle is skipped.
+                recognition_fps=self._capture_fps,
             )
         self._lock = threading.Lock()
         self._lifecycle_lock = threading.Lock()

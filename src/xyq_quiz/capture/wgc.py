@@ -146,14 +146,8 @@ class WGCCapture:
                 if raw_bgra is None or raw_bgra.ndim != 3 or raw_bgra.shape[2] < 4:
                     return
 
-                height, width = raw_bgra.shape[:2]
-                sample = raw_bgra[
-                    :: max(1, height // 64),
-                    :: max(1, width // 64),
-                    :3,
-                ]
-                signature = int(sample.sum(dtype=np.uint64) % 1_000_000_007)
                 captured_at_ns = time.perf_counter_ns()
+                height, width = raw_bgra.shape[:2]
 
                 with self._lock:
                     if (
@@ -165,9 +159,6 @@ class WGCCapture:
                         return
                     self._frame_count += 1
                     frame_id = self._frame_count
-                    if self._last_signature != signature:
-                        self._last_signature = signature
-                        self._content_change_count += 1
                     recognition_due = (
                         self._recognition_interval_ns is None
                         or self._last_recognition_ns == 0
@@ -176,7 +167,7 @@ class WGCCapture:
                     )
                     if recognition_due:
                         self._last_recognition_ns = captured_at_ns
-                    preview_due = (
+                    preview_due = self._video_hub is not None and (
                         self._preview_interval_ns is None
                         or self._last_preview_ns == 0
                         or captured_at_ns - self._last_preview_ns
@@ -184,6 +175,30 @@ class WGCCapture:
                     )
                     if preview_due:
                         self._last_preview_ns = captured_at_ns
+
+                # The native ``minimum_update_interval`` hint can be ignored,
+                # so reject over-rate callbacks before sampling or copying the
+                # full frame.  Preview and recognition keep independent clocks.
+                if not recognition_due and not preview_due:
+                    return
+
+                sample = raw_bgra[
+                    :: max(1, height // 64),
+                    :: max(1, width // 64),
+                    :3,
+                ]
+                signature = int(sample.sum(dtype=np.uint64) % 1_000_000_007)
+                with self._lock:
+                    if (
+                        self._generation != generation
+                        or not self._running
+                        or self._capture is not capture
+                    ):
+                        capture_control.stop()
+                        return
+                    if self._last_signature != signature:
+                        self._last_signature = signature
+                        self._content_change_count += 1
 
                 if self._video_hub is not None and preview_due:
                     preview_width = min(width, self._preview_width)
@@ -214,7 +229,7 @@ class WGCCapture:
                     )
 
                 if recognition_due:
-                    bgr = np.ascontiguousarray(raw_bgra[:, :, :3])
+                    bgr = cv2.cvtColor(raw_bgra, cv2.COLOR_BGRA2BGR)
                     with self._lock:
                         if (
                             self._generation == generation

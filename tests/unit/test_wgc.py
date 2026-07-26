@@ -199,6 +199,38 @@ def test_wgc_publishes_resized_i420_preview_without_throttling_it(
     assert capture.latest() is first_recognition
 
 
+def test_wgc_software_throttle_skips_full_frame_bgr_conversion(
+    fake_factory: FakeFactory,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    timestamps = iter(
+        (1_000_000_000, 1_100_000_000, 2_100_000_000, 2_200_000_000)
+    )
+    monkeypatch.setattr(wgc_module.time, "perf_counter_ns", lambda: next(timestamps))
+    original_cvt_color = wgc_module.cv2.cvtColor
+    bgr_conversion_count = 0
+
+    def tracked_cvt_color(frame: NDArray[np.uint8], code: int) -> NDArray[np.uint8]:
+        nonlocal bgr_conversion_count
+        if code == wgc_module.cv2.COLOR_BGRA2BGR:
+            bgr_conversion_count += 1
+        return original_cvt_color(frame, code)
+
+    monkeypatch.setattr(wgc_module.cv2, "cvtColor", tracked_cvt_color)
+    capture = WGCCapture(factory=fake_factory, recognition_fps=1)
+    capture.start(123)
+    bgra = np.zeros((4, 8, 4), dtype=np.uint8)
+
+    fake_factory.session.emit(bgra)
+    fake_factory.session.emit(bgra)
+    fake_factory.session.emit(bgra)
+
+    latest = capture.latest()
+    assert latest is not None and latest.frame_id == 3
+    assert capture.stats().frame_count == 3
+    assert bgr_conversion_count == 2
+
+
 def test_wgc_caps_preview_independently_from_recognition(
     fake_factory: FakeFactory,
     monkeypatch: pytest.MonkeyPatch,

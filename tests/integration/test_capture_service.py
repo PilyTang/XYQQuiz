@@ -183,10 +183,14 @@ def test_default_wgc_is_throttled_to_configured_preview_rate(
     capture_config: dict[str, int],
     expected_interval_ms: int,
 ) -> None:
-    created: list[int] = []
+    created: list[tuple[int, int]] = []
 
-    def build_wgc(*, minimum_update_interval_ms: int) -> FakeWGC:
-        created.append(minimum_update_interval_ms)
+    def build_wgc(
+        *,
+        minimum_update_interval_ms: int,
+        recognition_fps: int,
+    ) -> FakeWGC:
+        created.append((minimum_update_interval_ms, recognition_fps))
         return FakeWGC()
 
     monkeypatch.setattr(service_module, "WGCCapture", build_wgc)
@@ -196,17 +200,22 @@ def test_default_wgc_is_throttled_to_configured_preview_rate(
         LatestFrameHub(),
     )
 
-    assert created == [expected_interval_ms]
+    expected_fps = capture_config.get("preview_fps", 30)
+    assert created == [(expected_interval_ms, expected_fps)]
     service.stop()
 
 
 def test_capture_rate_override_builds_low_frequency_ocr_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    created: list[int] = []
+    created: list[tuple[int, int]] = []
 
-    def build_wgc(*, minimum_update_interval_ms: int) -> FakeWGC:
-        created.append(minimum_update_interval_ms)
+    def build_wgc(
+        *,
+        minimum_update_interval_ms: int,
+        recognition_fps: int,
+    ) -> FakeWGC:
+        created.append((minimum_update_interval_ms, recognition_fps))
         return FakeWGC()
 
     monkeypatch.setattr(service_module, "WGCCapture", build_wgc)
@@ -217,7 +226,7 @@ def test_capture_rate_override_builds_low_frequency_ocr_session(
         capture_fps=5,
     )
 
-    assert created == [200]
+    assert created == [(200, 5)]
     service.stop()
 
 
