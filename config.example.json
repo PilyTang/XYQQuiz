@@ -14,7 +14,12 @@
     "option_score": 90
   },
   "recognition": {
+    "scan_fps": 15,
     "ocr_workers": 1
+  },
+  "performance": {
+    "ocr_backend": "auto",
+    "preview_backend": "auto"
   },
   "web": {
     "host": "127.0.0.1",

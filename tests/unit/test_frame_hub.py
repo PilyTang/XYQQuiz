@@ -31,3 +31,15 @@ def test_wait_after_times_out_without_queue_growth() -> None:
     hub.publish(frame(3))
 
     assert hub.wait_after(3, 0.01) is None
+
+
+def test_hub_keeps_cursor_monotonic_when_capture_session_restarts() -> None:
+    hub = LatestFrameHub()
+    hub.publish(frame(40))
+
+    hub.publish(frame(1))
+
+    latest = hub.snapshot()
+    assert latest is not None and latest.frame_id == 41
+    waited = hub.wait_after(40, 0.01)
+    assert waited is not None and waited.frame_id == 41

@@ -8,7 +8,6 @@ import socket
 import threading
 import time
 
-import cv2
 import numpy as np
 import pytest
 import uvicorn
@@ -181,6 +180,7 @@ def test_actual_uvicorn_serves_binary_frames_and_json_state_over_websockets() ->
     services = _services()
     with _ActualUvicorn(services) as server:
         with _connect_websocket(server.port, "/ws/frames") as frames:
+            config_opcode, config_bytes = _receive_server_frame(frames)
             opcode, packet = _receive_server_frame(frames)
         services.hub.publish(
             CapturedFrame.create(8, 12, np.full((12, 20, 3), 90, np.uint8))
@@ -190,10 +190,13 @@ def test_actual_uvicorn_serves_binary_frames_and_json_state_over_websockets() ->
         services.runtime.clear_question("client_closed")
         time.sleep(0.05)
 
+    assert config_opcode == 1
+    assert json.loads(config_bytes) == {"type": "preview-config", "mode": "i420"}
     assert opcode == 2
     assert int.from_bytes(packet[:8], "big") == 7
-    image = cv2.imdecode(np.frombuffer(packet[8:], np.uint8), cv2.IMREAD_COLOR)
-    assert image.shape[:2] == (6, 10)
+    assert int.from_bytes(packet[16:20], "big") == 10
+    assert int.from_bytes(packet[20:24], "big") == 6
+    assert len(packet[24:]) == 10 * 6 * 3 // 2
     assert state_opcode == 1
     payload = json.loads(state_bytes)
     assert payload["phase"] == "MONITORING"

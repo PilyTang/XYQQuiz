@@ -11,22 +11,27 @@ import pytest
 
 import xyq_quiz.launcher as launcher_module
 from xyq_quiz.config import AppConfig
+from xyq_quiz.desktop.webview import DesktopRunMode, DesktopUnavailable
 from xyq_quiz.launcher import (
     AlreadyRunningError,
     ElevationError,
     PortConflictError,
+    RestartError,
     SingleInstance,
     StartupAssetError,
     configure_logging,
     ensure_elevated,
     reserve_loopback_port,
     run_server_with_browser,
+    run_server_with_desktop,
+    spawn_restart_process,
     wait_for_health_and_open,
     validate_recognition_assets,
     validate_recognition_asset_bundle,
     build_services,
 )
 from xyq_quiz.runtime.paths import RuntimePaths
+from xyq_quiz.performance.settings import save_performance_settings
 
 
 def test_reserve_loopback_port_reports_conflict_and_releases_socket() -> None:
@@ -42,6 +47,76 @@ def test_reserve_loopback_port_reports_conflict_and_releases_socket() -> None:
 def test_reserve_loopback_port_rejects_non_loopback_host() -> None:
     with pytest.raises(ValueError, match="127.0.0.1"):
         reserve_loopback_port("0.0.0.0", 8765)
+
+
+def test_source_restart_loads_saved_performance_config(tmp_path: Path) -> None:
+    discovered = RuntimePaths.discover()
+    paths = RuntimePaths(
+        app_root=tmp_path,
+        resource_root=discovered.resource_root,
+        defaults_root=discovered.defaults_root,
+        config_path=tmp_path / "config.json",
+        data_dir=tmp_path / "data",
+        user_data_dir=tmp_path / "user-data",
+        logs_dir=tmp_path / "logs",
+        diagnostics_dir=tmp_path / "diagnostics",
+        frozen=False,
+    )
+    assert launcher_module._select_runtime_config_path(None, paths) is None
+
+    save_performance_settings(
+        paths.config_path,
+        ocr_backend="directml:0",
+        preview_backend="windows_hardware:0",
+        fallback_config=AppConfig(),
+    )
+
+    selected = launcher_module._select_runtime_config_path(None, paths)
+    restarted = AppConfig.load(selected)
+    assert selected == paths.config_path
+    assert restarted.performance.ocr_backend == "directml:0"
+    assert restarted.performance.preview_backend == "windows_hardware:auto"
+
+    explicit = tmp_path / "custom.json"
+    assert launcher_module._select_runtime_config_path(explicit, paths) == explicit
+
+
+def test_spawn_restart_process_uses_argument_array_and_waits_for_old_pid(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[tuple[list[str], dict[str, object]]] = []
+
+    def fake_popen(command: list[str], **kwargs: object) -> object:
+        calls.append((command, kwargs))
+        return object()
+
+    monkeypatch.delattr(launcher_module.sys, "frozen", raising=False)
+
+    spawn_restart_process(
+        ["--config", "D:\\Some Folder\\config.json", "--elevated-child"],
+        process_id=4321,
+        popen=fake_popen,
+    )
+
+    assert calls[0][0] == [
+        launcher_module.sys.executable,
+        "-m",
+        "xyq_quiz.launcher",
+        "--config",
+        "D:\\Some Folder\\config.json",
+        "--elevated-child",
+        "--restart-after-pid",
+        "4321",
+    ]
+    assert calls[0][1]["close_fds"] is True
+
+
+def test_spawn_restart_process_reports_launch_failure() -> None:
+    def fail(*_args: object, **_kwargs: object) -> object:
+        raise OSError("blocked")
+
+    with pytest.raises(RestartError, match="无法启动"):
+        spawn_restart_process([], process_id=1, popen=fail)
 
 
 def test_uvicorn_serves_through_prebound_socket() -> None:
@@ -86,6 +161,7 @@ def test_main_reports_port_conflict_with_dedicated_exit_code(
     monkeypatch,
 ) -> None:
     messages: list[tuple[str, str, bool]] = []
+    requested_ports: list[int] = []
     config = AppConfig(log_path=tmp_path / "app.log")
     monkeypatch.setattr(
         launcher_module,
@@ -97,12 +173,15 @@ def test_main_reports_port_conflict_with_dedicated_exit_code(
     monkeypatch.setattr(launcher_module, "ensure_elevated", lambda _argv: True)
     monkeypatch.setattr(launcher_module.AppConfig, "load", lambda _path: config)
     monkeypatch.setattr(launcher_module, "SingleInstance", lambda _name: nullcontext())
+
+    def conflict(_host: str, port: int):
+        requested_ports.append(port)
+        raise PortConflictError("本机端口 8765 已被其他程序占用。")
+
     monkeypatch.setattr(
         launcher_module,
         "reserve_loopback_port",
-        lambda _host, _port: (_ for _ in ()).throw(
-            PortConflictError("本机端口 8765 已被其他程序占用。")
-        ),
+        conflict,
     )
     monkeypatch.setattr(
         launcher_module,
@@ -110,7 +189,8 @@ def test_main_reports_port_conflict_with_dedicated_exit_code(
         lambda title, message, *, error=False: messages.append((title, message, error)),
     )
 
-    assert launcher_module.main(["--elevated-child"]) == 4
+    assert launcher_module.main(["--elevated-child", "--external-browser"]) == 4
+    assert requested_ports == [8765]
     assert messages == [
         ("XYQQuiz 端口冲突", "本机端口 8765 已被其他程序占用。", True)
     ]
@@ -127,6 +207,7 @@ def test_build_services_uses_fixed_single_ocr_worker() -> None:
     services = build_services(config)
     try:
         assert services.pipeline._executor._max_workers == 1
+        assert services.coordinator._scan_fps == config.recognition.scan_fps
     finally:
         services.pipeline.close()
 
@@ -362,6 +443,32 @@ def test_version_report_runs_before_activation_or_elevation(
     assert '"app_id": "xyq-quiz"' in payload
 
 
+def test_headless_no_dialog_self_test_failure_never_blocks_on_message_box(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(
+        launcher_module,
+        "run_self_test",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(RuntimeError("broken bundle")),
+    )
+    monkeypatch.setattr(
+        launcher_module,
+        "_show_message",
+        lambda *_args, **_kwargs: pytest.fail("no-dialog self-test showed a dialog"),
+    )
+
+    assert launcher_module.main(
+        [
+            "--self-test",
+            "--headless",
+            "--no-dialog",
+            "--report-dir",
+            str(tmp_path / "report"),
+        ]
+    ) == 1
+
+
 def test_single_instance_releases_mutex_on_normal_exit() -> None:
     handle = 0x1234_5678_9ABC_DEF0
     kernel32 = FakeKernel32(handle=handle)
@@ -533,6 +640,59 @@ def test_server_run_return_cancels_and_joins_browser_watcher() -> None:
     )
 
     assert events == ["start", "run", "join:0.5"]
+
+
+def test_desktop_runner_uses_existing_browser_path_when_pywebview_is_missing() -> None:
+    server = object()
+    reserved = object()
+    events: list[object] = []
+
+    class MissingDesktop:
+        def run(self, *_args, **_kwargs):
+            raise DesktopUnavailable("pywebview missing", server_started=False)
+
+        def enable_browser_fallback(self, _opener, _url_factory) -> None:
+            events.append("fallback-enabled")
+
+        def disable_browser_fallback(self) -> None:
+            events.append("fallback-disabled")
+
+    def browser_runner(current_server, health_url, **kwargs) -> None:
+        events.append((current_server, health_url, kwargs))
+
+    mode = run_server_with_desktop(
+        MissingDesktop(),  # type: ignore[arg-type]
+        server,
+        "http://127.0.0.1:12345/api/health",
+        lambda: "http://127.0.0.1:12345/#token=once",
+        sockets=[reserved],  # type: ignore[list-item]
+        browser_runner=browser_runner,
+    )
+
+    assert mode is DesktopRunMode.BROWSER_FALLBACK
+    assert events[0] == "fallback-enabled"
+    assert events[1][0] is server  # type: ignore[index]
+    assert events[1][2]["sockets"] == [reserved]  # type: ignore[index]
+    assert events[2] == "fallback-disabled"
+
+
+def test_desktop_runner_never_restarts_server_after_post_start_failure() -> None:
+    browser_calls: list[object] = []
+
+    class FailedDesktop:
+        def run(self, *_args, **_kwargs):
+            raise DesktopUnavailable("WebView2 failed", server_started=True)
+
+    with pytest.raises(DesktopUnavailable, match="WebView2 failed"):
+        run_server_with_desktop(
+            FailedDesktop(),  # type: ignore[arg-type]
+            object(),
+            "http://127.0.0.1:12345/api/health",
+            lambda: "http://127.0.0.1:12345/#token=once",
+            browser_runner=lambda *_args, **_kwargs: browser_calls.append(object()),
+        )
+
+    assert browser_calls == []
 
 
 def test_prebound_socket_is_forwarded_to_uvicorn_server() -> None:

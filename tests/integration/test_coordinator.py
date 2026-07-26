@@ -88,6 +88,16 @@ class FakeLayoutDetector:
             raise AssertionError("layout detector did not receive the frame")
 
 
+class RecordingLayoutDetector(FakeLayoutDetector):
+    def __init__(self) -> None:
+        super().__init__()
+        self.markers: list[int] = []
+
+    def detect(self, image: np.ndarray) -> DetectedLayout | None:
+        self.markers.append(int(image[-1, -1, 0]))
+        return super().detect(image)
+
+
 class GatedPipeline:
     def __init__(self) -> None:
         self.calls: list[int] = []
@@ -308,7 +318,14 @@ def make_coordinator(pipeline):
     hub = LatestFrameHub()
     detector = FakeLayoutDetector()
     store = RuntimeStore()
-    coordinator = RecognitionCoordinator(capture, hub, detector, pipeline, store)
+    coordinator = RecognitionCoordinator(
+        capture,
+        hub,
+        detector,
+        pipeline,
+        store,
+        scan_fps=60,
+    )
     return capture, hub, detector, pipeline, store, coordinator
 
 
@@ -373,7 +390,10 @@ def test_changed_hash_invalidates_running_generation_before_old_result() -> None
         coordinator.stop()
 
 
-def test_same_hash_is_recognized_once_and_cached_after_return() -> None:
+def test_same_hash_is_recognized_once_and_cached_after_return(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(coordinator_module, "_IDLE_LAYOUT_SCAN_SECONDS", 0.0)
     _capture, hub, detector, pipeline, store, coordinator = make_coordinator(
         ImmediatePipeline()
     )
@@ -492,6 +512,115 @@ def test_uncertain_results_retry_without_clearing_candidate_overlay(
     finally:
         pipeline.second_gate.set()
         coordinator.stop()
+
+
+def test_uncertain_retry_delay_backs_off_to_bounded_maximum() -> None:
+    delay = 0.2
+    observed = []
+    for _ in range(5):
+        delay = coordinator_module._next_recognition_retry_delay(delay)
+        observed.append(delay)
+
+    assert observed == pytest.approx([0.4, 0.8, 1.6, 2.0, 2.0])
+
+
+def test_layout_scan_delay_uses_active_and_idle_cadences(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(coordinator_module, "_IDLE_LAYOUT_SCAN_SECONDS", 0.2)
+
+    assert coordinator_module._remaining_layout_scan_delay(
+        layout_present=True,
+        layout_missing_cleared=False,
+        scan_fps=10,
+        last_scan_at=10.0,
+        now=10.04,
+    ) == pytest.approx(0.06)
+    assert coordinator_module._remaining_layout_scan_delay(
+        layout_present=False,
+        layout_missing_cleared=True,
+        scan_fps=10,
+        last_scan_at=10.0,
+        now=10.04,
+    ) == pytest.approx(0.16)
+    assert coordinator_module._remaining_layout_scan_delay(
+        layout_present=False,
+        layout_missing_cleared=True,
+        scan_fps=10,
+        last_scan_at=10.0,
+        now=10.21,
+    ) == 0.0
+    assert coordinator_module._remaining_layout_scan_delay(
+        layout_present=False,
+        layout_missing_cleared=True,
+        scan_fps=10,
+        last_scan_at=None,
+        now=10.0,
+    ) == 0.0
+    assert coordinator_module._remaining_layout_scan_delay(
+        layout_present=False,
+        layout_missing_cleared=False,
+        scan_fps=10,
+        last_scan_at=10.0,
+        now=10.04,
+    ) == pytest.approx(0.06)
+
+
+def test_30_fps_input_is_consumed_latest_only_at_15_fps() -> None:
+    capture = FakeCaptureService()
+    hub = LatestFrameHub()
+    detector = RecordingLayoutDetector()
+    pipeline = ImmediatePipeline()
+    store = RuntimeStore()
+    coordinator = RecognitionCoordinator(
+        capture,
+        hub,
+        detector,
+        pipeline,
+        store,
+        scan_fps=15,
+    )
+
+    coordinator.start()
+    try:
+        for frame_id in range(1, 16):
+            captured = frame(frame_id, 7)
+            image = captured.bgr.copy()
+            image[-1, -1, 0] = frame_id
+            hub.publish(
+                CapturedFrame.create(frame_id, time.monotonic_ns(), image)
+            )
+            time.sleep(1 / 30)
+
+        wait_until(lambda: detector.markers and detector.markers[-1] == 15)
+    finally:
+        coordinator.stop()
+
+    assert 6 <= len(detector.markers) <= 9
+    assert detector.markers == sorted(set(detector.markers))
+    assert any(
+        newer - older > 1
+        for older, newer in zip(detector.markers, detector.markers[1:])
+    )
+
+
+@pytest.mark.parametrize("scan_fps", [0, -1, True])
+def test_coordinator_rejects_invalid_scan_fps(scan_fps: int) -> None:
+    capture = FakeCaptureService()
+    hub = LatestFrameHub()
+    detector = FakeLayoutDetector()
+    pipeline = ImmediatePipeline()
+    store = RuntimeStore()
+
+    with pytest.raises(ValueError, match="scan_fps must be a positive integer"):
+        RecognitionCoordinator(
+            capture,
+            hub,
+            detector,
+            pipeline,
+            store,
+            scan_fps=scan_fps,
+        )
 
 
 def test_cache_identity_blocks_reuse_when_stability_signature_collides(
@@ -898,6 +1027,7 @@ def test_invalid_anchor_fit_does_not_stop_coordinator_and_overlay_recovers(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setattr(coordinator_module, "_IDLE_LAYOUT_SCAN_SECONDS", 0.0)
     pattern = np.arange(64, dtype=np.uint8).reshape(8, 8)
     assert cv2.imwrite(str(tmp_path / "one.png"), pattern)
     assert cv2.imwrite(str(tmp_path / "two.png"), np.rot90(pattern))
@@ -971,7 +1101,10 @@ def test_invalid_anchor_fit_does_not_stop_coordinator_and_overlay_recovers(
         coordinator.stop()
 
 
-def test_cache_is_bounded_to_128_entries() -> None:
+def test_cache_is_bounded_to_128_entries(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(coordinator_module, "_IDLE_LAYOUT_SCAN_SECONDS", 0.0)
     _capture, hub, detector, pipeline, store, coordinator = make_coordinator(
         ImmediatePipeline()
     )

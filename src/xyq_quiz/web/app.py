@@ -17,6 +17,7 @@ from fastapi.staticfiles import StaticFiles
 
 from xyq_quiz.capture.hub import LatestFrameHub
 from xyq_quiz.capture.models import CaptureStatus, CapturedFrame
+from xyq_quiz.capture.video import LatestVideoHub
 from xyq_quiz.config import MatchConfig
 from xyq_quiz.diagnostics import (
     DiagnosticSnapshot,
@@ -40,8 +41,13 @@ from xyq_quiz.knowledge.local import (
 from xyq_quiz.knowledge.matcher import QuestionMatcher
 from xyq_quiz.knowledge.store import QuestionBank
 from xyq_quiz.knowledge.updater import QuestionBankUpdater, load_current_generation
+from xyq_quiz.performance.controller import PerformanceController
 from xyq_quiz.runtime.state import RuntimeSnapshot, RuntimeStore
-from xyq_quiz.web.protocol import encode_frame_packet
+from xyq_quiz.web.protocol import (
+    encode_bgra_packet,
+    encode_i420_packet,
+    encode_nv12_packet,
+)
 from xyq_quiz.web.security import (
     APP_ID,
     SESSION_COOKIE,
@@ -109,13 +115,18 @@ class Services:
     local_question_store: LocalQuestionStore | None = None
     official_bank: QuestionBank | None = None
     official_metadata: Any = field(default_factory=dict)
-    preview_width: int = 1280
+    # The preview is informational; OCR keeps the untouched native frame.
+    # 1024 px avoids encoding and transferring pixels the UI cannot use.
+    preview_width: int = 1024
     owns_lifecycle: bool = True
     diagnostic_writer: DiagnosticWriter | None = None
     environment_diagnostic_writer: EnvironmentDiagnosticWriter | None = None
     diagnostic_config: Any = field(default_factory=dict)
     diagnostic_metadata: Any = field(default_factory=dict)
     shutdown: Callable[[], None] | None = None
+    restart: Callable[[], None] | None = None
+    performance: PerformanceController | None = None
+    video_hub: LatestVideoHub | None = None
     _lifespan_claimed: bool = field(default=False, init=False, repr=False)
     _claim_lock: threading.Lock = field(
         default_factory=threading.Lock,
@@ -219,8 +230,12 @@ def create_app(
         services.claim_lifespan()
         capture_started = False
         coordinator_started = False
+        performance_started = False
         try:
             await asyncio.to_thread(services.pipeline.warm_up)
+            if services.performance is not None:
+                services.performance.start()
+                performance_started = True
             services.capture.start()
             capture_started = True
             services.coordinator.start()
@@ -235,7 +250,11 @@ def create_app(
                     if capture_started:
                         await asyncio.to_thread(services.capture.stop)
                 finally:
-                    await asyncio.to_thread(services.pipeline.close)
+                    try:
+                        if performance_started and services.performance is not None:
+                            await asyncio.to_thread(services.performance.stop)
+                    finally:
+                        await asyncio.to_thread(services.pipeline.close)
 
     app = FastAPI(title="XYQ Quiz", lifespan=lifespan)
 
@@ -255,6 +274,10 @@ def create_app(
                     host=request.headers.get("host"),
                     origin=request.headers.get("origin"),
                     token=request.headers.get(TOKEN_HEADER),
+                    # Chromium omits Origin on ordinary same-origin GET/HEAD
+                    # requests. The unguessable process token still protects
+                    # these reads; a supplied, mismatched Origin remains fatal.
+                    allow_missing_origin=request.method in {"GET", "HEAD"},
                 )
             else:
                 decision = security.validate_host(request.headers.get("host"))
@@ -319,6 +342,137 @@ def create_app(
         payload = _runtime_payload(services.runtime.snapshot())
         payload["capture"] = jsonable_encoder(asdict(services.capture.status()))
         return payload
+
+    @app.get("/api/performance")
+    async def performance_status() -> JSONResponse:
+        controller = services.performance
+        if controller is None:
+            return JSONResponse(
+                status_code=503,
+                content={"ok": False, "error": "性能后端服务未配置"},
+            )
+        return JSONResponse(content={"ok": True, **controller.payload()})
+
+    @app.post("/api/performance/settings")
+    async def performance_settings(request: Request) -> JSONResponse:
+        controller = services.performance
+        if controller is None:
+            return JSONResponse(
+                status_code=503,
+                content={"ok": False, "error": "性能后端服务未配置"},
+            )
+        try:
+            payload = await _request_object(request)
+            action = payload.get("action", "save")
+            if action not in {"save", "apply"}:
+                raise ValueError("action 必须是 save 或 apply")
+            ocr_backend = payload.get("ocr_backend")
+            preview_backend = payload.get("preview_backend")
+            if not isinstance(ocr_backend, str) or not isinstance(
+                preview_backend,
+                str,
+            ):
+                raise ValueError("OCR 与预览后端必须是字符串")
+            saved = await asyncio.to_thread(
+                controller.save,
+                ocr_backend=ocr_backend,
+                preview_backend=preview_backend,
+            )
+            if action == "apply":
+                callback = services.restart
+                if callback is None:
+                    raise RuntimeError("立即重启服务未配置，设置已经保存")
+                await asyncio.to_thread(callback)
+        except (ValueError, RuntimeError) as error:
+            return JSONResponse(
+                status_code=400,
+                content={"ok": False, "error": str(error)},
+            )
+        return JSONResponse(
+            content={
+                "ok": True,
+                "action": action,
+                "pending_ocr": saved.ocr_backend,
+                "pending_preview": saved.preview_backend,
+            }
+        )
+
+    @app.post("/api/performance/canvas-fps")
+    async def performance_canvas_fps(request: Request) -> JSONResponse:
+        controller = services.performance
+        if controller is None:
+            return JSONResponse(
+                status_code=503,
+                content={"ok": False, "error": "性能后端服务未配置"},
+            )
+        try:
+            payload = await _request_object(request)
+            value = payload.get("fps")
+            if not isinstance(value, (int, float)) or isinstance(value, bool):
+                raise ValueError("fps 必须是数字")
+            controller.record_canvas_fps(float(value))
+        except ValueError as error:
+            return JSONResponse(
+                status_code=400,
+                content={"ok": False, "error": str(error)},
+            )
+        return JSONResponse(content={"ok": True})
+
+    @app.post("/api/preview/layout")
+    async def preview_layout(request: Request) -> JSONResponse:
+        callback = getattr(services.capture, "set_preview_layout", None)
+        if not callable(callback):
+            return JSONResponse(content={"ok": True, "native": False})
+        try:
+            payload = await _request_object(request)
+            x = int(payload.get("x", 0))
+            y = int(payload.get("y", 0))
+            width = int(payload.get("width", 0))
+            height = int(payload.get("height", 0))
+            scale = float(payload.get("scale", 1.0))
+            visible = bool(payload.get("visible", True))
+            if width < 0 or height < 0 or scale <= 0 or scale > 8:
+                raise ValueError("invalid native preview layout")
+            await asyncio.to_thread(
+                callback,
+                x,
+                y,
+                width,
+                height,
+                scale,
+                visible,
+            )
+        except (TypeError, ValueError) as error:
+            return JSONResponse(
+                status_code=400,
+                content={"ok": False, "error": f"原生预览区域无效：{error}"},
+            )
+        return JSONResponse(content={"ok": True, "native": True})
+
+    @app.post("/api/preview/overlay")
+    async def preview_overlay(request: Request) -> JSONResponse:
+        callback = getattr(services.capture, "set_preview_overlay", None)
+        if not callable(callback):
+            return JSONResponse(content={"ok": True, "native": False})
+        try:
+            payload = await _request_object(request)
+            raw_rect = payload.get("rect")
+            rect = None
+            if raw_rect is not None:
+                if not isinstance(raw_rect, list) or len(raw_rect) != 4:
+                    raise ValueError("rect must contain four values")
+                rect = tuple(float(value) for value in raw_rect)
+                if any(value < 0 or value > 1 for value in rect):
+                    raise ValueError("rect values must be normalized")
+            score = float(payload.get("score", 0.0))
+            level = int(payload.get("level", 0))
+            await asyncio.to_thread(callback, rect, score, level)
+        except (TypeError, ValueError) as error:
+            return JSONResponse(
+                status_code=400,
+                content={"ok": False, "error": f"原生预览框选无效：{error}"},
+            )
+        return JSONResponse(content={"ok": True, "native": True})
 
     @app.post("/api/question-bank/update")
     async def update_question_bank() -> JSONResponse:
@@ -857,33 +1011,167 @@ async def _stream_state(websocket: WebSocket, services: Services) -> None:
 
 
 async def _stream_frames(websocket: WebSocket, services: Services) -> None:
-    last_frame_id = -1
     disconnect = _start_disconnect_watcher(websocket)
     try:
         while True:
             if _disconnect_finished(disconnect):
                 return
-            frame = await asyncio.to_thread(
-                services.hub.wait_after,
-                last_frame_id,
-                0.25,
+            hardware = (
+                services.performance is not None
+                and services.video_hub is not None
+                and services.performance.snapshot().preview.effective.startswith(
+                    "windows_hardware:"
+                )
             )
-            if frame is None:
-                continue
-            packet = await asyncio.to_thread(
-                _encode_preview,
-                frame,
-                services.preview_width,
+            if hardware:
+                await _stream_hardware_until_mode_change(
+                    websocket,
+                    services,
+                    disconnect,
+                )
+            else:
+                await _stream_i420_until_mode_change(
+                    websocket,
+                    services,
+                    disconnect,
+                )
+    finally:
+        await _cancel_disconnect_watcher(disconnect)
+
+
+async def _stream_i420_until_mode_change(
+    websocket: WebSocket,
+    services: Services,
+    disconnect: asyncio.Task[None] | None,
+) -> None:
+    await websocket.send_json({"type": "preview-config", "mode": "i420"})
+    last_frame_id = -1
+    while True:
+        if _disconnect_finished(disconnect):
+            return
+        if (
+            services.performance is not None
+            and services.video_hub is not None
+            and services.performance.snapshot().preview.effective.startswith(
+                "windows_hardware:"
             )
+        ):
+            return
+        frame = await asyncio.to_thread(
+            services.hub.wait_after,
+            last_frame_id,
+            0.25,
+        )
+        if frame is None:
+            continue
+        packet = await asyncio.to_thread(
+            _encode_preview_i420,
+            frame,
+            services.preview_width,
+        )
+        try:
+            await websocket.send_bytes(packet)
+        except RuntimeError:
+            if _disconnect_finished(disconnect):
+                return
+            raise
+        last_frame_id = frame.frame_id
+
+
+async def _stream_hardware_until_mode_change(
+    websocket: WebSocket,
+    services: Services,
+    disconnect: asyncio.Task[None] | None,
+) -> None:
+    if bool(getattr(services.capture, "native_preview", False)):
+        await websocket.send_json({"type": "preview-config", "mode": "native"})
+        while True:
+            if _disconnect_finished(disconnect):
+                return
+            if (
+                services.performance is None
+                or not services.performance.snapshot().preview.effective.startswith(
+                    "windows_hardware:"
+                )
+            ):
+                await websocket.send_json(
+                    {"type": "preview-config", "mode": "i420"}
+                )
+                return
+            await asyncio.sleep(0.25)
+    video_hub = services.video_hub
+    if video_hub is None:
+        return
+    pixel_format = video_hub.pixel_format
+    await websocket.send_json(
+        {
+            "type": "preview-config",
+            "mode": pixel_format,
+        }
+    )
+    video_hub.request_key_frame()
+    sequence = 0
+    started = False
+    while True:
+        if _disconnect_finished(disconnect):
+            return
+        if (
+            services.performance is None
+            or not services.performance.snapshot().preview.effective.startswith(
+                "windows_hardware:"
+            )
+        ):
+            await websocket.send_json(
+                {"type": "preview-config", "mode": "i420"}
+            )
+            return
+        if video_hub.pixel_format != pixel_format:
+            return
+        window = await asyncio.to_thread(video_hub.wait_after, sequence, 0.25)
+        if window.gap:
+            started = False
+            video_hub.request_key_frame()
+        if not window.frames:
+            continue
+        # Raw NV12/BGRA frames are independently displayable.  Never replay a
+        # backlog after the browser falls behind: obsolete frames only add
+        # latency and prevent the stream from catching the live picture.
+        for frame in window.frames[-1:]:
+            sequence = frame.sequence
+            if not started:
+                if not frame.key_frame:
+                    continue
+                started = True
+            if pixel_format == "bgra":
+                packet = encode_bgra_packet(
+                    frame_id=frame.frame_id,
+                    timestamp_us=frame.timestamp_us,
+                    width=frame.width,
+                    height=frame.height,
+                    bgra=frame.payload,
+                )
+            elif pixel_format == "i420":
+                packet = encode_i420_packet(
+                    frame_id=frame.frame_id,
+                    timestamp_us=frame.timestamp_us,
+                    width=frame.width,
+                    height=frame.height,
+                    i420=frame.payload,
+                )
+            else:
+                packet = encode_nv12_packet(
+                    frame_id=frame.frame_id,
+                    timestamp_us=frame.timestamp_us,
+                    width=frame.width,
+                    height=frame.height,
+                    nv12=frame.payload,
+                )
             try:
                 await websocket.send_bytes(packet)
             except RuntimeError:
                 if _disconnect_finished(disconnect):
                     return
                 raise
-            last_frame_id = frame.frame_id
-    finally:
-        await _cancel_disconnect_watcher(disconnect)
 
 
 def _start_disconnect_watcher(websocket: WebSocket) -> asyncio.Task[None] | None:
@@ -926,26 +1214,24 @@ def _state_payload(
     return payload
 
 
-def _encode_preview(frame: CapturedFrame, preview_width: int) -> bytes:
-    if preview_width <= 0:
-        raise ValueError("preview_width must be positive")
+def _encode_preview_i420(frame: CapturedFrame, preview_width: int) -> bytes:
+    if preview_width < 2:
+        raise ValueError("preview_width must be at least two")
     image = frame.bgr
-    height, width = image.shape[:2]
-    if width > preview_width:
-        preview_height = max(1, round(height * preview_width / width))
-        image = cv2.resize(
-            image,
-            (preview_width, preview_height),
-            interpolation=cv2.INTER_AREA,
-        )
-    encoded, jpeg = cv2.imencode(
-        ".jpg",
-        image,
-        [cv2.IMWRITE_JPEG_QUALITY, 80],
+    source_height, source_width = image.shape[:2]
+    width = min(source_width, preview_width) & ~1
+    width = max(2, width)
+    height = max(2, round(source_height * width / source_width) & ~1)
+    if (width, height) != (source_width, source_height):
+        image = cv2.resize(image, (width, height), interpolation=cv2.INTER_AREA)
+    i420 = cv2.cvtColor(image, cv2.COLOR_BGR2YUV_I420)
+    return encode_i420_packet(
+        frame_id=frame.frame_id,
+        timestamp_us=frame.captured_at_ns // 1_000,
+        width=width,
+        height=height,
+        i420=i420.tobytes(),
     )
-    if not encoded:
-        raise RuntimeError("JPEG preview encoding failed")
-    return encode_frame_packet(frame.frame_id, jpeg.tobytes())
 
 
 __all__ = ["Services", "create_app"]

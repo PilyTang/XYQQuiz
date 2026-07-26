@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import threading
 import time
+from types import SimpleNamespace
 
 import cv2
 import numpy as np
@@ -16,6 +17,7 @@ from fastapi import WebSocketDisconnect
 
 from xyq_quiz.capture.hub import LatestFrameHub
 from xyq_quiz.capture.models import CapturedFrame, CapturePhase, CaptureStatus, Rect
+from xyq_quiz.capture.video import LatestVideoHub
 from xyq_quiz.config import MatchConfig
 from xyq_quiz.diagnostics import DiagnosticSnapshot, DiagnosticWriter
 from xyq_quiz.knowledge.local import LocalQuestionStore
@@ -50,6 +52,34 @@ class LifecycleFake:
 class FakeCapture(LifecycleFake):
     def status(self) -> CaptureStatus:
         return CaptureStatus(CapturePhase.CAPTURING)
+
+
+class FakeNativeCapture(FakeCapture):
+    def __init__(self, name: str, events: list[str]) -> None:
+        super().__init__(name, events)
+        self.layouts: list[tuple[int, int, int, int, float, bool]] = []
+        self.overlays: list[
+            tuple[tuple[float, float, float, float] | None, float, int]
+        ] = []
+
+    def set_preview_layout(
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        scale: float,
+        visible: bool,
+    ) -> None:
+        self.layouts.append((x, y, width, height, scale, visible))
+
+    def set_preview_overlay(
+        self,
+        rect: tuple[float, float, float, float] | None,
+        score: float,
+        level: int,
+    ) -> None:
+        self.overlays.append((rect, score, level))
 
 
 class FakePipeline:
@@ -99,6 +129,62 @@ class FakeDiagnosticWriter:
     def write(self, snapshot: DiagnosticSnapshot) -> Path:
         self.snapshots.append(snapshot)
         return self.path
+
+
+class FakePerformance:
+    def __init__(self, events: list[str]) -> None:
+        self.events = events
+        self.saved: list[tuple[str, str]] = []
+        self.fps: list[float] = []
+
+    def start(self) -> None:
+        self.events.append("performance.start")
+
+    def stop(self) -> None:
+        self.events.append("performance.stop")
+
+    def payload(self) -> dict[str, object]:
+        return {
+            "ocr": {
+                "requested": "auto",
+                "effective": "cpu",
+                "label": "OCR CPU",
+                "fallback_reason": None,
+            },
+            "preview": {
+                "requested": "auto",
+                "effective": "cpu",
+                "label": "预览 CPU",
+                "fallback_reason": None,
+            },
+            "pending_ocr": "auto",
+            "pending_preview": "auto",
+            "ocr_options": [],
+            "preview_options": [],
+            "probing": False,
+            "benchmark_status": "idle",
+            "canvas_fps": None,
+        }
+
+    def save(self, *, ocr_backend: str, preview_backend: str):
+        self.saved.append((ocr_backend, preview_backend))
+        return SimpleNamespace(
+            ocr_backend=ocr_backend,
+            preview_backend=preview_backend,
+        )
+
+    def record_canvas_fps(self, fps: float) -> None:
+        self.fps.append(fps)
+
+    def snapshot(self):
+        return SimpleNamespace(preview=SimpleNamespace(effective="cpu"))
+
+
+class HardwarePreviewPerformance(FakePerformance):
+    def snapshot(self):
+        return SimpleNamespace(
+            preview=SimpleNamespace(effective="windows_hardware:auto")
+        )
 
 
 class RecordingWebSocket:
@@ -260,7 +346,41 @@ def test_status_reports_runtime_and_capture_state(tmp_path: Path) -> None:
     assert response.json()["capture"]["phase"] == "CAPTURING"
 
 
-def test_frame_websocket_immediately_sends_latest_downscaled_jpeg(tmp_path: Path) -> None:
+def test_native_preview_layout_and_overlay_are_forwarded_to_capture(
+    tmp_path: Path,
+) -> None:
+    fixture = _services(tmp_path)
+    capture = FakeNativeCapture("capture", fixture.events)
+    fixture.services.capture = capture
+
+    with TestClient(create_app(fixture.services)) as client:
+        layout = client.post(
+            "/api/preview/layout",
+            json={
+                "x": 32,
+                "y": 45,
+                "width": 960,
+                "height": 720,
+                "scale": 1.5,
+                "visible": True,
+            },
+        )
+        overlay = client.post(
+            "/api/preview/overlay",
+            json={
+                "rect": [0.1, 0.2, 0.3, 0.4],
+                "score": 87.5,
+                "level": 2,
+            },
+        )
+
+    assert layout.json() == {"ok": True, "native": True}
+    assert overlay.json() == {"ok": True, "native": True}
+    assert capture.layouts == [(32, 45, 960, 720, 1.5, True)]
+    assert capture.overlays == [((0.1, 0.2, 0.3, 0.4), 87.5, 2)]
+
+
+def test_frame_websocket_immediately_sends_latest_downscaled_i420(tmp_path: Path) -> None:
     fixture = _services(tmp_path)
     fixture.services.hub.publish(
         CapturedFrame.create(1, 1, np.full((10, 20, 3), 40, np.uint8))
@@ -271,12 +391,41 @@ def test_frame_websocket_immediately_sends_latest_downscaled_jpeg(tmp_path: Path
 
     with TestClient(create_app(fixture.services)) as client:
         with client.websocket_connect("/ws/frames") as socket:
+            config = socket.receive_json()
             packet = socket.receive_bytes()
 
+    assert config == {"type": "preview-config", "mode": "i420"}
     assert int.from_bytes(packet[:8], "big") == 2
-    decoded = cv2.imdecode(np.frombuffer(packet[8:], np.uint8), cv2.IMREAD_COLOR)
-    assert decoded.shape[1] == 4
-    assert decoded.shape[0] == 2
+    assert int.from_bytes(packet[16:20], "big") == 4
+    assert int.from_bytes(packet[20:24], "big") == 2
+    assert len(packet[24:]) == 4 * 2 * 3 // 2
+
+
+def test_frame_websocket_sends_wgc_bgra_hardware_preview(tmp_path: Path) -> None:
+    fixture = _services(tmp_path)
+    video_hub = LatestVideoHub(pixel_format="bgra")
+    fixture.services.video_hub = video_hub
+    fixture.services.performance = HardwarePreviewPerformance(fixture.events)  # type: ignore[assignment]
+    video_hub.publish(
+        frame_id=7,
+        timestamp_us=123,
+        width=4,
+        height=2,
+        key_frame=True,
+        payload=bytes(range(32)),
+    )
+
+    with TestClient(create_app(fixture.services)) as client:
+        with client.websocket_connect("/ws/frames") as socket:
+            config = socket.receive_json()
+            packet = socket.receive_bytes()
+
+    assert config == {"type": "preview-config", "mode": "bgra"}
+    assert packet[0] == 1
+    assert int.from_bytes(packet[1:9], "big") == 7
+    assert int.from_bytes(packet[17:21], "big") == 4
+    assert int.from_bytes(packet[21:25], "big") == 2
+    assert packet[25:] == bytes(range(32))
 
 
 def test_state_websocket_sends_current_then_clear_overlay_without_new_frame(
@@ -732,6 +881,82 @@ def test_update_and_diagnostic_metadata_are_one_atomic_knowledge_version(
     assert writer.snapshots[0].metadata["generation_id"] == "new-generation"
 
 
+def test_performance_api_reports_saves_and_records_canvas_fps(
+    tmp_path: Path,
+) -> None:
+    fixture = _services(tmp_path)
+    performance = FakePerformance(fixture.events)
+    fixture.services.performance = performance  # type: ignore[assignment]
+
+    with TestClient(create_app(fixture.services)) as client:
+        status = client.get("/api/performance")
+        saved = client.post(
+            "/api/performance/settings",
+            json={
+                "action": "save",
+                "ocr_backend": "directml:0",
+                "preview_backend": "cpu",
+            },
+        )
+        fps = client.post("/api/performance/canvas-fps", json={"fps": 29.8})
+
+    assert status.status_code == 200
+    assert status.json()["ocr"]["effective"] == "cpu"
+    assert saved.json() == {
+        "ok": True,
+        "action": "save",
+        "pending_ocr": "directml:0",
+        "pending_preview": "cpu",
+    }
+    assert performance.saved == [("directml:0", "cpu")]
+    assert fps.json() == {"ok": True}
+    assert performance.fps == [29.8]
+    assert "performance.start" in fixture.events
+    assert "performance.stop" in fixture.events
+
+
+def test_performance_apply_schedules_restart_after_response(tmp_path: Path) -> None:
+    fixture = _services(tmp_path)
+    performance = FakePerformance(fixture.events)
+    restarted = threading.Event()
+    fixture.services.performance = performance  # type: ignore[assignment]
+    fixture.services.restart = restarted.set
+
+    with TestClient(create_app(fixture.services)) as client:
+        response = client.post(
+            "/api/performance/settings",
+            json={
+                "action": "apply",
+                "ocr_backend": "cpu",
+                "preview_backend": "auto",
+            },
+        )
+        assert response.status_code == 200
+        assert restarted.wait(1.0)
+
+
+def test_performance_api_rejects_invalid_payload(tmp_path: Path) -> None:
+    fixture = _services(tmp_path)
+    fixture.services.performance = FakePerformance(fixture.events)  # type: ignore[assignment]
+
+    with TestClient(create_app(fixture.services)) as client:
+        response = client.post(
+            "/api/performance/settings",
+            json={
+                "action": "unknown",
+                "ocr_backend": "cpu",
+                "preview_backend": "cpu",
+            },
+        )
+        bad_fps = client.post(
+            "/api/performance/canvas-fps",
+            json={"fps": "fast"},
+        )
+
+    assert response.status_code == 400
+    assert bad_fps.status_code == 400
+
+
 def test_static_b_layout_contract(tmp_path: Path) -> None:
     fixture = _services(tmp_path)
     with TestClient(create_app(fixture.services)) as client:
@@ -748,19 +973,52 @@ def test_static_b_layout_contract(tmp_path: Path) -> None:
     assert 'class="local-bank-panel"' in html.text
     assert 'id="localQuestionForm"' in html.text
     assert 'id="localQuestionList"' in html.text
+    assert 'id="backendStatus"' in html.text
+    assert 'id="backendSettingsDialog"' in html.text
+    assert 'id="ocrBackendSelect"' in html.text
+    assert 'id="previewBackendSelect"' in html.text
     assert "不会随诊断文件或发布包导出" in html.text
+    assert "body { margin: 0; min-height: 100vh; overflow: hidden;" in css.text
+    assert "height: 100dvh; min-height: 0;" in css.text
+    assert "place-items: start center" in css.text
+    assert ".canvas-stack { position: relative; width: 100%; height: 100%;" in css.text
+    assert "object-position: center top" in css.text
+    assert ".sidebar { min-height: 0; overflow-y: auto;" in css.text
+    assert "body { overflow: auto; }" in css.text
+    assert ".canvas-stack { height: auto; }" in css.text
+    assert ".sidebar { order: 2; overflow: visible; }" in css.text
     assert "overlayCtx.clearRect" in javascript.text
     assert "state.overlay" in javascript.text
     assert "confidencePresentation" in javascript.text
+    assert 'frameCanvas.getContext("2d", {alpha: false})' in javascript.text
+    assert "const canvasSizeChanged = (" in javascript.text
+    assert "if (canvasSizeChanged) drawOverlay();" in javascript.text
+    assert "function setText(element, value)" in javascript.text
+    assert "const overlayChanged = updateOverlayState(state);" in javascript.text
+    assert "if (overlayChanged) drawOverlay();" in javascript.text
+    assert "const jpeg = new Uint8Array(data, 8);" in javascript.text
+    assert "data.slice(8)" not in javascript.text
     assert "hsl(${hue.toFixed(1)}, 85%, 52%)" in javascript.text
     assert "overlayCtx.setLineDash" in javascript.text
     assert "评分 ${Math.round(presentation.score)}/100" in javascript.text
     assert 'alpha: level === "HIGH" ? 1 : 0.68' in javascript.text
-    assert 'style.aspectRatio = `${bitmap.width} / ${bitmap.height}`' in javascript.text
+    assert 'style.aspectRatio = `${bitmapWidth} / ${bitmapHeight}`' in javascript.text
+    assert 'new VideoDecoder({' in javascript.text
+    assert 'new EncodedVideoChunk({' in javascript.text
+    assert 'message.mode === "h264"' in javascript.text
+    assert 'message.mode === "i420"' in javascript.text
+    assert 'message.mode === "nv12"' in javascript.text
+    assert 'message.mode === "bgra"' in javascript.text
+    assert 'format: "I420"' in javascript.text
+    assert 'format: "NV12"' in javascript.text
+    assert 'format: "BGRA"' in javascript.text
     assert "let activeFrameDecode = false" in javascript.text
     assert "let pendingFrameBuffer = null" in javascript.text
     assert "function createLatestFrameDecoder(decodeFrame, renderFrame)" in javascript.text
     assert "const frameDecoder = createLatestFrameDecoder(decodeFrame, renderFrame)" in javascript.text
+    assert "const i420FrameDecoder = createLatestFrameDecoder(decodeI420Frame, renderFrame)" in javascript.text
+    assert "const nv12FrameDecoder = createLatestFrameDecoder(decodeNV12Frame, renderFrame)" in javascript.text
+    assert "const bgraFrameDecoder = createLatestFrameDecoder(decodeBGRAFrame, renderFrame)" in javascript.text
     assert "frameDecoder.enqueue(data)" in javascript.text
     assert 'apiFetch("/api/local-questions", {method: "GET"})' in javascript.text
     assert 'method: recordId ? "PUT" : "POST"' in javascript.text
@@ -769,8 +1027,16 @@ def test_static_b_layout_contract(tmp_path: Path) -> None:
     assert "frameSocket.onmessage = ({data}) =>" in javascript.text
     assert "frameSocket.onmessage = async" not in javascript.text
     assert "window.confirm" in javascript.text
+    assert "请关闭当前页面并重新打开 XYQQuiz" in javascript.text
+    assert "重新双击 XYQQuiz.exe" not in javascript.text
     assert "完整游戏画面" in javascript.text
     assert "saveRecognitionDiagnostics(currentTarget)" in javascript.text
+    assert 'apiFetch("/api/performance", {method: "GET"})' in javascript.text
+    assert 'apiFetch("/api/performance/settings"' in javascript.text
+    assert 'apiFetch("/api/performance/canvas-fps"' in javascript.text
+    assert "preserveDialogSelection: true" in javascript.text
+    assert "renderPerformanceDialog({preserveSelection:" in javascript.text
+    assert 'performanceSnapshot.pending_ocr' in javascript.text
     assert "pendingFrameBuffer = data" in javascript.text
     assert "while (pendingFrameBuffer !== null)" in javascript.text
     assert "if (pendingFrameBuffer !== null)" in javascript.text
@@ -952,6 +1218,37 @@ def test_bootstrap_is_single_use_and_authorizes_protected_post(tmp_path: Path) -
     assert replay.status_code == 403
     assert update.status_code == 200
     assert len(fixture.pipeline.matchers) == 1
+
+
+def test_protected_get_allows_browser_omitted_origin_with_valid_token(
+    tmp_path: Path,
+) -> None:
+    fixture = _services(tmp_path)
+    fixture.services.performance = FakePerformance(fixture.events)  # type: ignore[assignment]
+    security = LocalWebSecurity("127.0.0.1", 8765, process_token="process-secret")
+
+    with TestClient(
+        create_app(fixture.services, security),
+        base_url=security.expected_origin,
+    ) as client:
+        token = _bootstrap_secure_client(client, security)
+        accepted = client.get(
+            "/api/performance",
+            headers={TOKEN_HEADER: token},
+        )
+        wrong_origin = client.get(
+            "/api/performance",
+            headers={
+                "Origin": "https://attacker.example",
+                TOKEN_HEADER: token,
+            },
+        )
+        missing_token = client.get("/api/performance")
+
+    assert accepted.status_code == 200
+    assert accepted.json()["ok"] is True
+    assert wrong_origin.status_code == 403
+    assert missing_token.status_code == 403
 
 
 def test_clean_page_restores_same_process_without_persisting_process_token(

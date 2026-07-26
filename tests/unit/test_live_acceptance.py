@@ -127,7 +127,7 @@ def test_static_negative_screen_passes_only_the_negative_sample_boundary(capsys)
     assert payload["positive_ocr_validated"] is False
     assert payload["fps_target_met"] is None
     assert "正题/OCR 未验收" in output.err
-    assert "25-30 FPS 已达标" not in output.err
+    assert "30 FPS 已达标" not in output.err
 
 
 def test_negative_pass_rejects_window_disappearance_after_first_frame() -> None:
@@ -426,8 +426,8 @@ def test_sampling_boundaries_exclude_baseline_gap_and_post_end_native_callbacks(
     def sleep(_interval: float) -> None:
         nonlocal now_ns
         now_ns = 10_000_000_000
-        capture.frame_count += 249
-        capture.content_count += 200
+        capture.frame_count += 119
+        capture.content_count += 96
         hub.publish(
             CapturedFrame.create(
                 12,
@@ -449,11 +449,11 @@ def test_sampling_boundaries_exclude_baseline_gap_and_post_end_native_callbacks(
     )
 
     assert report.sampling_elapsed_ns == 10_000_000_000
-    assert report.native_frame_arrivals == 249
-    assert report.content_changes == 200
-    assert report.capture_arrival_hz == 24.9
+    assert report.native_frame_arrivals == 119
+    assert report.content_changes == 96
+    assert report.capture_arrival_hz == 11.9
     assert report.hub_frame_arrivals == 1
-    assert capture.frame_count == 400
+    assert capture.frame_count == 270
     assert report.fps_target_met is None
 
 
@@ -461,16 +461,16 @@ def _dynamic_report(**changes: object) -> LiveAcceptanceReport:
     report = replace(
         _report(),
         seconds=10.0,
-        native_frame_arrivals=332,
-        hub_frame_arrivals=273,
-        content_changes=300,
-        capture_arrival_hz=33.2,
-        hub_arrival_hz=27.3,
-        preview_ws_packet_count=273,
-        preview_ws_unique_frames=273,
+        native_frame_arrivals=294,
+        hub_frame_arrivals=286,
+        content_changes=268,
+        capture_arrival_hz=29.4,
+        hub_arrival_hz=28.6,
+        preview_ws_packet_count=286,
+        preview_ws_unique_frames=286,
         preview_ws_first_received_s=0.02,
         preview_ws_last_received_s=9.98,
-        preview_ws_hz=27.309,
+        preview_ws_hz=28.614,
         preview_ws_duplicate_frames=0,
         preview_ws_out_of_order_frames=0,
         preview_ws_invalid_packets=0,
@@ -598,7 +598,7 @@ def test_fps_gate_needs_ten_raw_seconds_then_fails_closed_on_too_few_frames() ->
 
 
 def test_fps_gate_requires_dynamic_native_evidence() -> None:
-    assert replace(_dynamic_report(), content_changes=100).fps_target_met is None
+    assert replace(_dynamic_report(), content_changes=200).fps_target_met is None
     assert replace(
         _dynamic_report(),
         native_frame_arrivals=249,
@@ -606,7 +606,7 @@ def test_fps_gate_requires_dynamic_native_evidence() -> None:
     ).fps_target_met is None
     assert replace(
         _dynamic_report(),
-        content_changes=100,
+        content_changes=200,
         preview_ws_unique_frames=0,
         preview_ws_hz=None,
         preview_ws_disconnected=True,
@@ -614,12 +614,12 @@ def test_fps_gate_requires_dynamic_native_evidence() -> None:
     ).fps_target_met is None
 
 
-def test_fps_gate_accepts_dynamic_native_33_and_hub_preview_27() -> None:
+def test_fps_gate_accepts_dynamic_native_and_30_fps_preview() -> None:
     report = _dynamic_report()
 
     assert report.fps_target_met is True
     assert report.to_json()["fps_target_met"] is True
-    assert report.to_json()["content_change_ratio"] == 0.904
+    assert report.to_json()["content_change_ratio"] == 0.912
     assert report.to_json()["preview_ws_jpeg_valid"] is True
 
 

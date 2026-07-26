@@ -24,7 +24,39 @@ from xyq_quiz.runtime.state import RuntimePhase, RuntimeStore
 
 
 _LAYOUT_MISSING_GRACE_SECONDS = 0.15
+_IDLE_LAYOUT_SCAN_SECONDS = 0.20
 _RECOGNITION_RETRY_SECONDS = 0.20
+_RECOGNITION_RETRY_MAX_SECONDS = 2.0
+
+
+def _next_recognition_retry_delay(current: float) -> float:
+    return min(_RECOGNITION_RETRY_MAX_SECONDS, current * 2)
+
+
+def _remaining_layout_scan_delay(
+    *,
+    layout_present: bool,
+    layout_missing_cleared: bool,
+    scan_fps: int,
+    last_scan_at: float | None,
+    now: float,
+) -> float:
+    """Return how long recognition should wait before scanning the latest frame.
+
+    Preview capture keeps publishing at its own rate.  The coordinator consumes
+    only the newest available frame at the recognition cadence: ``scan_fps``
+    while a quiz layout is present (including its disappearance grace period),
+    and 5 Hz after absence has been confirmed and state has been cleared.
+    """
+    if last_scan_at is None:
+        return 0.0
+    active_scan = layout_present or not layout_missing_cleared
+    interval = (
+        1.0 / scan_fps
+        if active_scan
+        else _IDLE_LAYOUT_SCAN_SECONDS
+    )
+    return max(0.0, interval - (now - last_scan_at))
 
 
 class CaptureStatusSource(Protocol):
@@ -60,12 +92,21 @@ class RecognitionCoordinator:
         pipeline: Pipeline,
         store: RuntimeStore,
         executor_factory: Callable[[], Executor] | None = None,
+        *,
+        scan_fps: int = 15,
     ) -> None:
         self._capture_service = capture_service
         self._frame_hub = frame_hub
         self._layout_detector = layout_detector
         self._pipeline = pipeline
         self._store = store
+        if (
+            not isinstance(scan_fps, int)
+            or isinstance(scan_fps, bool)
+            or scan_fps <= 0
+        ):
+            raise ValueError("scan_fps must be a positive integer")
+        self._scan_fps = scan_fps
         self._executor_factory = executor_factory or (
             lambda: ThreadPoolExecutor(
                 max_workers=1,
@@ -150,6 +191,7 @@ class RecognitionCoordinator:
         observed_hash: str | None = None
         observed_identity: _QuizCacheIdentity | None = None
         observed_layout: _FrameLayoutIdentity | None = None
+        last_layout_scan_at: float | None = None
         layout_missing_since: float | None = None
         layout_missing_cleared = False
         candidate_count = 0
@@ -158,6 +200,7 @@ class RecognitionCoordinator:
         active_generation: int | None = None
         active_result_level: ConfidenceLevel | None = None
         last_attempt_at: float | None = None
+        retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
         pending: tuple[
             str,
             _QuizCacheIdentity,
@@ -183,12 +226,14 @@ class RecognitionCoordinator:
                 observed_hash = None
                 observed_identity = None
                 observed_layout = None
+                last_layout_scan_at = None
                 candidate_count = 0
                 active_hash = None
                 active_identity = None
                 active_generation = None
                 active_result_level = None
                 last_attempt_at = None
+                retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                 pending = None
 
             if (
@@ -207,6 +252,7 @@ class RecognitionCoordinator:
                 active_generation = None
                 active_result_level = None
                 last_attempt_at = None
+                retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                 pending = None
                 layout_missing_cleared = True
 
@@ -216,6 +262,7 @@ class RecognitionCoordinator:
                 observed_hash = None
                 observed_identity = None
                 observed_layout = None
+                last_layout_scan_at = None
                 layout_missing_since = None
                 layout_missing_cleared = False
                 candidate_count = 0
@@ -224,6 +271,7 @@ class RecognitionCoordinator:
                 active_generation = None
                 active_result_level = None
                 last_attempt_at = None
+                retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                 pending = None
                 self._stop_event.wait(0.02)
                 continue
@@ -239,6 +287,20 @@ class RecognitionCoordinator:
             if self._stop_event.is_set():
                 break
             if frame is not None:
+                scan_delay = _remaining_layout_scan_delay(
+                    layout_present=observed_layout is not None,
+                    layout_missing_cleared=layout_missing_cleared,
+                    scan_fps=self._scan_fps,
+                    last_scan_at=last_layout_scan_at,
+                    now=time.monotonic(),
+                )
+                if scan_delay > 0:
+                    # Keep ``last_frame_id`` unchanged.  Once the independent
+                    # recognition interval expires, ``wait_after`` returns the
+                    # hub's newest frame even if capture published nothing else.
+                    self._stop_event.wait(scan_delay)
+                    continue
+            if frame is not None:
                 last_frame_id = frame.frame_id
                 capture_status = self._capture_service.status()
                 if capture_status.phase is not CapturePhase.CAPTURING:
@@ -246,6 +308,7 @@ class RecognitionCoordinator:
                     observed_hash = None
                     observed_identity = None
                     observed_layout = None
+                    last_layout_scan_at = None
                     layout_missing_since = None
                     layout_missing_cleared = False
                     candidate_count = 0
@@ -254,9 +317,11 @@ class RecognitionCoordinator:
                     active_generation = None
                     active_result_level = None
                     last_attempt_at = None
+                    retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                     pending = None
                 else:
                     layout_started = time.perf_counter()
+                    last_layout_scan_at = time.monotonic()
                     layout = self._layout_detector.detect(frame.bgr)
                     layout_ms = (time.perf_counter() - layout_started) * 1000.0
                     if self._stop_event.is_set():
@@ -267,6 +332,7 @@ class RecognitionCoordinator:
                         observed_hash = None
                         observed_identity = None
                         observed_layout = None
+                        last_layout_scan_at = None
                         layout_missing_since = None
                         layout_missing_cleared = False
                         candidate_count = 0
@@ -275,6 +341,7 @@ class RecognitionCoordinator:
                         active_generation = None
                         active_result_level = None
                         last_attempt_at = None
+                        retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                         pending = None
                     elif layout is None:
                         if layout_missing_since is None:
@@ -298,6 +365,7 @@ class RecognitionCoordinator:
                             active_generation = None
                             active_result_level = None
                             last_attempt_at = None
+                            retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                             pending = None
                         observed_layout = layout_signature
                         question_hash = _quiz_stability_signature(frame.bgr, layout)
@@ -324,6 +392,7 @@ class RecognitionCoordinator:
                             active_generation = None
                             active_result_level = None
                             last_attempt_at = None
+                            retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                             pending = None
                         else:
                             if (
@@ -350,6 +419,7 @@ class RecognitionCoordinator:
                                 )
                                 active_generation = generation
                                 active_result_level = None
+                                retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                                 with self._cache_lock:
                                     cache_epoch = self._cache_epoch
                                     cached_entry = self._cache.get(active_hash)
@@ -395,6 +465,7 @@ class RecognitionCoordinator:
                                 # not byte-identical.  Keep the existing overlay
                                 # while two matching frames settle, then remap.
                                 active_identity = identity
+                                retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                                 generation = active_generation
                                 if generation is not None:
                                     with self._cache_lock:
@@ -446,7 +517,7 @@ class RecognitionCoordinator:
                                 and (
                                     last_attempt_at is None
                                     or time.monotonic() - last_attempt_at
-                                    >= _RECOGNITION_RETRY_SECONDS
+                                    >= retry_delay_seconds
                                 )
                             ):
                                 # A retry deliberately reuses the generation so
@@ -459,6 +530,11 @@ class RecognitionCoordinator:
                                     layout_ms,
                                     active_generation,
                                     cache_epoch,
+                                )
+                                retry_delay_seconds = (
+                                    _next_recognition_retry_delay(
+                                        retry_delay_seconds
+                                    )
                                 )
 
             # New frame transitions above always invalidate stale generations first.

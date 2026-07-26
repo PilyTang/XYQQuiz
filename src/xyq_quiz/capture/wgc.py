@@ -6,9 +6,11 @@ import threading
 import time
 from typing import Any
 
+import cv2
 import numpy as np
 
 from xyq_quiz.capture.models import CapturedFrame
+from xyq_quiz.capture.video import LatestVideoHub
 
 
 class WGCCaptureUnavailable(RuntimeError):
@@ -25,8 +27,61 @@ class WGCCaptureStats:
 
 
 class WGCCapture:
-    def __init__(self, factory: Callable[..., Any] | None = None) -> None:
+    def __init__(
+        self,
+        factory: Callable[..., Any] | None = None,
+        *,
+        minimum_update_interval_ms: int | None = None,
+        video_hub: LatestVideoHub | None = None,
+        preview_width: int = 1024,
+        preview_fps: int | None = None,
+        recognition_fps: int | None = None,
+    ) -> None:
+        if (
+            minimum_update_interval_ms is not None
+            and (
+                not isinstance(minimum_update_interval_ms, int)
+                or isinstance(minimum_update_interval_ms, bool)
+                or minimum_update_interval_ms <= 0
+            )
+        ):
+            raise ValueError("minimum_update_interval_ms must be a positive integer")
+        if (
+            not isinstance(preview_width, int)
+            or isinstance(preview_width, bool)
+            or preview_width <= 0
+        ):
+            raise ValueError("preview_width must be a positive integer")
+        if (
+            preview_fps is not None
+            and (
+                not isinstance(preview_fps, int)
+                or isinstance(preview_fps, bool)
+                or preview_fps <= 0
+            )
+        ):
+            raise ValueError("preview_fps must be a positive integer")
+        if (
+            recognition_fps is not None
+            and (
+                not isinstance(recognition_fps, int)
+                or isinstance(recognition_fps, bool)
+                or recognition_fps <= 0
+            )
+        ):
+            raise ValueError("recognition_fps must be a positive integer")
         self._factory = factory
+        self._minimum_update_interval_ms = minimum_update_interval_ms
+        self._video_hub = video_hub
+        self._preview_width = preview_width
+        self._preview_interval_ns = (
+            None if preview_fps is None else 1_000_000_000 // preview_fps
+        )
+        self._recognition_interval_ns = (
+            None if recognition_fps is None else 1_000_000_000 // recognition_fps
+        )
+        if self._video_hub is not None:
+            self._video_hub.set_pixel_format("i420")
         self._lock = threading.Lock()
         self._capture: Any | None = None
         self._capture_control: Any | None = None
@@ -37,6 +92,8 @@ class WGCCapture:
         self._running = False
         self._hwnd: int | None = None
         self._generation = 0
+        self._last_preview_ns = 0
+        self._last_recognition_ns = 0
 
     def start(
         self,
@@ -59,11 +116,19 @@ class WGCCapture:
         capture: Any | None = None
         try:
             factory = self._factory or _windows_capture_factory()
-            capture = factory(
-                window_hwnd=hwnd,
-                cursor_capture=False,
-                draw_border=False,
-            )
+            capture_options: dict[str, Any] = {
+                "window_hwnd": hwnd,
+                "cursor_capture": False,
+                "draw_border": False,
+            }
+            if self._minimum_update_interval_ms is not None:
+                # Ask Windows Graphics Capture to throttle before Python copies
+                # the full BGRA frame.  Polling the already-copied latest frame
+                # later cannot recover this CPU cost.
+                capture_options["minimum_update_interval"] = (
+                    self._minimum_update_interval_ms
+                )
+            capture = factory(**capture_options)
 
             @capture.event
             def on_frame_arrived(frame: Any, capture_control: Any) -> None:
@@ -81,9 +146,12 @@ class WGCCapture:
                 if raw_bgra is None or raw_bgra.ndim != 3 or raw_bgra.shape[2] < 4:
                     return
 
-                bgr = np.ascontiguousarray(raw_bgra[:, :, :3])
-                height, width = bgr.shape[:2]
-                sample = bgr[:: max(1, height // 64), :: max(1, width // 64)]
+                height, width = raw_bgra.shape[:2]
+                sample = raw_bgra[
+                    :: max(1, height // 64),
+                    :: max(1, width // 64),
+                    :3,
+                ]
                 signature = int(sample.sum(dtype=np.uint64) % 1_000_000_007)
                 captured_at_ns = time.perf_counter_ns()
 
@@ -96,14 +164,68 @@ class WGCCapture:
                         capture_control.stop()
                         return
                     self._frame_count += 1
+                    frame_id = self._frame_count
                     if self._last_signature != signature:
                         self._last_signature = signature
                         self._content_change_count += 1
-                    self._latest = CapturedFrame.create(
-                        frame_id=self._frame_count,
-                        captured_at_ns=captured_at_ns,
-                        bgr=bgr,
+                    recognition_due = (
+                        self._recognition_interval_ns is None
+                        or self._last_recognition_ns == 0
+                        or captured_at_ns - self._last_recognition_ns
+                        >= self._recognition_interval_ns
                     )
+                    if recognition_due:
+                        self._last_recognition_ns = captured_at_ns
+                    preview_due = (
+                        self._preview_interval_ns is None
+                        or self._last_preview_ns == 0
+                        or captured_at_ns - self._last_preview_ns
+                        >= self._preview_interval_ns
+                    )
+                    if preview_due:
+                        self._last_preview_ns = captured_at_ns
+
+                if self._video_hub is not None and preview_due:
+                    preview_width = min(width, self._preview_width)
+                    preview_width = max(2, preview_width - preview_width % 2)
+                    preview_height = max(
+                        2,
+                        round(height * preview_width / width),
+                    )
+                    preview_height -= preview_height % 2
+                    preview = raw_bgra[:, :, :4]
+                    if (preview_width, preview_height) != (width, height):
+                        preview = cv2.resize(
+                            preview,
+                            (preview_width, preview_height),
+                            interpolation=cv2.INTER_AREA,
+                        )
+                    preview_i420 = cv2.cvtColor(
+                        preview,
+                        cv2.COLOR_BGRA2YUV_I420,
+                    )
+                    self._video_hub.publish(
+                        frame_id=frame_id,
+                        timestamp_us=captured_at_ns // 1_000,
+                        width=preview_width,
+                        height=preview_height,
+                        key_frame=True,
+                        payload=preview_i420.tobytes(),
+                    )
+
+                if recognition_due:
+                    bgr = np.ascontiguousarray(raw_bgra[:, :, :3])
+                    with self._lock:
+                        if (
+                            self._generation == generation
+                            and self._running
+                            and self._capture is capture
+                        ):
+                            self._latest = CapturedFrame.create(
+                                frame_id=frame_id,
+                                captured_at_ns=captured_at_ns,
+                                bgr=bgr,
+                            )
 
             @capture.event
             def on_closed(*_args: Any) -> None:
@@ -180,6 +302,8 @@ class WGCCapture:
         self._content_change_count = 0
         self._running = False
         self._hwnd = None
+        self._last_preview_ns = 0
+        self._last_recognition_ns = 0
 
     @staticmethod
     def _stop_session(capture: Any | None, capture_control: Any | None) -> None:

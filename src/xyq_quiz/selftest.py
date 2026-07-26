@@ -276,10 +276,17 @@ def _check_state(config_path: Path) -> str:
 
 
 def _check_native_imports() -> str:
-    modules = ("cv2", "onnxruntime", "rapidocr", "windows_capture", "websockets")
+    modules = (
+        "cv2",
+        "onnxruntime",
+        "rapidocr",
+        "windows_capture",
+        "websockets",
+        "webview.platforms.edgechromium",
+    )
     for name in modules:
         importlib.import_module(name)
-    return "原生与 WebSocket 运行依赖均可导入"
+    return "原生、WebView2 与 WebSocket 运行依赖均可导入"
 
 
 def _check_ocr_inference() -> str:

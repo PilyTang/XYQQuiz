@@ -11,6 +11,7 @@ import numpy as np
 import pytest
 
 import xyq_quiz.tools.calibrate as calibrate_module
+import xyq_quiz.recognition.layout as layout_module
 from xyq_quiz.recognition.layout import (
     _AnchorMatch,
     _fit_anchor_transform,
@@ -36,6 +37,23 @@ _CALIBRATION_SELECTIONS = (
     (5, 5, 8, 8),
     (140, 85, 8, 8),
 )
+
+
+def test_opencv_thread_budget_caps_only_excess_parallelism(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    configured: list[int] = []
+    monkeypatch.setattr(layout_module.cv2, "getNumThreads", lambda: 16)
+    monkeypatch.setattr(layout_module.cv2, "setNumThreads", configured.append)
+
+    layout_module._limit_opencv_threads()
+
+    assert configured == [2]
+
+    configured.clear()
+    monkeypatch.setattr(layout_module.cv2, "getNumThreads", lambda: 1)
+    layout_module._limit_opencv_threads()
+    assert configured == []
 
 
 @pytest.mark.parametrize(

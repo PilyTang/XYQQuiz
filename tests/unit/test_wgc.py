@@ -10,6 +10,8 @@ import numpy as np
 import pytest
 from numpy.typing import NDArray
 
+import xyq_quiz.capture.wgc as wgc_module
+from xyq_quiz.capture.video import LatestVideoHub
 from xyq_quiz.capture.wgc import WGCCapture
 
 
@@ -170,6 +172,61 @@ def test_wgc_publishes_latest_immutable_frame(fake_factory: FakeFactory) -> None
     assert capture.stats().frame_count == 1
 
 
+def test_wgc_publishes_resized_i420_preview_without_throttling_it(
+    fake_factory: FakeFactory,
+) -> None:
+    video_hub = LatestVideoHub()
+    capture = WGCCapture(
+        factory=fake_factory,
+        video_hub=video_hub,
+        preview_width=4,
+        recognition_fps=1,
+    )
+    capture.start(123)
+    bgra = np.zeros((4, 8, 4), dtype=np.uint8)
+    bgra[:, :, 0] = 11
+    bgra[:, :, 3] = 255
+
+    fake_factory.session.emit(bgra)
+    first_recognition = capture.latest()
+    fake_factory.session.emit(bgra)
+
+    window = video_hub.wait_after(0, 0)
+    assert video_hub.pixel_format == "i420"
+    assert [frame.frame_id for frame in window.frames] == [1, 2]
+    assert all((frame.width, frame.height) == (4, 2) for frame in window.frames)
+    assert all(len(frame.payload) == 4 * 2 * 3 // 2 for frame in window.frames)
+    assert capture.latest() is first_recognition
+
+
+def test_wgc_caps_preview_independently_from_recognition(
+    fake_factory: FakeFactory,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    timestamps = iter((1_000_000_000, 1_020_000_000, 1_040_000_000))
+    monkeypatch.setattr(wgc_module.time, "perf_counter_ns", lambda: next(timestamps))
+    video_hub = LatestVideoHub()
+    capture = WGCCapture(
+        factory=fake_factory,
+        video_hub=video_hub,
+        preview_width=4,
+        preview_fps=30,
+        recognition_fps=1,
+    )
+    capture.start(123)
+    bgra = np.zeros((2, 4, 4), dtype=np.uint8)
+
+    fake_factory.session.emit(bgra)
+    first_recognition = capture.latest()
+    fake_factory.session.emit(bgra)
+    fake_factory.session.emit(bgra)
+
+    assert [
+        frame.frame_id for frame in video_hub.wait_after(0, 0).frames
+    ] == [1, 3]
+    assert capture.latest() is first_recognition
+
+
 def test_wgc_does_not_wait_or_fallback_when_no_frame(fake_factory: FakeFactory) -> None:
     capture = WGCCapture(factory=fake_factory)
     capture.start(123)
@@ -198,6 +255,53 @@ def test_wgc_start_is_idempotent_and_replaces_changed_hwnd(
     ]
     assert fake_factory.session.started is True
     assert capture.stats().hwnd == 456
+
+
+def test_wgc_passes_native_minimum_update_interval(
+    fake_factory: FakeFactory,
+) -> None:
+    capture = WGCCapture(
+        factory=fake_factory,
+        minimum_update_interval_ms=67,
+    )
+
+    capture.start(123)
+
+    assert fake_factory.calls == [
+        {
+            "window_hwnd": 123,
+            "cursor_capture": False,
+            "draw_border": False,
+            "minimum_update_interval": 67,
+        }
+    ]
+
+
+@pytest.mark.parametrize("value", [0, -1, True, 1.5])
+def test_wgc_rejects_invalid_minimum_update_interval(value: object) -> None:
+    with pytest.raises(
+        ValueError,
+        match="minimum_update_interval_ms must be a positive integer",
+    ):
+        WGCCapture(minimum_update_interval_ms=value)  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize("value", [0, -1, True, 1.5])
+def test_wgc_rejects_invalid_preview_width(value: object) -> None:
+    with pytest.raises(ValueError, match="preview_width must be a positive integer"):
+        WGCCapture(preview_width=value)  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize("value", [0, -1, True, 1.5])
+def test_wgc_rejects_invalid_preview_fps(value: object) -> None:
+    with pytest.raises(ValueError, match="preview_fps must be a positive integer"):
+        WGCCapture(preview_fps=value)  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize("value", [0, -1, True, 1.5])
+def test_wgc_rejects_invalid_recognition_fps(value: object) -> None:
+    with pytest.raises(ValueError, match="recognition_fps must be a positive integer"):
+        WGCCapture(recognition_fps=value)  # type: ignore[arg-type]
 
 
 def test_wgc_stats_track_content_changes_age_and_close(

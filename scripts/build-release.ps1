@@ -145,6 +145,10 @@ try {
         -not $VersionInfo.Contains("StringStruct('ProductVersion', '$Version')")) {
         throw "packaging version_info.txt does not match application version $Version"
     }
+    $NativeBuildScript = Join-Path $ProjectRoot "scripts\build-native-helper.ps1"
+    & $NativeBuildScript
+    if ($LASTEXITCODE -ne 0) { throw "Native helper build failed with exit code $LASTEXITCODE" }
+
     & $PythonPath -m PyInstaller ".\packaging\XYQQuiz.spec" --noconfirm --clean --distpath $DistRoot --workpath $WorkRoot
     if ($LASTEXITCODE -ne 0) { throw "PyInstaller failed with exit code $LASTEXITCODE" }
 

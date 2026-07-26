@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
+import xyq_quiz.selftest as selftest_module
 from xyq_quiz.runtime.paths import RuntimePaths
 from xyq_quiz.selftest import run_self_test, verify_build_manifest, write_version_report
 
@@ -92,3 +93,17 @@ def test_version_report_is_json_and_does_not_need_console(tmp_path: Path) -> Non
     assert path.name == "version.json"
     assert payload["app_id"] == "xyq-quiz"
     assert payload["target"].startswith("Windows 10 1903+")
+
+
+def test_native_import_check_includes_frozen_webview2_backend(monkeypatch) -> None:
+    imported: list[str] = []
+    monkeypatch.setattr(
+        selftest_module.importlib,
+        "import_module",
+        lambda name: imported.append(name),
+    )
+
+    detail = selftest_module._check_native_imports()
+
+    assert "webview.platforms.edgechromium" in imported
+    assert "WebView2" in detail

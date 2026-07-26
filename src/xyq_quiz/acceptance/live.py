@@ -31,6 +31,22 @@ class LiveAcceptanceError(RuntimeError):
     pass
 
 
+def _preview_frame_id(packet: object) -> int | None:
+    if not isinstance(packet, bytes):
+        return None
+    if len(packet) > 10 and packet[8:10] == b"\xff\xd8":
+        return int.from_bytes(packet[:8], "big")
+    if len(packet) <= 24:
+        return None
+    width = int.from_bytes(packet[16:20], "big")
+    height = int.from_bytes(packet[20:24], "big")
+    if width <= 0 or height <= 0 or width % 2 or height % 2:
+        return None
+    if len(packet) != 24 + width * height * 3 // 2:
+        return None
+    return int.from_bytes(packet[:8], "big")
+
+
 @dataclass(frozen=True, slots=True)
 class _PreviewPacketSample:
     packet_count: int
@@ -81,14 +97,10 @@ class _PreviewPacketCollector:
         invalid_packets = 0
         last_frame_id: int | None = None
         for packet, received_at in packets:
-            if (
-                not isinstance(packet, bytes)
-                or len(packet) <= 10
-                or packet[8:10] != b"\xff\xd8"
-            ):
+            frame_id = _preview_frame_id(packet)
+            if frame_id is None:
                 invalid_packets += 1
                 continue
-            frame_id = int.from_bytes(packet[:8], "big")
             if last_frame_id is not None:
                 if frame_id == last_frame_id:
                     duplicate_frames += 1
@@ -232,11 +244,8 @@ class _LoopbackWebMonitor:
                         packet = websocket.recv(timeout=0.25)
                     except TimeoutError:
                         continue
-                    valid = (
-                        isinstance(packet, bytes)
-                        and len(packet) > 10
-                        and packet[8:10] == b"\xff\xd8"
-                    )
+                    frame_id = _preview_frame_id(packet)
+                    valid = frame_id is not None
                     if valid:
                         self._frames_ready.set()
                     if self._sampling.is_set():
@@ -245,7 +254,10 @@ class _LoopbackWebMonitor:
                             collector = self._collector
                         if (
                             not valid
-                            or int.from_bytes(packet[:8], "big") > minimum_frame_id
+                            or (
+                                frame_id is not None
+                                and frame_id > minimum_frame_id
+                            )
                         ):
                             collector.observe(packet, time.perf_counter())
         except ConnectionClosed:
@@ -915,7 +927,7 @@ def main(
     else:
         print(
             "当前无题屏负样本通过：非黑、无布局、无 overlay；正题/OCR 未验收，"
-            "25-30 FPS 未作达标结论。",
+            "30 FPS 未作达标结论。",
             file=sys.stderr,
         )
     return 0

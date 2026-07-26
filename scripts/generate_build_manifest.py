@@ -16,7 +16,7 @@ DEPENDENCIES = (
     "numpy",
     "opencv-python",
     "rapidocr",
-    "onnxruntime",
+    "onnxruntime-directml",
     "rapidfuzz",
     "httpx",
     "pyjson5",

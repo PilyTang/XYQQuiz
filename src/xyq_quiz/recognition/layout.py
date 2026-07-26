@@ -21,6 +21,9 @@ from xyq_quiz.recognition.models import (
 )
 
 
+_MAX_OPENCV_THREADS = 2
+
+
 class LayoutTransformError(ValueError):
     """The matched anchors cannot define a safe ROI transform."""
 
@@ -820,6 +823,7 @@ def build_layout_detector(
 ) -> ResolutionAdaptiveLayoutDetector:
     if not profiles:
         raise ValueError("at least one layout profile is required")
+    _limit_opencv_threads()
     if len(profiles) == 1:
         detector: _Detector = TemplateLayoutDetector(profiles[0])
     else:
@@ -836,6 +840,18 @@ def build_layout_detector(
         detector,
         max_analysis_width=1600,
     )
+
+
+def _limit_opencv_threads() -> None:
+    """Keep frequent layout/JPEG work from occupying every logical CPU.
+
+    OpenCV otherwise defaults to the host's logical processor count.  Layout
+    matching is small enough that two workers retain low latency while avoiding
+    short bursts across most of a desktop CPU.  Respect an existing stricter
+    process-wide setting.
+    """
+    if cv2.getNumThreads() > _MAX_OPENCV_THREADS:
+        cv2.setNumThreads(_MAX_OPENCV_THREADS)
 
 
 def _scale_candidates(scale_range: tuple[float, float]) -> tuple[float, ...]:

@@ -7,9 +7,17 @@ relicense or grant rights to the third-party content described below.
 
 This distribution contains Python and third-party packages including FastAPI,
 Uvicorn, websockets, windows-capture, NumPy, OpenCV, RapidOCR, ONNX Runtime,
-RapidFuzz, HTTPX, pyjson5, Pydantic, and their transitive dependencies.
+RapidFuzz, HTTPX, pyjson5, Pydantic, pywebview, pythonnet, and their transitive
+dependencies. pywebview is distributed under the BSD 3-Clause License and
+pythonnet under the MIT License.
 Their license files and package metadata are retained in the bundled runtime
 where supplied by the corresponding distributions.
+
+The Windows desktop shell bundles the WebView2 SDK interop and loader files
+distributed by pywebview. It does not bundle a Fixed Version WebView2 Runtime;
+the Microsoft Edge WebView2 Evergreen Runtime is separately installed and
+serviced Microsoft software. When that runtime is unavailable, XYQQuiz falls
+back to the system browser.
 
 The bundled Keju question-bank snapshot is derived from the public NetEase
 Keju page at https://w.163.com/h5/xyq/dtk/index.html#/keju. Source URL,

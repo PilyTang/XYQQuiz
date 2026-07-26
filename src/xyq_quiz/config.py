@@ -26,6 +26,7 @@ class MatchConfig(BaseModel):
 
 
 class RecognitionConfig(BaseModel):
+    scan_fps: int = Field(default=15, ge=1, le=60)
     ocr_workers: int = 1
 
     @field_validator("ocr_workers", mode="before")
@@ -36,6 +37,37 @@ class RecognitionConfig(BaseModel):
                 "ocr_workers 现在只支持 1；请改为 1 或删除该配置项"
             )
         return value
+
+
+class PerformanceConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    ocr_backend: str = "auto"
+    preview_backend: str = "auto"
+
+    @field_validator("ocr_backend")
+    @classmethod
+    def validate_ocr_backend(cls, value: str) -> str:
+        return _validate_backend_selection(
+            value,
+            accelerated_prefix="directml",
+            field_name="performance.ocr_backend",
+        )
+
+    @field_validator("preview_backend")
+    @classmethod
+    def validate_preview_backend(cls, value: str) -> str:
+        if value in {"auto", "cpu", "windows_hardware:auto"}:
+            return value
+        prefix = "windows_hardware:"
+        if value.startswith(prefix):
+            legacy_device_id = value.removeprefix(prefix)
+            if legacy_device_id.isascii() and legacy_device_id.isdecimal():
+                return "windows_hardware:auto"
+        raise ValueError(
+            "performance.preview_backend 必须是 auto、cpu 或 "
+            "windows_hardware:auto"
+        )
 
 
 class WebConfig(BaseModel):
@@ -60,6 +92,7 @@ class AppConfig(BaseModel):
     capture: CaptureConfig = Field(default_factory=CaptureConfig)
     match: MatchConfig = Field(default_factory=MatchConfig)
     recognition: RecognitionConfig = Field(default_factory=RecognitionConfig)
+    performance: PerformanceConfig = Field(default_factory=PerformanceConfig)
     web: WebConfig = Field(default_factory=WebConfig)
     data_dir: Path = Path("data")
     layout_path: Path = Path("data/layouts/keju-default.json")
@@ -103,3 +136,21 @@ class AppConfig(BaseModel):
     @staticmethod
     def _resolve_relative(value: Path, base_dir: Path) -> Path:
         return value if value.is_absolute() else (base_dir / value).resolve()
+
+
+def _validate_backend_selection(
+    value: str,
+    *,
+    accelerated_prefix: str,
+    field_name: str,
+) -> str:
+    if value in {"auto", "cpu"}:
+        return value
+    prefix = f"{accelerated_prefix}:"
+    if value.startswith(prefix):
+        device_id = value.removeprefix(prefix)
+        if device_id.isascii() and device_id.isdecimal():
+            return f"{accelerated_prefix}:{int(device_id)}"
+    raise ValueError(
+        f"{field_name} 必须是 auto、cpu 或 {accelerated_prefix}:<device_id>"
+    )

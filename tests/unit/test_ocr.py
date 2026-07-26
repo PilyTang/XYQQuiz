@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import sys
 from types import SimpleNamespace
 
 import numpy as np
@@ -12,12 +13,77 @@ from xyq_quiz.recognition.ocr import (
     LineSegmentationError,
     OCRRole,
     RapidOCREngine,
+    _default_engine_factory,
     segment_text_lines,
 )
 
 
 def _canvas(height: int = 100, width: int = 200) -> np.ndarray:
     return np.full((height, width, 3), 255, dtype=np.uint8)
+
+
+def test_default_rapidocr_factory_limits_onnx_cpu_threads(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: list[dict[str, object] | None] = []
+
+    class FakeRapidOCR:
+        def __init__(self, *, params: dict[str, object] | None = None) -> None:
+            captured.append(params)
+
+    monkeypatch.setitem(
+        sys.modules,
+        "rapidocr",
+        SimpleNamespace(RapidOCR=FakeRapidOCR),
+    )
+
+    assert isinstance(_default_engine_factory(), FakeRapidOCR)
+    assert captured == [
+        {
+            "EngineConfig.onnxruntime.intra_op_num_threads": 2,
+            "EngineConfig.onnxruntime.inter_op_num_threads": 1,
+        }
+    ]
+
+
+def test_directml_rapidocr_factory_selects_one_concrete_adapter(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: list[dict[str, object] | None] = []
+
+    class FakeRapidOCR:
+        def __init__(self, *, params: dict[str, object] | None = None) -> None:
+            captured.append(params)
+
+    monkeypatch.setitem(
+        sys.modules,
+        "rapidocr",
+        SimpleNamespace(RapidOCR=FakeRapidOCR),
+    )
+
+    engine = RapidOCREngine(backend="directml", device_id=2)
+    engine._get_engine()
+
+    assert captured == [
+        {
+            "EngineConfig.onnxruntime.intra_op_num_threads": 2,
+            "EngineConfig.onnxruntime.inter_op_num_threads": 1,
+            "EngineConfig.onnxruntime.use_dml": True,
+            "EngineConfig.onnxruntime.dml_ep_cfg": {"device_id": "2"},
+        }
+    ]
+
+
+@pytest.mark.parametrize(
+    ("backend", "device_id"),
+    (("directml", None), ("directml", -1), ("cpu", 0), ("cuda", None)),
+)
+def test_rapidocr_engine_rejects_invalid_backend_selection(
+    backend: str,
+    device_id: int | None,
+) -> None:
+    with pytest.raises(ValueError):
+        RapidOCREngine(backend=backend, device_id=device_id)
 
 
 def _draw_text(

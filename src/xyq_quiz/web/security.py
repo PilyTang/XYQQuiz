@@ -113,13 +113,15 @@ class LocalWebSecurity:
         origin: object,
         token: object,
         bootstrap: bool = False,
+        allow_missing_origin: bool = False,
     ) -> BoundaryDecision:
         host_decision = self.validate_host(host)
         if not host_decision.allowed:
             return host_decision
-        origin_decision = self.validate_origin(origin)
-        if not origin_decision.allowed:
-            return origin_decision
+        if origin is not None or not allow_missing_origin:
+            origin_decision = self.validate_origin(origin)
+            if not origin_decision.allowed:
+                return origin_decision
         if not bootstrap and not self.validate_process_token(token):
             return BoundaryDecision(False, 403, "本机会话令牌无效")
         return BoundaryDecision(True)

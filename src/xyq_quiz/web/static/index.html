@@ -16,7 +16,14 @@
         </div>
       </section>
       <aside class="sidebar">
-        <header><p class="eyebrow">本机识别状态</p><h1>科举答题助手</h1></header>
+        <header>
+          <p class="eyebrow">本机识别状态</p>
+          <h1>科举答题助手</h1>
+          <div class="backend-status-row">
+            <span id="backendStatus" title="正在读取执行后端状态">OCR CPU · 预览 CPU · — FPS</span>
+            <button id="backendSettingsButton" class="icon-button" type="button" title="性能设置" aria-label="打开性能设置" disabled>⚙</button>
+          </div>
+        </header>
         <dl class="status-grid">
           <div><dt>阶段</dt><dd id="phase">—</dd></div>
           <div><dt>采集</dt><dd id="capturePhase">—</dd></div>
@@ -78,6 +85,40 @@
         <p id="errorMessage" role="alert"></p>
       </aside>
     </main>
+    <dialog id="backendSettingsDialog" class="settings-dialog" aria-labelledby="backendSettingsTitle">
+      <form id="backendSettingsForm">
+        <div class="dialog-title-row">
+          <div>
+            <p class="eyebrow">性能设置</p>
+            <h2 id="backendSettingsTitle">执行后端</h2>
+          </div>
+          <button id="backendSettingsClose" class="icon-button" type="button" aria-label="关闭设置">×</button>
+        </div>
+        <p class="dialog-help">OCR 推理与 30 FPS 预览分别选择。不可用的设备不会开放选择；保存后下次启动生效。</p>
+        <div class="backend-fields">
+          <label>
+            OCR 执行后端
+            <select id="ocrBackendSelect"></select>
+            <small id="ocrBackendCurrent">当前：—</small>
+          </label>
+          <label>
+            预览执行后端
+            <select id="previewBackendSelect"></select>
+            <small id="previewBackendCurrent">当前：—</small>
+          </label>
+        </div>
+        <div class="benchmark-row">
+          <span id="backendProbeStatus">自检状态：—</span>
+          <button id="backendReevaluateButton" class="secondary compact" type="button" disabled>重新评估</button>
+        </div>
+        <p id="backendSettingsMessage" class="panel-error" role="alert"></p>
+        <div class="dialog-actions">
+          <button id="backendSettingsCancel" class="secondary" type="button">取消</button>
+          <button id="backendSettingsSave" class="secondary" type="submit">保存</button>
+          <button id="backendSettingsApply" type="button">应用</button>
+        </div>
+      </form>
+    </dialog>
     <script src="/app.js" defer></script>
   </body>
 </html>

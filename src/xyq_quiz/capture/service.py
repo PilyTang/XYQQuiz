@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import deque
 from collections.abc import Callable
 from dataclasses import dataclass
+import math
 import threading
 
 import numpy as np
@@ -14,6 +15,7 @@ from xyq_quiz.capture.models import (
     CaptureStatus,
     WindowTarget,
 )
+from xyq_quiz.capture.video import LatestVideoHub
 from xyq_quiz.capture.wgc import WGCCapture, WGCCaptureStats
 from xyq_quiz.capture.windowing import enumerate_windows, select_window
 from xyq_quiz.config import AppConfig
@@ -51,12 +53,38 @@ class CaptureService:
         config: AppConfig,
         hub: LatestFrameHub,
         window_finder: WindowFinder = enumerate_windows,
-        wgc_factory: WGCCaptureFactory = WGCCapture,
+        wgc_factory: WGCCaptureFactory | None = None,
+        video_hub: LatestVideoHub | None = None,
+        hardware_preview: bool = False,
+        capture_fps: int | None = None,
     ) -> None:
         self._config = config
         self._hub = hub
         self._window_finder = window_finder
-        self._wgc = wgc_factory()
+        self._capture_fps = capture_fps or config.capture.preview_fps
+        if self._capture_fps <= 0:
+            raise ValueError("capture_fps must be positive")
+        if wgc_factory is not None:
+            self._wgc = wgc_factory()
+        elif hardware_preview:
+            self._wgc = WGCCapture(
+                minimum_update_interval_ms=math.ceil(
+                    1000 / config.capture.preview_fps
+                ),
+                video_hub=video_hub,
+                # Recognition keeps the full WGC frame.  The display stream is
+                # intentionally smaller so raw I420 can sustain 30 FPS through
+                # the local WebSocket without building latency.
+                preview_width=768,
+                preview_fps=config.capture.preview_fps,
+                recognition_fps=config.recognition.scan_fps,
+            )
+        else:
+            self._wgc = WGCCapture(
+                minimum_update_interval_ms=math.ceil(
+                    1000 / self._capture_fps
+                ),
+            )
         self._lock = threading.Lock()
         self._lifecycle_lock = threading.Lock()
         self._lifecycle_generation = 0
@@ -151,7 +179,12 @@ class CaptureService:
         target: WindowTarget | None = None
         last_frame_id = 0
         black_frame_count = 0
-        frame_poll_interval = 1 / self._config.capture.preview_fps
+        # Poll the native latest-frame slot twice per target period.  Polling at
+        # exactly the WGC cadence can phase-lock just behind the callback and
+        # skip otherwise valid frames, turning a 30 FPS capture into ~27 FPS at
+        # the preview hub.  This does not copy extra frames: frame_id still
+        # guards publication, while WGC itself remains capped at preview_fps.
+        frame_poll_interval = 0.5 / self._capture_fps
 
         try:
             while self._generation_is_active(generation):

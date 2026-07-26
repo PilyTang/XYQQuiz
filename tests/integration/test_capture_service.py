@@ -6,6 +6,7 @@ import threading
 
 import numpy as np
 import pytest
+import xyq_quiz.capture.service as service_module
 
 from xyq_quiz.capture.hub import LatestFrameHub
 from xyq_quiz.capture.models import (
@@ -168,6 +169,56 @@ class CountingFactory:
     def __call__(self) -> FakeWGC:
         self.calls += 1
         return self._capture
+
+
+@pytest.mark.parametrize(
+    ("capture_config", "expected_interval_ms"),
+    [
+        ({}, 34),
+        ({"preview_fps": 15}, 67),
+    ],
+)
+def test_default_wgc_is_throttled_to_configured_preview_rate(
+    monkeypatch: pytest.MonkeyPatch,
+    capture_config: dict[str, int],
+    expected_interval_ms: int,
+) -> None:
+    created: list[int] = []
+
+    def build_wgc(*, minimum_update_interval_ms: int) -> FakeWGC:
+        created.append(minimum_update_interval_ms)
+        return FakeWGC()
+
+    monkeypatch.setattr(service_module, "WGCCapture", build_wgc)
+
+    service = CaptureService(
+        AppConfig.model_validate({"capture": capture_config}),
+        LatestFrameHub(),
+    )
+
+    assert created == [expected_interval_ms]
+    service.stop()
+
+
+def test_capture_rate_override_builds_low_frequency_ocr_session(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    created: list[int] = []
+
+    def build_wgc(*, minimum_update_interval_ms: int) -> FakeWGC:
+        created.append(minimum_update_interval_ms)
+        return FakeWGC()
+
+    monkeypatch.setattr(service_module, "WGCCapture", build_wgc)
+
+    service = CaptureService(
+        AppConfig.model_validate({}),
+        LatestFrameHub(),
+        capture_fps=5,
+    )
+
+    assert created == [200]
+    service.stop()
 
 
 class BlockingStartWGC(FakeWGC):

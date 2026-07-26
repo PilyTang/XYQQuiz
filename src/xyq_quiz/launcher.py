@@ -43,13 +43,22 @@ bootstrap_frozen_stdio()
 import uvicorn
 
 from xyq_quiz.capture.hub import LatestFrameHub
+from xyq_quiz.capture.native import ResilientNativeCaptureService
 from xyq_quiz.capture.service import CaptureService
+from xyq_quiz.capture.video import LatestVideoHub
 from xyq_quiz.config import AppConfig
 from xyq_quiz.diagnostics import DiagnosticWriter, EnvironmentDiagnosticWriter
+from xyq_quiz.desktop.webview import (
+    DesktopRunMode,
+    DesktopUnavailable,
+    WebViewDesktopController,
+)
 from xyq_quiz.knowledge.knowledge import load_knowledge_snapshot
 from xyq_quiz.knowledge.local import LocalQuestionStore
 from xyq_quiz.knowledge.matcher import QuestionMatcher
 from xyq_quiz.knowledge.updater import QuestionBankUpdater, load_current_generation
+from xyq_quiz.performance.controller import PerformanceController
+from xyq_quiz.performance.native_preview import locate_native_preview_helper
 from xyq_quiz.recognition.layout import (
     LayoutProfile,
     build_layout_detector,
@@ -75,6 +84,9 @@ from xyq_quiz.web.security import APP_ID, LocalWebSecurity
 SW_SHOWNORMAL = 1
 ERROR_ALREADY_EXISTS = 183
 DEFAULT_MUTEX_NAME = "Local\\XYQQuizBackend"
+_SYNCHRONIZE = 0x00100000
+_WAIT_OBJECT_0 = 0x00000000
+_WAIT_TIMEOUT = 0x00000102
 
 
 class ElevationError(RuntimeError):
@@ -91,6 +103,73 @@ class StartupAssetError(RuntimeError):
 
 class PortConflictError(RuntimeError):
     pass
+
+
+class RestartError(RuntimeError):
+    pass
+
+
+def wait_for_restart_parent(
+    process_id: int,
+    *,
+    timeout_ms: int = 30_000,
+) -> None:
+    if process_id <= 0:
+        raise RestartError("重启等待进程 ID 无效")
+    if os.name != "nt":
+        return
+    kernel32 = ctypes.windll.kernel32
+    handle = kernel32.OpenProcess(_SYNCHRONIZE, False, process_id)
+    if not handle:
+        # The old process has already exited, which is the desired state.
+        return
+    try:
+        result = kernel32.WaitForSingleObject(handle, timeout_ms)
+    finally:
+        kernel32.CloseHandle(handle)
+    if result == _WAIT_OBJECT_0:
+        return
+    if result == _WAIT_TIMEOUT:
+        raise RestartError("等待旧版 XYQQuiz 退出超时，请手动重新打开程序")
+    raise RestartError(f"等待旧版 XYQQuiz 退出失败（代码 {result}）")
+
+
+def spawn_restart_process(
+    raw_args: Sequence[str],
+    *,
+    process_id: int | None = None,
+    popen: Callable[..., Any] = subprocess.Popen,
+) -> None:
+    parent_pid = os.getpid() if process_id is None else process_id
+    filtered_args: list[str] = []
+    skip_next = False
+    for item in raw_args:
+        if skip_next:
+            skip_next = False
+            continue
+        if item == "--restart-after-pid":
+            skip_next = True
+            continue
+        filtered_args.append(item)
+    if bool(getattr(sys, "frozen", False)):
+        command = [sys.executable, *filtered_args]
+    else:
+        command = [sys.executable, "-m", "xyq_quiz.launcher", *filtered_args]
+    command.extend(("--restart-after-pid", str(parent_pid)))
+    creation_flags = 0
+    if os.name == "nt":
+        creation_flags = (
+            getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)
+            | getattr(subprocess, "CREATE_NO_WINDOW", 0)
+        )
+    try:
+        popen(
+            command,
+            close_fds=True,
+            creationflags=creation_flags,
+        )
+    except OSError as error:
+        raise RestartError(f"无法启动新的 XYQQuiz 进程：{error}") from error
 
 
 def validate_recognition_assets(layout_path: Path) -> LayoutProfile:
@@ -329,6 +408,53 @@ def run_server_with_browser(
         browser_thread.join(timeout=join_timeout)
 
 
+def run_server_with_desktop(
+    controller: WebViewDesktopController,
+    server: Any,
+    health_url: str,
+    browser_url_factory: Callable[[], str],
+    *,
+    sockets: list[socket.socket] | None = None,
+    fallback_opener: Callable[[str], Any] = webbrowser.open,
+    browser_runner: Callable[..., None] = run_server_with_browser,
+) -> DesktopRunMode:
+    """Run the native UI, preserving a safe external-browser fallback.
+
+    A missing pywebview dependency is detected before Uvicorn starts, so the
+    untouched server can use the existing foreground browser runner.  Failures
+    after Uvicorn starts are handled by ``WebViewDesktopController`` on that
+    same server and must never invoke ``server.run`` a second time.
+    """
+
+    try:
+        return controller.run(
+            server,
+            health_url,
+            browser_url_factory,
+            sockets=sockets,
+            fallback_opener=fallback_opener,
+        )
+    except DesktopUnavailable as error:
+        if error.server_started:
+            raise
+        logging.getLogger(__name__).warning(
+            "%s；改用系统浏览器继续运行",
+            error,
+        )
+        controller.enable_browser_fallback(fallback_opener, browser_url_factory)
+        try:
+            browser_runner(
+                server,
+                health_url,
+                waiter=partial(wait_for_health_and_open, opener=fallback_opener),
+                browser_url_factory=browser_url_factory,
+                sockets=sockets,
+            )
+        finally:
+            controller.disable_browser_fallback()
+        return DesktopRunMode.BROWSER_FALLBACK
+
+
 def _http_is_ready(url: str) -> bool:
     try:
         with urlopen(url, timeout=0.5) as response:
@@ -345,10 +471,24 @@ def _http_is_ready(url: str) -> bool:
         return False
 
 
+def _select_runtime_config_path(
+    explicit_path: Path | None,
+    paths: RuntimePaths,
+) -> Path | None:
+    """Use a previously saved runtime config in both source and frozen runs."""
+    if explicit_path is not None:
+        return explicit_path
+    if paths.config_path.is_file():
+        return paths.config_path
+    return None
+
+
 def build_services(
     config: AppConfig,
     *,
     runtime_paths: RuntimePaths | None = None,
+    config_path: Path | None = None,
+    desktop_mode: bool = True,
 ) -> Services:
     """Build one fresh, single-use service graph for one Uvicorn lifespan."""
     layout_profiles = validate_recognition_asset_bundle(
@@ -369,20 +509,50 @@ def build_services(
         match.option_score,
     )
     layout_detector = build_layout_detector(layout_profiles)
+    native_preview_helper = locate_native_preview_helper(
+        app_root=paths.app_root,
+        resource_root=paths.resource_root,
+        frozen=paths.frozen,
+    )
+    performance = PerformanceController(
+        config.performance,
+        config_path=config_path or paths.config_path,
+        fallback_config=config,
+        desktop_mode=desktop_mode,
+        native_preview_helper=native_preview_helper,
+    )
     pipeline = RecognitionPipeline(
         layout_detector,
-        RapidOCREngine(),
+        performance.create_ocr_engine(),
         matcher,
     )
     hub = LatestFrameHub()
+    video_hub = LatestVideoHub()
     runtime = RuntimeStore()
-    capture = CaptureService(config, hub)
+    preview_device_id = performance.preview_device_id()
+    if preview_device_id is not None and native_preview_helper is not None:
+        capture = ResilientNativeCaptureService(
+            config,
+            hub,
+            video_hub,
+            adapter_id=preview_device_id,
+            helper_path=native_preview_helper,
+            on_success=lambda: performance.mark_preview_success(preview_device_id),
+            on_failure=lambda reason: performance.mark_preview_failure(
+                preview_device_id,
+                reason,
+            ),
+            on_preview_fps=performance.record_canvas_fps,
+        )
+    else:
+        capture = CaptureService(config, hub)
     coordinator = RecognitionCoordinator(
         capture,
         hub,
         layout_detector,
         pipeline,
         runtime,
+        scan_fps=config.recognition.scan_fps,
     )
     return Services(
         hub=hub,
@@ -411,6 +581,8 @@ def build_services(
             current.metadata,
             knowledge,
         ),
+        performance=performance,
+        video_hub=video_hub,
     )
 
 
@@ -421,10 +593,23 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--version", action="store_true")
     parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--headless", action="store_true")
+    parser.add_argument(
+        "--external-browser",
+        action="store_true",
+        help="不用原生 WebView2 窗口，改在系统浏览器中打开本机界面",
+    )
     parser.add_argument("--no-dialog", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--report-dir", type=Path)
     parser.add_argument("--elevated-child", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--restart-after-pid", type=int, help=argparse.SUPPRESS)
     args = parser.parse_args(raw_args)
+
+    if args.restart_after_pid is not None:
+        try:
+            wait_for_restart_parent(args.restart_after_pid)
+        except RestartError as error:
+            _show_message("XYQQuiz 重启失败", str(error), error=True)
+            return 5
 
     if args.headless and not args.self_test:
         parser.error("--headless 只能与 --self-test 一起使用")
@@ -450,7 +635,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args.self_test:
         if args.report_dir is None:
-            _show_message("XYQQuiz 自检", "--self-test 必须同时指定 --report-dir", error=True)
+            if not args.no_dialog:
+                _show_message(
+                    "XYQQuiz 自检",
+                    "--self-test 必须同时指定 --report-dir",
+                    error=True,
+                )
             return 2
         try:
             if paths.frozen:
@@ -466,7 +656,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 headless=args.headless,
             )
         except Exception as error:
-            _show_message("XYQQuiz 自检失败", str(error), error=True)
+            if not args.no_dialog:
+                _show_message("XYQQuiz 自检失败", str(error), error=True)
             return 1
         if not args.headless and not args.no_dialog:
             _show_message(
@@ -500,28 +691,59 @@ def main(argv: Sequence[str] | None = None) -> int:
     if paths.frozen:
         initialize_portable_state(paths)
         migrate_portable_state(paths.config_path, paths.data_dir)
-    config_path = args.config
-    if config_path is None and paths.frozen:
-        config_path = paths.config_path
+    config_path = _select_runtime_config_path(args.config, paths)
     config = AppConfig.load(config_path)
     log_handler = configure_logging(config.log_path)
     try:
         with SingleInstance(names.mutex):
-            security = LocalWebSecurity(config.web.host, config.web.port)
-            base_url = f"http://127.0.0.1:{config.web.port}"
-            server_holder: dict[str, Any] = {}
+            requested_port = config.web.port if args.external_browser else 0
+            with reserve_loopback_port(config.web.host, requested_port) as web_socket:
+                actual_port = int(web_socket.getsockname()[1])
+                security = LocalWebSecurity(config.web.host, actual_port)
+                base_url = f"http://127.0.0.1:{actual_port}"
+                server_holder: dict[str, Any] = {}
+                desktop_controller = (
+                    None if args.external_browser else WebViewDesktopController()
+                )
 
-            def activation_url() -> str | None:
-                server = server_holder.get("server")
-                if server is None or not server.started or server.should_exit:
-                    return None
-                return security.issue_browser_url(base_url)
+                def activation_url() -> str | None:
+                    server = server_holder.get("server")
+                    if server is None or not server.started or server.should_exit:
+                        return None
+                    return security.issue_browser_url(base_url)
 
-            with reserve_loopback_port(config.web.host, config.web.port) as web_socket:
-                activation_server = ActivationServer(names.pipe, activation_url)
+                def activate_desktop() -> bool | None:
+                    server = server_holder.get("server")
+                    if server is None or not server.started or server.should_exit:
+                        return None
+                    if desktop_controller is None:
+                        return False
+                    return desktop_controller.request_focus()
+
+                activation_server = (
+                    ActivationServer(names.pipe, activation_url)
+                    if args.external_browser
+                    else ActivationServer(
+                        names.pipe,
+                        focus_callback=activate_desktop,
+                    )
+                )
                 activation_server.start()
                 try:
-                    services = build_services(config, runtime_paths=paths)
+                    services = build_services(
+                        config,
+                        runtime_paths=paths,
+                        config_path=config_path or paths.config_path,
+                        desktop_mode=desktop_controller is not None,
+                    )
+                    if desktop_controller is not None:
+                        preview_owner = getattr(
+                            services.capture,
+                            "set_preview_owner",
+                            None,
+                        )
+                        if callable(preview_owner):
+                            desktop_controller.set_native_window_callback(preview_owner)
                     app = create_app(services, security)
                     health_url = f"{base_url}/api/health"
                     server = uvicorn.Server(
@@ -533,13 +755,57 @@ def main(argv: Sequence[str] | None = None) -> int:
                         )
                     )
                     server_holder["server"] = server
-                    services.shutdown = lambda: setattr(server, "should_exit", True)
-                    run_server_with_browser(
-                        server,
-                        health_url,
-                        browser_url_factory=lambda: security.issue_browser_url(base_url),
-                        sockets=[web_socket],
-                    )
+
+                    def browser_url_factory() -> str:
+                        return security.issue_browser_url(base_url)
+
+                    if desktop_controller is None:
+                        services.shutdown = lambda: setattr(server, "should_exit", True)
+                        restart_lock = threading.Lock()
+                        restart_scheduled = False
+
+                        def restart_application() -> None:
+                            nonlocal restart_scheduled
+                            with restart_lock:
+                                if restart_scheduled:
+                                    return
+                                spawn_restart_process(raw_args)
+                                restart_scheduled = True
+                            threading.Timer(0.25, services.shutdown).start()
+
+                        services.restart = restart_application
+                        run_server_with_browser(
+                            server,
+                            health_url,
+                            browser_url_factory=browser_url_factory,
+                            sockets=[web_socket],
+                        )
+                    else:
+                        services.shutdown = desktop_controller.request_close
+                        restart_lock = threading.Lock()
+                        restart_scheduled = False
+
+                        def restart_application() -> None:
+                            nonlocal restart_scheduled
+                            with restart_lock:
+                                if restart_scheduled:
+                                    return
+                                spawn_restart_process(raw_args)
+                                restart_scheduled = True
+                            threading.Timer(0.25, services.shutdown).start()
+
+                        services.restart = restart_application
+                        run_mode = run_server_with_desktop(
+                            desktop_controller,
+                            server,
+                            health_url,
+                            browser_url_factory,
+                            sockets=[web_socket],
+                        )
+                        logging.getLogger(__name__).info(
+                            "本机界面运行模式：%s",
+                            run_mode.value,
+                        )
                 finally:
                     activation_server.stop()
             return 0
@@ -592,6 +858,7 @@ __all__ = [
     "AlreadyRunningError",
     "ElevationError",
     "PortConflictError",
+    "RestartError",
     "SingleInstance",
     "StartupAssetError",
     "build_services",
@@ -600,6 +867,9 @@ __all__ = [
     "ensure_elevated",
     "main",
     "run_server_with_browser",
+    "run_server_with_desktop",
+    "spawn_restart_process",
+    "wait_for_restart_parent",
     "reserve_loopback_port",
     "wait_for_health_and_open",
     "validate_recognition_assets",

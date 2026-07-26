@@ -54,6 +54,7 @@ _DARK_THRESHOLD = 150
 _MIN_REC_ONLY_CONFIDENCE = 0.5
 _PADDING_X = 10
 _PADDING_Y = 8
+_RAPIDOCR_PROVIDER_PATCH_LOCK = threading.Lock()
 
 
 class OCREngine(Protocol):
@@ -71,8 +72,29 @@ class RoleAwareOCREngine(OCREngine, Protocol):
 
 
 class RapidOCREngine:
-    def __init__(self, engine_factory: Callable[[], Any] | None = None) -> None:
-        self._engine_factory = engine_factory or _default_engine_factory
+    def __init__(
+        self,
+        engine_factory: Callable[[], Any] | None = None,
+        *,
+        backend: str = "cpu",
+        device_id: int | None = None,
+    ) -> None:
+        if backend not in {"cpu", "directml"}:
+            raise ValueError("RapidOCR backend must be cpu or directml")
+        if backend == "directml" and (
+            device_id is None or device_id < 0
+        ):
+            raise ValueError("DirectML requires a non-negative device_id")
+        if backend == "cpu" and device_id is not None:
+            raise ValueError("CPU OCR does not accept a device_id")
+        self.backend = backend
+        self.device_id = device_id
+        self._engine_factory = engine_factory or (
+            lambda: _default_engine_factory(
+                backend=backend,
+                device_id=device_id,
+            )
+        )
         self._thread_local = threading.local()
         self._initialization_lock = threading.Lock()
         self._initialization_error: OCRUnavailable | None = None
@@ -144,6 +166,30 @@ class RapidOCREngine:
                 self._fallback_count,
                 MappingProxyType(dict(self._line_count_distribution)),
             )
+
+    def execution_providers(self) -> tuple[tuple[str, ...], ...]:
+        """Return providers used by RapidOCR's det/cls/rec sessions.
+
+        This is intentionally a fail-closed self-test hook.  Merely having the
+        DML provider installed is insufficient because ORT can rebuild a
+        rejected provider configuration on CPU while OCR still succeeds.
+        """
+        engine = self._get_engine()
+        providers: list[tuple[str, ...]] = []
+        for attribute in ("text_det", "text_cls", "text_rec"):
+            component = getattr(engine, attribute, None)
+            wrapper = getattr(component, "session", None)
+            session = getattr(wrapper, "session", None)
+            get_providers = getattr(session, "get_providers", None)
+            if not callable(get_providers):
+                raise OCRUnavailable(
+                    f"RapidOCR {attribute} 无法报告实际 ONNX Runtime provider"
+                )
+            current = tuple(str(item) for item in get_providers())
+            if not current:
+                raise OCRUnavailable(f"RapidOCR {attribute} provider 列表为空")
+            providers.append(current)
+        return tuple(providers)
 
     def _recognize_line(self, image: NDArray[np.uint8]) -> OCRText:
         output = self._get_engine()(
@@ -398,10 +444,67 @@ def _group_projection_indexes(
     return tuple(groups)
 
 
-def _default_engine_factory() -> Any:
+def _default_engine_factory(
+    *,
+    backend: str = "cpu",
+    device_id: int | None = None,
+) -> Any:
     from rapidocr import RapidOCR
 
-    return RapidOCR()
+    # ONNX Runtime otherwise expands one small OCR request across every logical
+    # processor.  Two intra-op workers measured faster than the unrestricted
+    # default on the production-sized question crop while using far less total
+    # CPU; OCR calls are already serialized by RecognitionPipeline.
+    params: dict[str, object] = {
+        "EngineConfig.onnxruntime.intra_op_num_threads": 2,
+        "EngineConfig.onnxruntime.inter_op_num_threads": 1,
+    }
+    if backend == "directml":
+        if device_id is None or device_id < 0:
+            raise ValueError("DirectML requires a non-negative device_id")
+        params.update(
+            {
+                "EngineConfig.onnxruntime.use_dml": True,
+                "EngineConfig.onnxruntime.dml_ep_cfg": {
+                    # ORT 1.24.x requires provider option values to be strings;
+                    # an int makes it reject the whole provider list and
+                    # silently rebuild the session on CPU.
+                    "device_id": str(device_id),
+                },
+            }
+        )
+    elif backend != "cpu":
+        raise ValueError("RapidOCR backend must be cpu or directml")
+    if backend != "directml":
+        return RapidOCR(params=params)
+
+    # RapidOCR 3.9.1 returns its DirectML provider options as an OmegaConf
+    # DictConfig. ORT 1.24.4 accepts only a real dict in provider tuples and
+    # otherwise silently retries on CPU. Patch the construction window only;
+    # the upstream class is restored before this function returns.
+    try:
+        from rapidocr.inference_engine.onnxruntime.provider_config import (
+            ProviderConfig,
+        )
+    except ImportError:
+        return RapidOCR(params=params)
+
+    original = ProviderConfig.dml_ep_cfg
+
+    def dml_ep_cfg(config: Any) -> dict[str, Any]:
+        value = config.cfg.dml_ep_cfg
+        if value is not None:
+            return dict(value)
+        if config.is_cuda_available():
+            return config.cuda_ep_cfg()
+        return config.cpu_ep_cfg()
+
+    with _RAPIDOCR_PROVIDER_PATCH_LOCK:
+        ProviderConfig.dml_ep_cfg = dml_ep_cfg
+        try:
+            return RapidOCR(params=params)
+        finally:
+            ProviderConfig.dml_ep_cfg = original
 
 
 def _box_geometry(box: Any) -> tuple[float, float, float]:
