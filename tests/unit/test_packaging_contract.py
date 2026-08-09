@@ -112,11 +112,11 @@ def test_release_version_metadata_is_consistent() -> None:
         encoding="utf-8"
     )
 
-    assert version == "0.2.0"
+    assert version == "0.3.0"
     assert re.search(rf'^__version__ = "{re.escape(version)}"$', package_init, re.M)
     assert f'[string]$Version = "{version}"' in release_script
-    assert "filevers=(0, 2, 0, 0)" in version_info
-    assert "prodvers=(0, 2, 0, 0)" in version_info
+    assert "filevers=(0, 3, 0, 0)" in version_info
+    assert "prodvers=(0, 3, 0, 0)" in version_info
     assert f"StringStruct('FileVersion', '{version}')" in version_info
     assert f"StringStruct('ProductVersion', '{version}')" in version_info
 
