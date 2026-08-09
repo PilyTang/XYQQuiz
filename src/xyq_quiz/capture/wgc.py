@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+import sys
 import threading
 import time
 from typing import Any
@@ -116,10 +117,11 @@ class WGCCapture:
         capture: Any | None = None
         try:
             factory = self._factory or _windows_capture_factory()
+            optional_settings = _wgc_optional_settings()
             capture_options: dict[str, Any] = {
                 "window_hwnd": hwnd,
-                "cursor_capture": False,
-                "draw_border": False,
+                "cursor_capture": optional_settings["cursor_capture"],
+                "draw_border": optional_settings["draw_border"],
             }
             if self._minimum_update_interval_ms is not None:
                 # Ask Windows Graphics Capture to throttle before Python copies
@@ -325,6 +327,32 @@ class WGCCapture:
         target = capture_control if capture_control is not None else capture
         if target is not None and hasattr(target, "stop"):
             target.stop()
+
+
+def _windows_build_number() -> int | None:
+    get_version = getattr(sys, "getwindowsversion", None)
+    if get_version is None:
+        return None
+    try:
+        return int(get_version().build)
+    except (AttributeError, TypeError, ValueError):
+        return None
+
+
+def _wgc_optional_settings() -> dict[str, bool | None]:
+    build = _windows_build_number()
+    if build is None:
+        # Non-Windows unit tests use a fake capture factory.  Real Windows
+        # runtimes always expose ``sys.getwindowsversion``.
+        return {"cursor_capture": False, "draw_border": False}
+    return {
+        # IsCursorCaptureEnabled arrived in Windows 10 build 19041.
+        "cursor_capture": False if build >= 19041 else None,
+        # IsBorderRequired arrived in build 20348.  Passing None tells
+        # windows-capture to leave the system default untouched on older
+        # Windows 10 versions instead of aborting the entire capture session.
+        "draw_border": False if build >= 20348 else None,
+    }
 
 
 def _windows_capture_factory() -> Callable[..., Any]:

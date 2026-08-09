@@ -24,7 +24,7 @@ from xyq_quiz.recognition.models import (
 from xyq_quiz.recognition.ocr import OCREngine, OCRRole
 
 
-_QUESTION_CANDIDATE_SCORE = 62.0
+_QUESTION_CANDIDATE_SCORE = 30.0
 _QUESTION_CANDIDATE_GAP = 2.0
 _OPTION_CANDIDATE_SCORE = 55.0
 _OPTION_CANDIDATE_GAP = 1.0

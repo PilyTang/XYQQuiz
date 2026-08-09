@@ -247,6 +247,55 @@ def test_pipeline_default_uses_one_executor_thread_for_all_five_crops(
     assert result.timings.total_ms >= result.timings.ocr_ms
 
 
+def test_pipeline_displays_answer_for_exact_question_inside_exam_status_text(
+    layout: DetectedLayout,
+    frame: CapturedFrame,
+) -> None:
+    bank = QuestionBank(
+        [
+            QuestionRecord(
+                "target",
+                "下列选项中属于天宫门派技能的是",
+                "清明自在",
+                "下列选项中属于天宫门派技能的是",
+            ),
+            QuestionRecord(
+                "fangcun",
+                "下列选项中属于方寸山门派技能的是",
+                "归元心法",
+                "下列选项中属于方寸山门派技能的是",
+            ),
+            QuestionRecord(
+                "huasheng",
+                "下列选项中属于化生寺门派技能的是",
+                "大慈大悲",
+                "下列选项中属于化生寺门派技能的是",
+            ),
+        ]
+    )
+    matcher = QuestionMatcher(bank, 92, 5, 90)
+    ocr = MarkerOCR(
+        {
+            1: "礼部考题，已答16题，答对15题。下列选项中属于天宫门派技能的是",
+            2: "一气三清",
+            3: "清明自在",
+            4: "气吞山河",
+            5: "其他选项",
+        }
+    )
+    pipeline = RecognitionPipeline(FakeLayoutDetector(layout), ocr, matcher)
+    try:
+        result = pipeline.recognize(frame, 28)
+    finally:
+        pipeline.close()
+
+    assert result.official_answer == "清明自在"
+    assert result.option_texts == ("一气三清", "清明自在", "气吞山河", "其他选项")
+    assert result.option_index == 1
+    assert result.overlay_rect == layout.option_rects[1]
+    assert result.confidence_level is ConfidenceLevel.HIGH
+
+
 def test_pipeline_uses_pre_detected_layout_without_detecting_again(
     layout: DetectedLayout,
     frame: CapturedFrame,

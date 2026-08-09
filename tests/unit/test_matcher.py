@@ -219,6 +219,42 @@ def test_clear_exam_prompt_is_removed_on_query_side_only() -> None:
     assert match.query_variant == "prompt_body"
 
 
+def test_longest_exact_contained_question_beats_fuzzy_template_matches() -> None:
+    bank = QuestionBank(
+        [
+            QuestionRecord(
+                "target",
+                "下列选项中属于天宫门派技能的是",
+                "清明自在",
+                "下列选项中属于天宫门派技能的是",
+            ),
+            QuestionRecord(
+                "fangcun",
+                "下列选项中属于方寸山门派技能的是",
+                "归元心法",
+                "下列选项中属于方寸山门派技能的是",
+            ),
+            QuestionRecord(
+                "huasheng",
+                "下列选项中属于化生寺门派技能的是",
+                "大慈大悲",
+                "下列选项中属于化生寺门派技能的是",
+            ),
+        ]
+    )
+    matcher = QuestionMatcher(bank, 92, 5, 90)
+
+    match = matcher.match_question(
+        "礼部考题，已答16题，答对15题。下列选项中属于天宫门派技能的是"
+    )
+
+    assert match is not None
+    assert match.record.source_id == "target"
+    assert match.score == 100
+    assert match.score - match.runner_up_score >= 5
+    assert match.query_variant == "canonical_contained"
+
+
 def test_truncated_ocr_can_be_returned_as_unique_low_confidence_candidate() -> None:
     bank = QuestionBank(
         [

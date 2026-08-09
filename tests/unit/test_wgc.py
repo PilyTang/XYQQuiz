@@ -309,6 +309,35 @@ def test_wgc_passes_native_minimum_update_interval(
     ]
 
 
+@pytest.mark.parametrize(
+    ("build", "expected_cursor", "expected_border"),
+    [
+        (18362, None, None),
+        (19044, False, None),
+        (20348, False, False),
+        (22000, False, False),
+    ],
+)
+def test_wgc_avoids_optional_properties_unsupported_by_windows_build(
+    fake_factory: FakeFactory,
+    monkeypatch: pytest.MonkeyPatch,
+    build: int,
+    expected_cursor: bool | None,
+    expected_border: bool | None,
+) -> None:
+    monkeypatch.setattr(wgc_module, "_windows_build_number", lambda: build)
+
+    WGCCapture(factory=fake_factory).start(123)
+
+    assert fake_factory.calls == [
+        {
+            "window_hwnd": 123,
+            "cursor_capture": expected_cursor,
+            "draw_border": expected_border,
+        }
+    ]
+
+
 @pytest.mark.parametrize("value", [0, -1, True, 1.5])
 def test_wgc_rejects_invalid_minimum_update_interval(value: object) -> None:
     with pytest.raises(

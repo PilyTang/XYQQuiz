@@ -112,6 +112,25 @@ class QuestionMatcher:
         scores: dict[int, tuple[float, str]] = {}
 
         for query_variant, normalized in variants:
+            contained = tuple(
+                (index, candidate)
+                for index, candidate in enumerate(choices)
+                if candidate in normalized
+            )
+            if contained:
+                longest = max(len(candidate) for _, candidate in contained)
+                for index, candidate in contained:
+                    # Exact ordered text beats fuzzy similarity.  When an OCR
+                    # region also contains progress/status text, rank complete
+                    # question substrings by the number of matched characters.
+                    containment_score = 100.0 * len(candidate) / longest
+                    _keep_best_score(
+                        scores,
+                        index,
+                        containment_score,
+                        f"{query_variant}_contained",
+                    )
+
             ratio_ranked = process.extract(
                 normalized,
                 choices,
