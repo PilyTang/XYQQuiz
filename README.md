@@ -23,11 +23,11 @@ XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》答题辅助显示
 - 支持单实例启动、端口冲突提示、题库原子更新和一键退出。
 - 可按需保存识别诊断或不含游戏画面的环境诊断。
 
-当前版本为 `0.4.1`。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。教师节基础验证范围见 [v0.4 验收记录](docs/v0.4-validation.md)，名称差异与未收录干扰项修复见 [v0.4.1 修复记录](docs/v0.4.1-feedback-fix.md)。
+当前版本为 `0.4.1-beta.1` 预发布版。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。教师节基础验证范围见 [v0.4 验收记录](docs/v0.4-validation.md)，名称差异与未收录干扰项修复见 [v0.4.1 修复记录](docs/v0.4.1-feedback-fix.md)。
 
 ## 直接使用 Windows 便携版
 
-1. 获取 `XYQQuiz-v0.4.1-win10-win11-x64.zip` 和同名 `.sha256`。
+1. 获取 `XYQQuiz-v0.4.1-beta.1-win10-win11-x64.zip` 和同名 `.sha256`。
 2. 完整解压到一个新目录，不要直接在压缩包里运行。
 3. 双击 `XYQQuiz.exe`，首次捕获时允许 UAC 管理员权限请求。
 4. 等待默认 `1440×900` 的可缩放桌面窗口打开；游戏题面出现后，答案框会显示在窗口预览中。
@@ -96,13 +96,13 @@ Copy-Item config.example.json config.json
 
 ```powershell
 .venv\Scripts\python.exe -m pip install --require-hashes -r requirements-release.txt
-.\scripts\build-release.ps1 -Version 0.4.1 -Commit working-tree -AllowDevelopmentCommit
+.\scripts\build-release.ps1 -Version 0.4.1-beta.1 -Commit working-tree -AllowDevelopmentCommit
 ```
 
 正式发布构建必须从干净提交运行，并传入完整 40 位 Git SHA：
 
 ```powershell
-.\scripts\build-release.ps1 -Version 0.4.1 -Commit (git rev-parse HEAD)
+.\scripts\build-release.ps1 -Version 0.4.1-beta.1 -Commit (git rev-parse HEAD)
 ```
 
 产物位于 `release\`，包括 ZIP 和 SHA-256 文件。构建脚本会审计公开树和最终 ZIP，拒绝打入 `user-data\`、`diagnostics\` 或本地 `questions.json`。GitHub 的 `v*` 标签工作流会先做公开内容审计和完整测试，再使用标签对应的真实提交 SHA 构建并创建 Release。

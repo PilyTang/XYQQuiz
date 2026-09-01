@@ -9,6 +9,7 @@ pyinstaller==6.21.0
 pyjson5==1.6.9
 RapidFuzz==3.14.5
 rapidocr==3.9.1
+setuptools==77.0.3
 uvicorn==0.51.0
 websockets==15.0.1
 windows-capture==2.0.0

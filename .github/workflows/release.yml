@@ -101,4 +101,13 @@ jobs:
             (Resolve-Path -LiteralPath ".\release\XYQQuiz-v$Version-win10-win11-x64.zip").Path,
             (Resolve-Path -LiteralPath ".\release\XYQQuiz-v$Version-win10-win11-x64.zip.sha256").Path
           )
-          gh release create $env:GITHUB_REF_NAME @Assets --verify-tag --title "XYQQuiz $Version" --generate-notes
+          $ReleaseChannelArguments = @()
+          if ($Version -match '-(?:alpha|beta|rc)\.\d+$') {
+            $ReleaseChannelArguments = @("--prerelease", "--latest=false")
+          }
+          $NotesPath = Join-Path ".\docs\releases" "$($env:GITHUB_REF_NAME).md"
+          $NotesArguments = @("--generate-notes")
+          if (Test-Path -LiteralPath $NotesPath) {
+            $NotesArguments = @("--notes-file", $NotesPath)
+          }
+          gh release create $env:GITHUB_REF_NAME @Assets --verify-tag --title "XYQQuiz $Version" @NotesArguments @ReleaseChannelArguments

@@ -1,6 +1,6 @@
 param(
     [string]$Python = ".\.venv\Scripts\python.exe",
-    [string]$Version = "0.4.1",
+    [string]$Version = "0.4.1-beta.1",
     [string]$Commit = "",
     [string]$OutputDirectory = ".\release",
     [switch]$AllowDevelopmentCommit
