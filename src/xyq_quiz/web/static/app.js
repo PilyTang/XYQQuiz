@@ -2,9 +2,16 @@ const frameCanvas = document.getElementById("frameCanvas");
 const overlayCanvas = document.getElementById("overlayCanvas");
 const canvasStack = document.querySelector(".canvas-stack");
 const previewHint = document.getElementById("previewHint");
+const backendSettingsDialog = document.getElementById("backendSettingsDialog");
+const confirmationDialog = document.getElementById("confirmationDialog");
+const diagnosticsButton = document.getElementById("diagnosticsButton");
 const frameCtx = frameCanvas.getContext("2d", {alpha: false});
 const overlayCtx = overlayCanvas.getContext("2d");
 const sidebarElements = {
+  activityKind: document.getElementById("activityKind"),
+  questionLabel: document.getElementById("questionLabel"),
+  questionScoreLabel: document.getElementById("questionScoreLabel"),
+  bankStatus: document.getElementById("bankStatus"),
   phase: document.getElementById("phase"),
   capturePhase: document.getElementById("capturePhase"),
   question: document.getElementById("question"),
@@ -31,6 +38,7 @@ let lastCanvasFps = null;
 let previewMode = "i420";
 let videoDecoder = null;
 const videoFrameIds = new Map();
+let confirmationResolver = null;
 
 function websocketUrl(path) {
   const scheme = location.protocol === "https:" ? "wss" : "ws";
@@ -272,10 +280,14 @@ async function reportNativePreviewLayout() {
   // this request on previewMode would create a startup deadlock.
   if (!apiToken) return;
   const rect = canvasStack.getBoundingClientRect();
+  // The native renderer is a separate HWND above WebView, so no DOM z-index
+  // can cover it. Hide that window while any modal dialog is open.
+  const noOpenDialog = document.querySelector("dialog[open]") === null;
   const visible = (
     document.visibilityState === "visible"
     && rect.width > 0
     && rect.height > 0
+    && noOpenDialog
   );
   try {
     await apiFetch("/api/preview/layout", {
@@ -439,20 +451,27 @@ async function openBackendSettings() {
   message.textContent = "";
   try {
     await loadPerformanceStatus({renderDialog: true});
-    document.getElementById("backendSettingsDialog").showModal();
+    backendSettingsDialog.showModal();
+    await reportNativePreviewLayout();
   } catch (error) {
     document.getElementById("errorMessage").textContent = error.message;
   }
 }
 
 function closeBackendSettings() {
-  document.getElementById("backendSettingsDialog").close();
+  backendSettingsDialog.close();
+  void reportNativePreviewLayout();
 }
 
 async function saveBackendSettings(action) {
   const message = document.getElementById("backendSettingsMessage");
-  if (action === "apply" && !window.confirm("应用后 XYQQuiz 将立即重启，Windows 可能再次请求管理员权限。现在重启吗？")) return;
-  const buttons = document.querySelectorAll(".dialog-actions button");
+  if (action === "apply" && !await requestConfirmation({
+    eyebrow: "性能设置",
+    title: "立即重启并应用？",
+    message: "应用后 XYQQuiz 将立即重启，Windows 可能再次请求管理员权限。",
+    acceptLabel: "重启并应用",
+  })) return;
+  const buttons = backendSettingsDialog.querySelectorAll(".dialog-actions button");
   for (const button of buttons) button.disabled = true;
   message.textContent = "";
   try {
@@ -572,13 +591,29 @@ function setText(element, value) {
 }
 
 function renderSidebar(state) {
+  const teacher = state.activity_kind === "teachers_day";
+  setText(sidebarElements.activityKind, {
+    keju: "科举", teachers_day: "教师节·看图说话", unknown: "正在判断题型",
+  }[state.activity_kind] || "等待答题界面");
+  setText(sidebarElements.questionLabel, teacher ? "题目提示" : "OCR 题目");
+  setText(sidebarElements.questionScoreLabel, teacher ? "图标匹配分数" : "题目分数");
+  if (state.question_banks) {
+    const banks = state.question_banks;
+    const lines = [["keju", "科举"], ["teachers_day", "教师节"]].map(([key, label]) => {
+      const bank = banks[key];
+      if (!bank?.available) return `${label}：不可用`;
+      const updated = bank.updated_at ? new Date(bank.updated_at).toLocaleDateString("zh-CN") : "—";
+      return `${label} ${bank.record_count} 条 · ${updated}${bank.message ? ` · ${bank.message}` : ""}`;
+    });
+    setText(sidebarElements.bankStatus, lines.join("；"));
+  }
   setText(sidebarElements.phase, state.phase || "—");
   if (state.capture) setText(sidebarElements.capturePhase, state.capture.phase || "—");
   setText(sidebarElements.question, state.question_text || "等待识别");
   setText(sidebarElements.answer, state.official_answer || "—");
   setText(
     sidebarElements.questionScore,
-    score(state.question_score, state.question_runner_up_score),
+    teacher ? score(state.image_score, state.image_runner_up_score) : score(state.question_score, state.question_runner_up_score),
   );
   setText(
     sidebarElements.optionScore,
@@ -631,15 +666,23 @@ function updateOverlayState(state) {
   return changed;
 }
 
-async function runAction(button, path) {
+async function runAction(button, path, options = {}) {
   const error = document.getElementById("errorMessage");
   button.disabled = true;
-  error.textContent = "";
+  error.dataset.kind = options.pendingMessage ? "pending" : "";
+  error.textContent = options.pendingMessage || "";
   try {
     const response = await apiFetch(path);
     const result = await response.json();
     if (!response.ok || !result.ok) throw new Error(result.error || `HTTP ${response.status}`);
+    if (options.successMessage) {
+      error.dataset.kind = "success";
+      error.textContent = typeof options.successMessage === "function"
+        ? options.successMessage(result)
+        : options.successMessage;
+    }
   } catch (caught) {
+    error.dataset.kind = "error";
     error.textContent = caught.message;
   } finally {
     button.disabled = false;
@@ -739,12 +782,39 @@ new ResizeObserver(scheduleNativePreviewLayout).observe(canvasStack);
 window.addEventListener("resize", scheduleNativePreviewLayout);
 document.addEventListener("visibilitychange", scheduleNativePreviewLayout);
 
-async function saveRecognitionDiagnostics(button) {
-  const accepted = window.confirm(
-    "识别诊断会保存当前完整游戏画面、OCR 裁剪和日志尾部，可能包含角色名、聊天或其他个人信息。确认仅保存到本机吗？"
-  );
+function requestConfirmation({eyebrow, title, message, acceptLabel = "确认"}) {
+  if (confirmationResolver !== null) {
+    return Promise.reject(new Error("已有确认操作正在进行"));
+  }
+  document.getElementById("confirmationEyebrow").textContent = eyebrow;
+  document.getElementById("confirmationTitle").textContent = title;
+  document.getElementById("confirmationMessage").textContent = message;
+  document.getElementById("confirmationAccept").textContent = acceptLabel;
+  confirmationDialog.returnValue = "";
+  return new Promise((resolve, reject) => {
+    confirmationResolver = resolve;
+    try {
+      confirmationDialog.showModal();
+      scheduleNativePreviewLayout();
+    } catch (error) {
+      confirmationResolver = null;
+      reject(error);
+    }
+  });
+}
+
+async function saveRecognitionDiagnostics() {
+  const accepted = await requestConfirmation({
+    eyebrow: "识别诊断",
+    title: "保存当前识别现场？",
+    message: "识别诊断会保存当前完整游戏画面、OCR 裁剪和日志尾部，可能包含角色名、聊天或其他个人信息。文件只会保存到本机 diagnostics 目录。",
+    acceptLabel: "确认保存",
+  });
   if (!accepted) return;
-  await runAction(button, "/api/diagnostics");
+  await runAction(diagnosticsButton, "/api/diagnostics", {
+    pendingMessage: "正在保存识别诊断，请稍候…",
+    successMessage: (result) => `识别诊断已保存：${result.path}`,
+  });
 }
 
 function updateLocalModeFields() {
@@ -884,7 +954,12 @@ async function saveLocalQuestion(event) {
 }
 
 async function deleteLocalQuestion(record) {
-  if (!window.confirm(`确认删除本地题目“${record.question}”吗？`)) return;
+  if (!await requestConfirmation({
+    eyebrow: "本地补题",
+    title: "删除这条本地题目？",
+    message: `确认删除本地题目“${record.question}”吗？`,
+    acceptLabel: "确认删除",
+  })) return;
   const error = document.getElementById("localQuestionError");
   try {
     const response = await apiFetch(
@@ -903,8 +978,10 @@ async function deleteLocalQuestion(record) {
   }
 }
 
-document.getElementById("updateButton").addEventListener("click", ({currentTarget}) => runAction(currentTarget, "/api/question-bank/update"));
-document.getElementById("diagnosticsButton").addEventListener("click", ({currentTarget}) => saveRecognitionDiagnostics(currentTarget));
+document.getElementById("updateButton").addEventListener("click", ({currentTarget}) => runAction(currentTarget, "/api/question-bank/update", {
+  pendingMessage: "正在更新科举和教师节题库…", successMessage: (result) => result.message || "题库更新完成",
+}));
+diagnosticsButton.addEventListener("click", () => { void saveRecognitionDiagnostics(); });
 document.getElementById("environmentDiagnosticsButton").addEventListener("click", ({currentTarget}) => runAction(currentTarget, "/api/environment-diagnostics"));
 document.getElementById("shutdownButton").addEventListener("click", ({currentTarget}) => runAction(currentTarget, "/api/shutdown"));
 document.getElementById("localQuestionMode").addEventListener("change", updateLocalModeFields);
@@ -913,6 +990,15 @@ document.getElementById("localQuestionCancel").addEventListener("click", resetLo
 document.getElementById("backendSettingsButton").addEventListener("click", openBackendSettings);
 document.getElementById("backendSettingsClose").addEventListener("click", closeBackendSettings);
 document.getElementById("backendSettingsCancel").addEventListener("click", closeBackendSettings);
+backendSettingsDialog.addEventListener("close", scheduleNativePreviewLayout);
+backendSettingsDialog.addEventListener("cancel", scheduleNativePreviewLayout);
+confirmationDialog.addEventListener("close", () => {
+  scheduleNativePreviewLayout();
+  const resolve = confirmationResolver;
+  confirmationResolver = null;
+  if (resolve !== null) resolve(confirmationDialog.returnValue === "confirm");
+});
+confirmationDialog.addEventListener("cancel", scheduleNativePreviewLayout);
 document.getElementById("backendSettingsForm").addEventListener("submit", (event) => {
   event.preventDefault();
   void saveBackendSettings("save");

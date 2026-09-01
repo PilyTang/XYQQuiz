@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>梦幻西游科举助手</title>
+    <title>梦幻西游答题助手</title>
     <link rel="stylesheet" href="/app.css">
   </head>
   <body>
@@ -18,23 +18,25 @@
       <aside class="sidebar">
         <header>
           <p class="eyebrow">本机识别状态</p>
-          <h1>科举答题助手</h1>
+          <h1>梦幻西游答题助手</h1>
           <div class="backend-status-row">
             <span id="backendStatus" title="正在读取执行后端状态">OCR CPU · 预览 CPU · — FPS</span>
             <button id="backendSettingsButton" class="icon-button" type="button" title="性能设置" aria-label="打开性能设置" disabled>⚙</button>
           </div>
         </header>
         <dl class="status-grid">
+          <div class="wide"><dt>当前活动</dt><dd id="activityKind">等待答题界面</dd></div>
           <div><dt>阶段</dt><dd id="phase">—</dd></div>
           <div><dt>采集</dt><dd id="capturePhase">—</dd></div>
-          <div class="wide"><dt>OCR 题目</dt><dd id="question">等待识别</dd></div>
+          <div class="wide"><dt id="questionLabel">OCR 题目</dt><dd id="question">等待识别</dd></div>
           <div class="wide"><dt>官方答案</dt><dd id="answer">—</dd></div>
-          <div><dt>题目分数</dt><dd id="questionScore">—</dd></div>
+          <div><dt id="questionScoreLabel">题目分数</dt><dd id="questionScore">—</dd></div>
           <div><dt>选项分数</dt><dd id="optionScore">—</dd></div>
           <div><dt>定位状态</dt><dd id="confidenceLevel" data-level="NONE">未定位</dd></div>
           <div><dt>综合可信评分</dt><dd id="confidenceScore">0/100</dd></div>
           <div class="wide"><dt>可信说明</dt><dd id="confidenceReason">—</dd></div>
           <div class="wide"><dt>耗时</dt><dd id="timings">—</dd></div>
+          <div class="wide"><dt>离线题库</dt><dd id="bankStatus">正在读取</dd></div>
         </dl>
         <div class="actions">
           <button id="updateButton" type="button" disabled>更新题库</button>
@@ -43,7 +45,7 @@
           <button id="shutdownButton" type="button" class="secondary" disabled>退出程序</button>
         </div>
         <details class="local-bank-panel">
-          <summary>本地补题 <span id="localQuestionCount">0 条</span></summary>
+          <summary>科举本地补题 <span id="localQuestionCount">0 条</span></summary>
           <p class="panel-help">仅保存在本机 user-data，不会随诊断文件或发布包导出。</p>
           <p id="localQuestionError" class="panel-error" role="alert"></p>
           <form id="localQuestionForm">
@@ -116,6 +118,21 @@
           <button id="backendSettingsCancel" class="secondary" type="button">取消</button>
           <button id="backendSettingsSave" class="secondary" type="submit">保存</button>
           <button id="backendSettingsApply" type="button">应用</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="confirmationDialog" class="settings-dialog confirmation-dialog" aria-labelledby="confirmationTitle">
+      <form method="dialog">
+        <div class="dialog-title-row">
+          <div>
+            <p id="confirmationEyebrow" class="eyebrow">请确认</p>
+            <h2 id="confirmationTitle">确认操作？</h2>
+          </div>
+        </div>
+        <p id="confirmationMessage" class="dialog-help"></p>
+        <div class="dialog-actions">
+          <button class="secondary" type="submit" value="cancel">取消</button>
+          <button id="confirmationAccept" type="submit" value="confirm">确认</button>
         </div>
       </form>
     </dialog>

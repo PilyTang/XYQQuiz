@@ -6,6 +6,7 @@ import threading
 import time
 
 from xyq_quiz.recognition.models import (
+    ActivityKind,
     ConfidenceLevel,
     RecognitionResult,
     RecognitionTimings,
@@ -46,6 +47,11 @@ class RuntimeSnapshot:
     timings: RecognitionTimings | None = None
     message: str | None = None
     clear_monotonic_ns: int | None = None
+    activity_kind: ActivityKind | None = None
+    image_score: float = 0.0
+    image_runner_up_score: float = 0.0
+    bank_generation: str | None = None
+    image_candidates: tuple[tuple[str, float], ...] = ()
 
 
 class RuntimeStore:
@@ -77,6 +83,7 @@ class RuntimeStore:
         question_hash: str,
         frame_id: int,
         frame_size: tuple[int, int],
+        activity_kind: ActivityKind = ActivityKind.KEJU,
     ) -> int:
         with self._condition:
             generation_id = self._snapshot.generation_id + 1
@@ -90,6 +97,7 @@ class RuntimeStore:
                     ),
                     frame_id=frame_id,
                     question_hash=question_hash,
+                    activity_kind=activity_kind,
                     clear_monotonic_ns=self._snapshot.clear_monotonic_ns,
                 )
             )
@@ -134,6 +142,11 @@ class RuntimeStore:
                         )
                     ),
                     question_text=result.question_text,
+                    activity_kind=result.activity_kind,
+                    image_score=result.image_score,
+                    image_runner_up_score=result.image_runner_up_score,
+                    bank_generation=result.bank_generation,
+                    image_candidates=result.image_candidates,
                     option_texts=result.option_texts,
                     official_answer=result.official_answer,
                     question_score=result.question_score,
@@ -232,6 +245,11 @@ class RuntimeStore:
                 )
             )
             return True
+
+    def set_activity(self, activity: ActivityKind | None) -> None:
+        with self._condition:
+            if self._snapshot.activity_kind != activity:
+                self._publish_locked(replace(self._snapshot, activity_kind=activity))
 
     def _publish_locked(self, snapshot: RuntimeSnapshot) -> None:
         self._snapshot = replace(snapshot, version=self._snapshot.version + 1)

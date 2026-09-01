@@ -1,0 +1,684 @@
+{
+  "version": "0.4.1",
+  "input_kind": "cropped_dialog_screenshots",
+  "method": "OCR and image matching on manually aligned visible icon/option regions; full-window locator rejects these title-clipped inputs",
+  "baseline_reason": "v0.4.0 required all four option names to exist in the icon bank",
+  "cases": [
+    {
+      "sample": 1,
+      "cropped_input_detected": false,
+      "original_bank_unknown_labels": [
+        "堪察令"
+      ],
+      "ocr": [
+        {
+          "text": "推气过宫",
+          "confidence": 0.99573,
+          "elapsed_ms": 11.533099999724072
+        },
+        {
+          "text": "无穷妙道",
+          "confidence": 0.99844,
+          "elapsed_ms": 9.391600000526523
+        },
+        {
+          "text": "娉婷袅娜",
+          "confidence": 0.99978,
+          "elapsed_ms": 7.339299999330251
+        },
+        {
+          "text": "堪察令",
+          "confidence": 0.99949,
+          "elapsed_ms": 7.688899999266141
+        }
+      ],
+      "answer": "勘察令",
+      "option": "D",
+      "image_score": 76.86,
+      "level": "HIGH",
+      "reason": "图标与选项唯一对应（堪察令对应勘察令）"
+    },
+    {
+      "sample": 2,
+      "cropped_input_detected": false,
+      "original_bank_unknown_labels": [
+        "中药医理"
+      ],
+      "ocr": [
+        {
+          "text": "巧匠之术",
+          "confidence": 0.99974,
+          "elapsed_ms": 10.055399999146175
+        },
+        {
+          "text": "打造技巧",
+          "confidence": 0.99994,
+          "elapsed_ms": 9.277099999962957
+        },
+        {
+          "text": "中药医理",
+          "confidence": 0.99997,
+          "elapsed_ms": 8.49610000022949
+        },
+        {
+          "text": "炼金术",
+          "confidence": 0.99893,
+          "elapsed_ms": 7.956999999805703
+        }
+      ],
+      "answer": "炼金术",
+      "option": "D",
+      "image_score": 98.96,
+      "level": "HIGH",
+      "reason": "图标与选项唯一对应"
+    },
+    {
+      "sample": 3,
+      "cropped_input_detected": false,
+      "original_bank_unknown_labels": [
+        "以和为贵"
+      ],
+      "ocr": [
+        {
+          "text": "以和为贵",
+          "confidence": 0.99974,
+          "elapsed_ms": 7.747700000436453
+        },
+        {
+          "text": "姐妹同心",
+          "confidence": 0.99968,
+          "elapsed_ms": 7.324000000153319
+        },
+        {
+          "text": "定身符",
+          "confidence": 1.0,
+          "elapsed_ms": 7.341700000324636
+        },
+        {
+          "text": "五雷咒",
+          "confidence": 0.99928,
+          "elapsed_ms": 7.311100000151782
+        }
+      ],
+      "answer": "姐妹同心",
+      "option": "B",
+      "image_score": 80.39,
+      "level": "HIGH",
+      "reason": "图标与选项唯一对应"
+    }
+  ],
+  "regression": {
+    "pipeline": [
+      {
+        "sample": 1,
+        "variant": "original",
+        "option_index": 3,
+        "answer": "连环击",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "乾天罡气",
+          "魂兮归来",
+          "红袖添香",
+          "连环击"
+        ],
+        "timings": {
+          "layout_ms": 138.67519999985234,
+          "ocr_ms": 32.894900000428606,
+          "match_ms": 35.005099999580125,
+          "total_ms": 207.02199999959703
+        },
+        "wall_ms": 207.8,
+        "passed": true
+      },
+      {
+        "sample": 1,
+        "variant": "1024x768-dialog-1.0",
+        "option_index": 3,
+        "answer": "连环击",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "乾天罡气",
+          "魂兮归来",
+          "红袖添香",
+          "连环击"
+        ],
+        "timings": {
+          "layout_ms": 88.12320000015461,
+          "ocr_ms": 34.33190000032482,
+          "match_ms": 13.95200000024488,
+          "total_ms": 136.68669999970007
+        },
+        "wall_ms": 136.7,
+        "passed": true
+      },
+      {
+        "sample": 1,
+        "variant": "1280x960-dialog-1.0",
+        "option_index": 3,
+        "answer": "连环击",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "乾天罡气",
+          "魂兮归来",
+          "红袖添香",
+          "连环击"
+        ],
+        "timings": {
+          "layout_ms": 141.22070000030362,
+          "ocr_ms": 33.615000000281725,
+          "match_ms": 16.455400000268128,
+          "total_ms": 191.6147000001729
+        },
+        "wall_ms": 191.7,
+        "passed": true
+      },
+      {
+        "sample": 1,
+        "variant": "1920x1080-dialog-1.0",
+        "option_index": 3,
+        "answer": "连环击",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "乾天罡气",
+          "魂兮归来",
+          "红袖添香",
+          "连环击"
+        ],
+        "timings": {
+          "layout_ms": 106.80169999977807,
+          "ocr_ms": 37.04730000026757,
+          "match_ms": 14.954000000216183,
+          "total_ms": 159.1123999996853
+        },
+        "wall_ms": 159.2,
+        "passed": true
+      },
+      {
+        "sample": 1,
+        "variant": "1920x1080-dialog-1.5",
+        "option_index": 3,
+        "answer": "连环击",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "乾天罡气",
+          "魂兮归来",
+          "红袖添香",
+          "连环击"
+        ],
+        "timings": {
+          "layout_ms": 116.4333999995506,
+          "ocr_ms": 73.67130000056932,
+          "match_ms": 261.81110000015906,
+          "total_ms": 452.98670000011043
+        },
+        "wall_ms": 453.1,
+        "passed": true
+      },
+      {
+        "sample": 1,
+        "variant": "1024x768-dialog-0.8",
+        "option_index": 3,
+        "answer": "连环击",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "乾天罡气",
+          "魂兮归来",
+          "红袖添香",
+          "连环击"
+        ],
+        "timings": {
+          "layout_ms": 180.60720000084984,
+          "ocr_ms": 45.80060000080266,
+          "match_ms": 51.539999999477004,
+          "total_ms": 278.2396000002336
+        },
+        "wall_ms": 278.3,
+        "passed": true
+      },
+      {
+        "sample": 2,
+        "variant": "original",
+        "option_index": 1,
+        "answer": "健身术",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "养生之道",
+          "健身术",
+          "打造技巧",
+          "巧匠之术"
+        ],
+        "timings": {
+          "layout_ms": 153.75850000054925,
+          "ocr_ms": 31.199300000480434,
+          "match_ms": 14.533399999891117,
+          "total_ms": 199.872600001072
+        },
+        "wall_ms": 199.9,
+        "passed": true
+      },
+      {
+        "sample": 2,
+        "variant": "1024x768-dialog-1.0",
+        "option_index": 1,
+        "answer": "健身术",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "养生之道",
+          "健身术",
+          "打造技巧",
+          "巧匠之术"
+        ],
+        "timings": {
+          "layout_ms": 99.00110000035056,
+          "ocr_ms": 30.663900000035937,
+          "match_ms": 13.063400000646652,
+          "total_ms": 143.18499999990308
+        },
+        "wall_ms": 143.3,
+        "passed": true
+      },
+      {
+        "sample": 2,
+        "variant": "1280x960-dialog-1.0",
+        "option_index": 1,
+        "answer": "健身术",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "养生之道",
+          "健身术",
+          "打造技巧",
+          "巧匠之术"
+        ],
+        "timings": {
+          "layout_ms": 137.01839999976073,
+          "ocr_ms": 29.58680000028835,
+          "match_ms": 12.978599999769358,
+          "total_ms": 179.91799999981595
+        },
+        "wall_ms": 180.0,
+        "passed": true
+      },
+      {
+        "sample": 2,
+        "variant": "1920x1080-dialog-1.0",
+        "option_index": 1,
+        "answer": "健身术",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "养生之道",
+          "健身术",
+          "打造技巧",
+          "巧匠之术"
+        ],
+        "timings": {
+          "layout_ms": 103.84369999974297,
+          "ocr_ms": 31.75680000003922,
+          "match_ms": 12.350899999546527,
+          "total_ms": 148.27770000010787
+        },
+        "wall_ms": 148.3,
+        "passed": true
+      },
+      {
+        "sample": 2,
+        "variant": "1920x1080-dialog-1.5",
+        "option_index": 1,
+        "answer": "健身术",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "养生之道",
+          "健身术",
+          "打造技巧",
+          "巧匠之术"
+        ],
+        "timings": {
+          "layout_ms": 111.92909999954281,
+          "ocr_ms": 33.35510000033537,
+          "match_ms": 25.341499999740336,
+          "total_ms": 171.38009999962378
+        },
+        "wall_ms": 171.4,
+        "passed": true
+      },
+      {
+        "sample": 2,
+        "variant": "1024x768-dialog-0.8",
+        "option_index": 1,
+        "answer": "健身术",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "养生之道",
+          "健身术",
+          "打造技巧",
+          "巧匠之术"
+        ],
+        "timings": {
+          "layout_ms": 91.22260000003735,
+          "ocr_ms": 29.167400000005728,
+          "match_ms": 10.483000000022002,
+          "total_ms": 131.11280000066472
+        },
+        "wall_ms": 131.2,
+        "passed": true
+      },
+      {
+        "sample": 3,
+        "variant": "original",
+        "option_index": 2,
+        "answer": "百毒不侵",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "血雨",
+          "后发制人",
+          "百毒不侵",
+          "阎罗令"
+        ],
+        "timings": {
+          "layout_ms": 151.8231999998534,
+          "ocr_ms": 36.83230000024196,
+          "match_ms": 17.204599999786296,
+          "total_ms": 206.1824999991586
+        },
+        "wall_ms": 206.3,
+        "passed": true
+      },
+      {
+        "sample": 3,
+        "variant": "1024x768-dialog-1.0",
+        "option_index": 2,
+        "answer": "百毒不侵",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "血雨",
+          "后发制人",
+          "百毒不侵",
+          "阎罗令"
+        ],
+        "timings": {
+          "layout_ms": 92.50049999991461,
+          "ocr_ms": 32.744000000093365,
+          "match_ms": 15.798099999301485,
+          "total_ms": 141.31069999984902
+        },
+        "wall_ms": 141.4,
+        "passed": true
+      },
+      {
+        "sample": 3,
+        "variant": "1280x960-dialog-1.0",
+        "option_index": 2,
+        "answer": "百毒不侵",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "血雨",
+          "后发制人",
+          "百毒不侵",
+          "阎罗令"
+        ],
+        "timings": {
+          "layout_ms": 144.22149999973044,
+          "ocr_ms": 34.602199999426375,
+          "match_ms": 15.190699999948265,
+          "total_ms": 194.4143000000622
+        },
+        "wall_ms": 194.5,
+        "passed": true
+      },
+      {
+        "sample": 3,
+        "variant": "1920x1080-dialog-1.0",
+        "option_index": 2,
+        "answer": "百毒不侵",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "血雨",
+          "后发制人",
+          "百毒不侵",
+          "阎罗令"
+        ],
+        "timings": {
+          "layout_ms": 106.35640000054991,
+          "ocr_ms": 32.24099999988539,
+          "match_ms": 15.067500000441214,
+          "total_ms": 153.9719000011246
+        },
+        "wall_ms": 154.0,
+        "passed": true
+      },
+      {
+        "sample": 3,
+        "variant": "1920x1080-dialog-1.5",
+        "option_index": 2,
+        "answer": "百毒不侵",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "血雨",
+          "后发制人",
+          "百毒不侵",
+          "阎罗令"
+        ],
+        "timings": {
+          "layout_ms": 107.06029999983002,
+          "ocr_ms": 33.37939999983064,
+          "match_ms": 50.58400000052643,
+          "total_ms": 191.7530999999144
+        },
+        "wall_ms": 191.8,
+        "passed": true
+      },
+      {
+        "sample": 3,
+        "variant": "1024x768-dialog-0.8",
+        "option_index": 2,
+        "answer": "百毒不侵",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "血雨",
+          "后发制人",
+          "百毒不侵",
+          "阎罗令"
+        ],
+        "timings": {
+          "layout_ms": 91.93880000020727,
+          "ocr_ms": 32.903999999689404,
+          "match_ms": 33.2351999995808,
+          "total_ms": 158.28890000011597
+        },
+        "wall_ms": 158.3,
+        "passed": true
+      },
+      {
+        "sample": 4,
+        "variant": "original",
+        "option_index": 3,
+        "answer": "古董评估",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "变化之术",
+          "打坐",
+          "丹元济会",
+          "古董评估"
+        ],
+        "timings": {
+          "layout_ms": 143.2074999993347,
+          "ocr_ms": 34.74199999982375,
+          "match_ms": 13.239299999440846,
+          "total_ms": 191.55999999929918
+        },
+        "wall_ms": 191.6,
+        "passed": true
+      },
+      {
+        "sample": 4,
+        "variant": "1024x768-dialog-1.0",
+        "option_index": 3,
+        "answer": "古董评估",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "变化之术",
+          "打坐",
+          "丹元济会",
+          "古董评估"
+        ],
+        "timings": {
+          "layout_ms": 90.83000000009633,
+          "ocr_ms": 29.802899999594956,
+          "match_ms": 11.714299999766808,
+          "total_ms": 132.63460000052874
+        },
+        "wall_ms": 132.7,
+        "passed": true
+      },
+      {
+        "sample": 4,
+        "variant": "1280x960-dialog-1.0",
+        "option_index": 3,
+        "answer": "古董评估",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "变化之术",
+          "打坐",
+          "丹元济会",
+          "古董评估"
+        ],
+        "timings": {
+          "layout_ms": 139.7718000007444,
+          "ocr_ms": 32.404200000200944,
+          "match_ms": 12.273600000298757,
+          "total_ms": 184.90870000096038
+        },
+        "wall_ms": 185.0,
+        "passed": true
+      },
+      {
+        "sample": 4,
+        "variant": "1920x1080-dialog-1.0",
+        "option_index": 3,
+        "answer": "古董评估",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "变化之术",
+          "打坐",
+          "丹元济会",
+          "古董评估"
+        ],
+        "timings": {
+          "layout_ms": 108.52629999953933,
+          "ocr_ms": 32.85819999928208,
+          "match_ms": 11.603099999774713,
+          "total_ms": 153.31389999937528
+        },
+        "wall_ms": 153.4,
+        "passed": true
+      },
+      {
+        "sample": 4,
+        "variant": "1920x1080-dialog-1.5",
+        "option_index": 3,
+        "answer": "古董评估",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "变化之术",
+          "打坐",
+          "丹元济会",
+          "古董评估"
+        ],
+        "timings": {
+          "layout_ms": 106.4118000003873,
+          "ocr_ms": 32.82469999976456,
+          "match_ms": 44.94760000034148,
+          "total_ms": 185.1582999997845
+        },
+        "wall_ms": 185.3,
+        "passed": true
+      },
+      {
+        "sample": 4,
+        "variant": "1024x768-dialog-0.8",
+        "option_index": 3,
+        "answer": "古董评估",
+        "level": "HIGH",
+        "reason": "图标与选项唯一对应",
+        "options": [
+          "变化之术",
+          "打坐",
+          "丹元济会",
+          "古董评估"
+        ],
+        "timings": {
+          "layout_ms": 100.72599999966769,
+          "ocr_ms": 30.21050000006653,
+          "match_ms": 31.236099999659928,
+          "total_ms": 162.5419999991209
+        },
+        "wall_ms": 162.6,
+        "passed": true
+      }
+    ],
+    "replay": [
+      {
+        "case": "sample-1",
+        "option_index": 3,
+        "passed": true,
+        "latency_ms": 244.6,
+        "clear_ms": 162.9
+      },
+      {
+        "case": "sample-2",
+        "option_index": 1,
+        "passed": true,
+        "latency_ms": 285.9,
+        "clear_ms": 61.4
+      },
+      {
+        "case": "sample-3",
+        "option_index": 2,
+        "passed": true,
+        "latency_ms": 408.9,
+        "clear_ms": 81.2
+      },
+      {
+        "case": "sample-4",
+        "option_index": 3,
+        "passed": true,
+        "latency_ms": 286.0,
+        "clear_ms": 82.1
+      },
+      {
+        "case": "same-icon-reordered",
+        "option_index": 0,
+        "passed": true,
+        "latency_ms": 245.2,
+        "clear_ms": 81.8
+      },
+      {
+        "case": "dialog-close",
+        "passed": true,
+        "clear_ms": 72.8
+      }
+    ]
+  }
+}

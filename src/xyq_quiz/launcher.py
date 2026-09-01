@@ -57,6 +57,12 @@ from xyq_quiz.knowledge.knowledge import load_knowledge_snapshot
 from xyq_quiz.knowledge.local import LocalQuestionStore
 from xyq_quiz.knowledge.matcher import QuestionMatcher
 from xyq_quiz.knowledge.updater import QuestionBankUpdater, load_current_generation
+from xyq_quiz.knowledge.teacher_bank import recover_teacher_bank
+from xyq_quiz.knowledge.teacher_matcher import TeacherIconMatcher
+from xyq_quiz.knowledge.teacher_updater import TeacherBankUpdater
+from xyq_quiz.recognition.activity import ActivityLayoutDetector
+from xyq_quiz.recognition.teachers_day_layout import TeacherLayoutDetector
+from xyq_quiz.runtime.paths import initialize_teacher_assets
 from xyq_quiz.performance.controller import PerformanceController
 from xyq_quiz.performance.native_preview import locate_native_preview_helper
 from xyq_quiz.recognition.layout import (
@@ -508,7 +514,22 @@ def build_services(
         match.question_gap,
         match.option_score,
     )
-    layout_detector = build_layout_detector(layout_profiles)
+    try:
+        initialize_teacher_assets(config.data_dir, paths.default_data_dir)
+    except (OSError, ValueError, KeyError, TypeError):
+        pass  # Recovery below can still use the immutable bundled bank.
+    teacher_bank = recover_teacher_bank(
+        config.data_dir / "teachers_day", paths.default_data_dir / "teachers_day",
+    )
+    teacher_matcher = TeacherIconMatcher(teacher_bank) if teacher_bank else None
+    teacher_detector = None
+    for base in (config.data_dir, paths.default_data_dir):
+        try:
+            teacher_detector = TeacherLayoutDetector(base / "layouts" / "teachers-day.json")
+            break
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+    layout_detector = ActivityLayoutDetector(build_layout_detector(layout_profiles), teacher_detector)
     native_preview_helper = locate_native_preview_helper(
         app_root=paths.app_root,
         resource_root=paths.resource_root,
@@ -525,6 +546,7 @@ def build_services(
         layout_detector,
         performance.create_ocr_engine(),
         matcher,
+        teacher_matcher=teacher_matcher,
     )
     hub = LatestFrameHub()
     video_hub = LatestVideoHub()
@@ -561,6 +583,8 @@ def build_services(
         coordinator=coordinator,
         pipeline=pipeline,
         updater=QuestionBankUpdater(config.data_dir),
+        teacher_updater=TeacherBankUpdater(config.data_dir / "teachers_day"),
+        teacher_bank=teacher_bank,
         match_config=config.match,
         local_question_store=local_question_store,
         official_bank=current.question_bank,
@@ -588,7 +612,7 @@ def build_services(
 
 def main(argv: Sequence[str] | None = None) -> int:
     raw_args = list(sys.argv[1:] if argv is None else argv)
-    parser = argparse.ArgumentParser(description="启动梦幻西游科举答题助手")
+    parser = argparse.ArgumentParser(description="启动梦幻西游答题助手（科举 / 教师节）")
     parser.add_argument("--config", type=Path)
     parser.add_argument("--version", action="store_true")
     parser.add_argument("--self-test", action="store_true")

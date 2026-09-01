@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "app_version": "0.4.0",
+  "generated_at": "2026-09-01T15:19:26.596417+00:00",
+  "headless": true,
+  "ok": true,
+  "checks": [
+    {
+      "name": "platform",
+      "status": "PASS",
+      "detail": "Windows build 26200, x64",
+      "duration_ms": 0.01
+    },
+    {
+      "name": "portable-write",
+      "status": "PASS",
+      "detail": "便携根目录可创建、刷新、读取和删除文件",
+      "duration_ms": 4.5998
+    },
+    {
+      "name": "build-manifest",
+      "status": "PASS",
+      "detail": "已校验 1287 个不可变文件",
+      "duration_ms": 691.6878
+    },
+    {
+      "name": "portable-state",
+      "status": "PASS",
+      "detail": "配置与题库可用，generation=20260726T120206559147Z-0361dc73746a470b9273bf02ec172c7a, records=2586",
+      "duration_ms": 42.8641
+    },
+    {
+      "name": "teachers-day-assets",
+      "status": "PASS",
+      "detail": "教师节题库、图标和定位资源可用，records=336",
+      "duration_ms": 250.0551
+    },
+    {
+      "name": "native-imports",
+      "status": "PASS",
+      "detail": "原生、WebView2 与 WebSocket 运行依赖均可导入",
+      "duration_ms": 1798.4209
+    },
+    {
+      "name": "ocr-inference",
+      "status": "PASS",
+      "detail": "RapidOCR 推理完成，text_length=0",
+      "duration_ms": 632.1524
+    },
+    {
+      "name": "local-web-security",
+      "status": "PASS",
+      "detail": "一次性引导、浏览器恢复与进程令牌边界可用",
+      "duration_ms": 0.0811
+    },
+    {
+      "name": "synthetic-wgc",
+      "status": "SKIPPED",
+      "detail": "headless 模式无交互桌面",
+      "duration_ms": 0.0042
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "sample": 1,
+    "answer": "勘察令",
+    "option_index": 3,
+    "options": [
+      "推气过宫",
+      "无穷妙道",
+      "娉婷袅娜",
+      "堪察令"
+    ],
+    "files": {
+      "icon": "feedback-1-icon.png",
+      "option-a": "feedback-1-option-a.png",
+      "option-b": "feedback-1-option-b.png",
+      "option-c": "feedback-1-option-c.png",
+      "option-d": "feedback-1-option-d.png"
+    }
+  },
+  {
+    "sample": 2,
+    "answer": "炼金术",
+    "option_index": 3,
+    "options": [
+      "巧匠之术",
+      "打造技巧",
+      "中药医理",
+      "炼金术"
+    ],
+    "files": {
+      "icon": "feedback-2-icon.png",
+      "option-a": "feedback-2-option-a.png",
+      "option-b": "feedback-2-option-b.png",
+      "option-c": "feedback-2-option-c.png",
+      "option-d": "feedback-2-option-d.png"
+    }
+  },
+  {
+    "sample": 3,
+    "answer": "姐妹同心",
+    "option_index": 1,
+    "options": [
+      "以和为贵",
+      "姐妹同心",
+      "定身符",
+      "五雷咒"
+    ],
+    "files": {
+      "icon": "feedback-3-icon.png",
+      "option-a": "feedback-3-option-a.png",
+      "option-b": "feedback-3-option-b.png",
+      "option-c": "feedback-3-option-c.png",
+      "option-d": "feedback-3-option-d.png"
+    }
+  }
+]

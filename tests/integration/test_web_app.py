@@ -90,6 +90,9 @@ class FakePipeline:
     def replace_matcher(self, matcher: object) -> None:
         self.matchers.append(matcher)
 
+    def replace_teacher_matcher(self, matcher: object) -> None:
+        self.matchers.append(matcher)
+
     def warm_up(self) -> None:
         self.events.append("pipeline.warm_up")
 
@@ -561,6 +564,31 @@ def test_failed_update_keeps_old_matcher_and_returns_structured_error(
     }
 
 
+@pytest.mark.parametrize("failed_bank", [None, "keju", "teachers_day"])
+def test_both_bank_updates_report_independent_outcomes(tmp_path, failed_bank):
+    from xyq_quiz.knowledge.teacher_bank import load_teacher_bank
+    bank = load_teacher_bank(Path(__file__).parents[2] / "data/teachers_day")
+    fixture = _services(tmp_path, updater_error=RuntimeError("科举网络不可用") if failed_bank == "keju" else None)
+    fixture.services.teacher_bank = bank
+    def update_teacher():
+        if failed_bank == "teachers_day":
+            raise RuntimeError("图片下载失败")
+        return bank
+    fixture.services.teacher_updater = SimpleNamespace(update=update_teacher)
+    with TestClient(create_app(fixture.services)) as client:
+        response = client.post("/api/question-bank/update")
+        payload = response.json()
+        assert response.status_code == 200
+        assert payload["ok"] is (failed_bank is None)
+        assert payload["partial_success"] is (failed_bank is not None)
+        assert payload["banks"]["keju"]["ok"] is (failed_bank != "keju")
+        assert payload["banks"]["teachers_day"]["ok"] is (failed_bank != "teachers_day")
+        status = client.get("/api/status").json()
+        assert status["question_banks"]["teachers_day"]["record_count"] == 336
+        assert status["question_banks"]["keju"]["available"]
+    assert fixture.services.teacher_bank is bank
+
+
 def test_local_question_crud_rebuilds_combined_matcher_immediately(
     tmp_path: Path,
 ) -> None:
@@ -975,6 +1003,7 @@ def test_static_b_layout_contract(tmp_path: Path) -> None:
     assert 'id="localQuestionList"' in html.text
     assert 'id="backendStatus"' in html.text
     assert 'id="backendSettingsDialog"' in html.text
+    assert 'id="confirmationDialog"' in html.text
     assert 'id="ocrBackendSelect"' in html.text
     assert 'id="previewBackendSelect"' in html.text
     assert "不会随诊断文件或发布包导出" in html.text
@@ -1026,17 +1055,30 @@ def test_static_b_layout_contract(tmp_path: Path) -> None:
     assert "list.replaceChildren()" in javascript.text
     assert "frameSocket.onmessage = ({data}) =>" in javascript.text
     assert "frameSocket.onmessage = async" not in javascript.text
-    assert "window.confirm" in javascript.text
+    assert "window.confirm" not in javascript.text
     assert "请关闭当前页面并重新打开 XYQQuiz" in javascript.text
     assert "重新双击 XYQQuiz.exe" not in javascript.text
     assert "完整游戏画面" in javascript.text
-    assert "saveRecognitionDiagnostics(currentTarget)" in javascript.text
+    assert "function requestConfirmation" in javascript.text
+    assert "confirmationDialog.showModal()" in javascript.text
+    assert 'confirmationDialog.returnValue === "confirm"' in javascript.text
+    assert 'pendingMessage: "正在保存识别诊断，请稍候…"' in javascript.text
+    assert 'diagnosticsButton.addEventListener("click", () => { void saveRecognitionDiagnostics(); })' in javascript.text
     assert 'apiFetch("/api/performance", {method: "GET"})' in javascript.text
     assert 'apiFetch("/api/performance/settings"' in javascript.text
     assert 'apiFetch("/api/performance/canvas-fps"' in javascript.text
     assert "preserveDialogSelection: true" in javascript.text
     assert "renderPerformanceDialog({preserveSelection:" in javascript.text
     assert 'performanceSnapshot.pending_ocr' in javascript.text
+    assert 'document.querySelector("dialog[open]") === null' in javascript.text
+    assert (
+        'backendSettingsDialog.addEventListener("close", scheduleNativePreviewLayout)'
+        in javascript.text
+    )
+    assert (
+        'backendSettingsDialog.addEventListener("cancel", scheduleNativePreviewLayout)'
+        in javascript.text
+    )
     assert "pendingFrameBuffer = data" in javascript.text
     assert "while (pendingFrameBuffer !== null)" in javascript.text
     assert "if (pendingFrameBuffer !== null)" in javascript.text

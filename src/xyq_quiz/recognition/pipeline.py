@@ -15,6 +15,7 @@ from xyq_quiz.capture.models import CapturedFrame, Rect
 from xyq_quiz.knowledge.matcher import QuestionMatcher
 from xyq_quiz.knowledge.models import OptionMatch, QuestionMatch, normalize_text
 from xyq_quiz.recognition.models import (
+    ActivityKind,
     ConfidenceLevel,
     DetectedLayout,
     OCRText,
@@ -57,10 +58,13 @@ class RecognitionPipeline:
         layout_detector: LayoutDetector,
         ocr_engine: OCREngine,
         matcher: QuestionMatcher,
+        *,
+        teacher_matcher=None,
     ) -> None:
         self._layout_detector = layout_detector
         self._ocr_engine = ocr_engine
         self._matcher = matcher
+        self._teacher_matcher = teacher_matcher
         self._matcher_lock = threading.Lock()
         self._crops_lock = threading.Lock()
         self._latest_crops: tuple[NDArray[np.uint8], ...] = ()
@@ -136,6 +140,7 @@ class RecognitionPipeline:
                 raise RuntimeError("recognition pipeline is closed")
         with self._matcher_lock:
             matcher = self._matcher
+            teacher_matcher = self._teacher_matcher
         started = time.perf_counter()
         layout = detected_layout
         layout_ms = detected_layout_ms
@@ -150,6 +155,13 @@ class RecognitionPipeline:
                 generation_id,
                 layout_ms,
                 _milliseconds_since(started),
+            )
+
+        if layout.activity_kind is ActivityKind.TEACHERS_DAY:
+            from xyq_quiz.recognition.teachers_day import recognize_teacher
+            return recognize_teacher(
+                frame, generation_id, layout, teacher_matcher,
+                self._recognize_options, self._store_crops, layout_ms,
             )
 
         ocr_started = time.perf_counter()
@@ -287,6 +299,10 @@ class RecognitionPipeline:
         with self._matcher_lock:
             self._matcher = matcher
 
+    def replace_teacher_matcher(self, matcher) -> None:
+        with self._matcher_lock:
+            self._teacher_matcher = matcher
+
     def latest_crops(self) -> tuple[NDArray[np.uint8], ...]:
         """Return independent read-only copies of the last OCR input crops."""
         with self._crops_lock:
@@ -317,6 +333,9 @@ class RecognitionPipeline:
             ocr = future.result()
             match_started = time.perf_counter()
             match = matcher.match_question(_extract_question_body(ocr.text))
+            # This fixed prompt belongs to a visual activity, never a Keju row.
+            if "指出" in ocr.text and ("技能" in ocr.text or "法术名称" in ocr.text):
+                match = None
             match_ms += _milliseconds_since(match_started)
             attempt = _QuestionAttempt(ocr, match, crop, level, match_ms)
             attempts.append(attempt)

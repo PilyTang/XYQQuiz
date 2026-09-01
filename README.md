@@ -1,11 +1,15 @@
 # XYQQuiz
 
-XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》科举答题辅助显示工具。它通过 Windows Graphics Capture 读取游戏窗口，在独立桌面窗口中显示实时预览，并根据题目、题库答案和选项的综合评分框出候选答案。
+XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》答题辅助显示工具，支持科举和教师节“看图说话”。它通过 Windows Graphics Capture 读取游戏窗口，在独立桌面窗口中显示实时预览，并根据题库和当前选项框出候选答案。
 
 > 本项目不会自动点击、不会向游戏发送输入、不会读取游戏进程内存，也不会注入游戏或在游戏窗口内绘制。请自行确认并遵守游戏规则。
 
 ## 功能
 
+- 自动识别科举和教师节活动，无需手动切换。
+- 教师节使用内置的 336 条技能图标记录，将图像特征与四个选项联合匹配；图标不清、文字缺失或证据冲突时等待重试。
+- 同图换选项会重新映射答案；切题、关闭答题框和题库更新会清除旧提示。
+- 教师节优先适配 1024×768 及以上游戏画面。四张真实截图和缩放/移动回放已验证，实际活动连续答题仍需实机验收。
 - 自动寻找 `mhtab.exe` / `MHXYMainFrame` 游戏窗口并显示本地实时预览。
 - 先独立识别题目，再定位 3～4 个选项，使用内置离线科举题库匹配答案。
 - 布局分析可按分辨率自适应缩放，预览和 OCR 仍使用原始画面。
@@ -19,11 +23,11 @@ XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》科举答题辅助
 - 支持单实例启动、端口冲突提示、题库原子更新和一键退出。
 - 可按需保存识别诊断或不含游戏画面的环境诊断。
 
-当前版本为 `0.2.0`。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。目前以科举主流程的实际活动验证为准；乡试和殿试只有兼容性实现与有限样本验证，不承诺已经覆盖全部现场界面，仍需后续活动回归。
+当前版本为 `0.4.1`。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。教师节基础验证范围见 [v0.4 验收记录](docs/v0.4-validation.md)，名称差异与未收录干扰项修复见 [v0.4.1 修复记录](docs/v0.4.1-feedback-fix.md)。
 
 ## 直接使用 Windows 便携版
 
-1. 从 GitHub Releases 下载 `XYQQuiz-v0.2.0-win10-win11-x64.zip` 和同名 `.sha256`。
+1. 获取 `XYQQuiz-v0.4.1-win10-win11-x64.zip` 和同名 `.sha256`。
 2. 完整解压到一个新目录，不要直接在压缩包里运行。
 3. 双击 `XYQQuiz.exe`，首次捕获时允许 UAC 管理员权限请求。
 4. 等待默认 `1440×900` 的可缩放桌面窗口打开；游戏题面出现后，答案框会显示在窗口预览中。
@@ -32,6 +36,8 @@ XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》科举答题辅助
 第二次双击 EXE 会还原并聚焦已经运行的桌面窗口。若页面提示会话失效，也请重新双击 EXE，不要手工拼接本地 URL。
 
 便携包自带程序、OCR 模型、布局和离线题库，正常启动和识别不需要联网。“更新题库”是唯一会主动访问题库来源的日常功能。
+
+“更新题库”分别更新科举和教师节，并显示各自结果。教师节更新会先完整下载、校验所有图标再切换版本，失败时保留旧题库。旧配置或自定义数据目录首次运行 v0.4 时会自动补齐缺失的教师节资源；本地补题继续用于科举。
 
 桌面窗口使用系统中的 Microsoft Edge WebView2 Evergreen Runtime，并在 `127.0.0.1` 上选择随机空闲端口。发布包不会捆绑体积较大的 Fixed Version Runtime；如果系统缺少 WebView2，程序会自动退回外部浏览器模式，识别功能仍可使用。也可通过 `XYQQuiz.exe --external-browser` 主动使用外部浏览器进行调试；该模式使用 `config.web.port`（默认 `8765`），端口被占用时会给出明确提示。
 
@@ -90,13 +96,13 @@ Copy-Item config.example.json config.json
 
 ```powershell
 .venv\Scripts\python.exe -m pip install --require-hashes -r requirements-release.txt
-.\scripts\build-release.ps1 -Version 0.2.0 -Commit working-tree -AllowDevelopmentCommit
+.\scripts\build-release.ps1 -Version 0.4.1 -Commit working-tree -AllowDevelopmentCommit
 ```
 
 正式发布构建必须从干净提交运行，并传入完整 40 位 Git SHA：
 
 ```powershell
-.\scripts\build-release.ps1 -Version 0.2.0 -Commit (git rev-parse HEAD)
+.\scripts\build-release.ps1 -Version 0.4.1 -Commit (git rev-parse HEAD)
 ```
 
 产物位于 `release\`，包括 ZIP 和 SHA-256 文件。构建脚本会审计公开树和最终 ZIP，拒绝打入 `user-data\`、`diagnostics\` 或本地 `questions.json`。GitHub 的 `v*` 标签工作流会先做公开内容审计和完整测试，再使用标签对应的真实提交 SHA 构建并创建 Release。

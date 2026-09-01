@@ -224,6 +224,7 @@ def _default_checks(
             lambda: _check_manifest_for_runtime(paths),
         ),
         ("portable-state", lambda: _check_state(config_path)),
+        ("teachers-day-assets", lambda: _check_teacher_assets(paths, config_path)),
         ("native-imports", _check_native_imports),
         ("ocr-inference", _check_ocr_inference),
         ("local-web-security", _check_web_security),
@@ -273,6 +274,19 @@ def _check_state(config_path: Path) -> str:
     config = AppConfig.load(config_path)
     generation = load_current_generation(config.data_dir)
     return f"配置与题库可用，generation={generation.generation_id}, records={generation.question_bank.count}"
+
+
+def _check_teacher_assets(paths: RuntimePaths, config_path: Path) -> str:
+    from xyq_quiz.knowledge.teacher_bank import load_teacher_bank
+    from xyq_quiz.knowledge.teacher_matcher import TeacherIconMatcher
+    from xyq_quiz.recognition.teachers_day_layout import TeacherLayoutDetector
+    from xyq_quiz.runtime.paths import initialize_teacher_assets
+    config = AppConfig.load(config_path)
+    initialize_teacher_assets(config.data_dir, paths.default_data_dir)
+    bank = load_teacher_bank(config.data_dir / "teachers_day")
+    TeacherIconMatcher(bank)
+    TeacherLayoutDetector(config.data_dir / "layouts/teachers-day.json")
+    return f"教师节题库、图标和定位资源可用，records={bank.count}"
 
 
 def _check_native_imports() -> str:

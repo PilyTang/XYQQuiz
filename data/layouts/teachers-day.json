@@ -1,0 +1,68 @@
+{
+  "name": "teachers-day",
+  "reference_size": [
+    629,
+    375
+  ],
+  "icon_rect": [
+    222,
+    66,
+    40,
+    40
+  ],
+  "option_rects": [
+    [
+      201,
+      171,
+      189,
+      53
+    ],
+    [
+      411,
+      171,
+      190,
+      53
+    ],
+    [
+      201,
+      243,
+      189,
+      53
+    ],
+    [
+      411,
+      243,
+      190,
+      53
+    ]
+  ],
+  "anchors": {
+    "title": {
+      "template_path": "anchors/teachers-day-title.png",
+      "rect": [
+        287,
+        1,
+        70,
+        20
+      ]
+    },
+    "exit": {
+      "template_path": "anchors/teachers-day-exit.png",
+      "rect": [
+        550,
+        343,
+        70,
+        22
+      ]
+    },
+    "prompt": {
+      "template_path": "anchors/teachers-day-prompt.png",
+      "rect": [
+        274,
+        67,
+        282,
+        20
+      ]
+    }
+  }
+}

@@ -233,7 +233,7 @@ def test_default_window_is_resizable_and_not_maximized() -> None:
 
     args, kwargs = webview.create_calls[0]
     assert args == (
-        "XYQQuiz 科举答题助手",
+        "XYQQuiz 梦幻西游答题助手",
         "http://127.0.0.1:8765/#token=once",
     )
     assert kwargs == {

@@ -1,0 +1,385 @@
+{
+  "date_local": "2026-09-01",
+  "timezone": "Asia/Shanghai",
+  "purpose": "v0.4 design feasibility evidence; not implementation acceptance",
+  "code_baseline": {
+    "version": "0.3.1",
+    "commit_short": "4b64e71",
+    "layout_config": "config.example.json",
+    "ocr_backend": "cpu"
+  },
+  "sources": {
+    "page": "https://w.163.com/h5/xyq/dtk/index.html#/jiaoshijie",
+    "app_bundle": "https://w.163.com/h5/xyq/dtk/static/js/app.82e45b63.js",
+    "teacher_bundle": "https://w.163.com/h5/xyq/dtk/static/js/pageb.3e074f37.js",
+    "route_module_id": 7345
+  },
+  "bank": {
+    "record_count": 336,
+    "unique_names": 335,
+    "category_counts": {
+      "其他技能": 8,
+      "剧情技能": 11,
+      "坐骑技能": 13,
+      "祥瑞技能": 6,
+      "辅助技能": 21,
+      "方寸山": 20,
+      "女儿村": 14,
+      "狮驼岭": 13,
+      "魔王寨": 11,
+      "地府": 14,
+      "盘丝洞": 13,
+      "天宫": 15,
+      "龙宫": 12,
+      "五庄观": 14,
+      "普陀山": 14,
+      "东海渊": 13,
+      "花果山": 17,
+      "女魃墓": 15,
+      "天机城": 13,
+      "神木林": 12,
+      "无底洞": 15,
+      "凌波城": 14,
+      "大唐官府": 10,
+      "化生寺": 18,
+      "九黎城": 10
+    },
+    "downloaded_and_decoded": 336,
+    "download_failures": [],
+    "image_bytes": 1212631,
+    "image_dimensions": {
+      "40x40": 27,
+      "44x42": 3,
+      "41x41": 97,
+      "45x45": 1,
+      "43x43": 3,
+      "43x44": 1,
+      "42x45": 1,
+      "39x39": 24,
+      "40x39": 32,
+      "42x39": 4,
+      "42x41": 7,
+      "41x40": 12,
+      "38x39": 10,
+      "41x39": 5,
+      "39x40": 15,
+      "40x41": 7,
+      "42x40": 7,
+      "39x38": 29,
+      "39x41": 1,
+      "42x42": 10,
+      "40x38": 5,
+      "38x40": 5,
+      "40x42": 2,
+      "38x41": 1,
+      "40x37": 2,
+      "38x38": 7,
+      "41x38": 1,
+      "42x43": 2,
+      "43x42": 4,
+      "44x43": 3,
+      "44x45": 1,
+      "43x41": 3,
+      "41x42": 4
+    },
+    "identical_pixel_groups": []
+  },
+  "scope_limits": [
+    "Icon and option matching probes used manually specified image regions.",
+    "Existing configured layout detector returned no layout on all four images.",
+    "The full-bank image experiment is a naive 36..44 pixel square-template NCC baseline, not the proposed multifeature recognizer.",
+    "Correct answers were established by visual comparison and the currently displayed options.",
+    "Latency values are single probe measurements and exclude live capture, reliable automatic ROI selection and UI rendering.",
+    "No automatic end-to-end teachers-day feature, live sequence, true resolution matrix or calibrated false-accept rate has been verified."
+  ],
+  "samples": [
+    {
+      "sample": 1,
+      "file_dimensions_px": [
+        1280,
+        980
+      ],
+      "expected_answer": "连环击",
+      "expected_option": "D",
+      "existing_layout_detected": false,
+      "options_ocr_with_manual_rectangles": [
+        "乾天罡气",
+        "魂兮归来",
+        "红袖添香",
+        "连环击"
+      ],
+      "options_ocr_confidences": [
+        0.99992,
+        0.99994,
+        0.99586,
+        0.99992
+      ],
+      "full_bank_ncc_with_manual_icon_roi": [
+        {
+          "id": 97,
+          "name": "连环击",
+          "score": 0.67316
+        },
+        {
+          "id": 54,
+          "name": "逃离技巧",
+          "score": 0.55217
+        },
+        {
+          "id": 294,
+          "name": "天崩地裂",
+          "score": 0.53803
+        },
+        {
+          "id": 281,
+          "name": "移魂化骨",
+          "score": 0.53764
+        },
+        {
+          "id": 283,
+          "name": "元阳护体",
+          "score": 0.5375
+        }
+      ],
+      "full_bank_naive_probe_elapsed_ms": 331.73,
+      "current_option_subset_ncc_with_manual_icon_roi": [
+        {
+          "answer": "连环击",
+          "option": "D",
+          "score": 0.67316
+        },
+        {
+          "answer": "乾天罡气",
+          "option": "A",
+          "score": 0.50033
+        },
+        {
+          "answer": "魂兮归来",
+          "option": "B",
+          "score": 0.43052
+        },
+        {
+          "answer": "红袖添香",
+          "option": "C",
+          "score": 0.42905
+        }
+      ]
+    },
+    {
+      "sample": 2,
+      "file_dimensions_px": [
+        1284,
+        970
+      ],
+      "expected_answer": "健身术",
+      "expected_option": "B",
+      "existing_layout_detected": false,
+      "options_ocr_with_manual_rectangles": [
+        "养生之道",
+        "健身术",
+        "打造技巧",
+        "巧匠之术"
+      ],
+      "options_ocr_confidences": [
+        0.99988,
+        0.99982,
+        0.99994,
+        0.99974
+      ],
+      "full_bank_ncc_with_manual_icon_roi": [
+        {
+          "id": 44,
+          "name": "健身术",
+          "score": 0.92901
+        },
+        {
+          "id": 56,
+          "name": "养生之道",
+          "score": 0.69331
+        },
+        {
+          "id": 54,
+          "name": "逃离技巧",
+          "score": 0.65696
+        },
+        {
+          "id": 58,
+          "name": "中医药理",
+          "score": 0.65343
+        },
+        {
+          "id": 125,
+          "name": "尸腐毒",
+          "score": 0.64345
+        }
+      ],
+      "full_bank_naive_probe_elapsed_ms": 321.58,
+      "current_option_subset_ncc_with_manual_icon_roi": [
+        {
+          "answer": "健身术",
+          "option": "B",
+          "score": 0.92901
+        },
+        {
+          "answer": "养生之道",
+          "option": "A",
+          "score": 0.69331
+        },
+        {
+          "answer": "打造技巧",
+          "option": "C",
+          "score": 0.57898
+        },
+        {
+          "answer": "巧匠之术",
+          "option": "D",
+          "score": 0.46995
+        }
+      ]
+    },
+    {
+      "sample": 3,
+      "file_dimensions_px": [
+        1280,
+        963
+      ],
+      "expected_answer": "百毒不侵",
+      "expected_option": "C",
+      "existing_layout_detected": false,
+      "options_ocr_with_manual_rectangles": [
+        "血雨",
+        "后发制人",
+        "百毒不侵",
+        "阎罗令"
+      ],
+      "options_ocr_confidences": [
+        0.99968,
+        0.99966,
+        0.99987,
+        0.98875
+      ],
+      "full_bank_ncc_with_manual_icon_roi": [
+        {
+          "id": 297,
+          "name": "指地成钢",
+          "score": 0.72017
+        },
+        {
+          "id": 80,
+          "name": "百毒不侵",
+          "score": 0.71978
+        },
+        {
+          "id": 242,
+          "name": "天魔觉醒",
+          "score": 0.66711
+        },
+        {
+          "id": 213,
+          "name": "八戒上身",
+          "score": 0.6668
+        },
+        {
+          "id": 225,
+          "name": "铜头铁臂",
+          "score": 0.66121
+        }
+      ],
+      "full_bank_naive_probe_elapsed_ms": 257.89,
+      "current_option_subset_ncc_with_manual_icon_roi": [
+        {
+          "answer": "百毒不侵",
+          "option": "C",
+          "score": 0.71978
+        },
+        {
+          "answer": "血雨",
+          "option": "A",
+          "score": 0.57549
+        },
+        {
+          "answer": "后发制人",
+          "option": "B",
+          "score": 0.46383
+        },
+        {
+          "answer": "阎罗令",
+          "option": "D",
+          "score": 0.45519
+        }
+      ]
+    },
+    {
+      "sample": 4,
+      "file_dimensions_px": [
+        1288,
+        976
+      ],
+      "expected_answer": "古董评估",
+      "expected_option": "D",
+      "existing_layout_detected": false,
+      "options_ocr_with_manual_rectangles": [
+        "变化之术",
+        "打坐",
+        "丹元济会",
+        "古董评估"
+      ],
+      "options_ocr_confidences": [
+        0.99944,
+        0.99997,
+        0.9972,
+        0.99955
+      ],
+      "full_bank_ncc_with_manual_icon_roi": [
+        {
+          "id": 14,
+          "name": "古董评估",
+          "score": 0.83484
+        },
+        {
+          "id": 129,
+          "name": "杳无音讯",
+          "score": 0.63517
+        },
+        {
+          "id": 13,
+          "name": "调息",
+          "score": 0.59614
+        },
+        {
+          "id": 125,
+          "name": "尸腐毒",
+          "score": 0.59477
+        },
+        {
+          "id": 213,
+          "name": "八戒上身",
+          "score": 0.56021
+        }
+      ],
+      "full_bank_naive_probe_elapsed_ms": 326.36,
+      "current_option_subset_ncc_with_manual_icon_roi": [
+        {
+          "answer": "古董评估",
+          "option": "D",
+          "score": 0.83484
+        },
+        {
+          "answer": "丹元济会",
+          "option": "C",
+          "score": 0.52426
+        },
+        {
+          "answer": "变化之术",
+          "option": "A",
+          "score": 0.52291
+        },
+        {
+          "answer": "打坐",
+          "option": "B",
+          "score": 0.50501
+        }
+      ]
+    }
+  ]
+}

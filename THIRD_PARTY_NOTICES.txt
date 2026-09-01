@@ -30,3 +30,9 @@ rights and terms applicable to the corresponding material.
 
 XYQQuiz is an unofficial display assistant. It is not affiliated with or
 endorsed by NetEase.
+
+The Teachers' Day skill names and 336 icon records are derived from NetEase's
+public page at https://w.163.com/h5/xyq/dtk/index.html#/jiaoshijie.
+The bundled generation retains the source URLs, retrieval date, category,
+record identifiers, and SHA-256 for each image. The same third-party rights
+notice above applies to these icons and the three cropped dialog anchors.

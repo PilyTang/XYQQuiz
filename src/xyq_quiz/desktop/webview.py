@@ -54,7 +54,7 @@ class WebViewDesktopController:
     def __init__(
         self,
         *,
-        title: str = "XYQQuiz 科举答题助手",
+        title: str = "XYQQuiz 梦幻西游答题助手",
         width: int = 1440,
         height: int = 900,
         min_size: tuple[int, int] = (1000, 650),

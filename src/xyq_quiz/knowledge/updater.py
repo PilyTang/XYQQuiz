@@ -273,13 +273,15 @@ def resolve_keju_chunk(
     index_html: str,
     app_js: str,
     base_url: str,
+    *,
+    route_path: str = "/keju",
 ) -> tuple[str, int]:
     """Resolve the dynamic Keju bundle URL and its Webpack module id."""
 
     _app_script_source(index_html)
 
-    route_source = _route_object_source(app_js, "/keju")
-    component_source = _component_expression(route_source, "/keju")
+    route_source = _route_object_source(app_js, route_path)
+    component_source = _component_expression(route_source, route_path)
 
     bind_pattern = re.compile(
         r"(?P<runtime>[$\w]+)\.bind\(\s*(?P=runtime)\s*,\s*(?P<module>\d+)\s*\)"

@@ -19,6 +19,11 @@ venv/
 build/
 dist/
 release/
+release-*/
+
+# Local Codex launch helpers
+.codex-dev-launcher.*
+.codex-launch-source.*
 
 # Mutable portable/runtime state
 config.json

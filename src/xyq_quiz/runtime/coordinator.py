@@ -16,6 +16,7 @@ from numpy.typing import NDArray
 from xyq_quiz.capture.hub import LatestFrameHub
 from xyq_quiz.capture.models import CapturedFrame, CapturePhase, CaptureStatus, Rect
 from xyq_quiz.recognition.models import (
+    ActivityKind,
     ConfidenceLevel,
     DetectedLayout,
     RecognitionResult,
@@ -320,6 +321,12 @@ class RecognitionCoordinator:
                     retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                     pending = None
                 else:
+                    if (
+                        observed_layout is not None
+                        and observed_layout.frame_size != (frame.bgr.shape[1], frame.bgr.shape[0])
+                        and self._store.snapshot().activity_kind is ActivityKind.TEACHERS_DAY
+                    ):
+                        self._store.clear_question("frame_size_changed")
                     layout_started = time.perf_counter()
                     last_layout_scan_at = time.monotonic()
                     layout = self._layout_detector.detect(frame.bgr)
@@ -344,6 +351,23 @@ class RecognitionCoordinator:
                         retry_delay_seconds = _RECOGNITION_RETRY_SECONDS
                         pending = None
                     elif layout is None:
+                        observation = getattr(self._layout_detector, "observation", None)
+                        if (
+                            self._store.snapshot().activity_kind is ActivityKind.TEACHERS_DAY
+                            or getattr(observation, "activity_kind", None) is ActivityKind.UNKNOWN
+                        ):
+                            self._store.set_phase(RuntimePhase.MONITORING, "正在重新定位答题界面", clear=True)
+                            if getattr(observation, "activity_kind", None) is ActivityKind.UNKNOWN:
+                                self._store.set_activity(ActivityKind.UNKNOWN)
+                            observed_hash = None
+                            observed_identity = None
+                            observed_layout = None
+                            candidate_count = 0
+                            active_hash = None
+                            active_identity = None
+                            active_generation = None
+                            active_result_level = None
+                            pending = None
                         if layout_missing_since is None:
                             layout_missing_since = time.monotonic()
                             layout_missing_cleared = False
@@ -416,6 +440,7 @@ class RecognitionCoordinator:
                                     active_hash,
                                     frame.frame_id,
                                     frame_size=(frame.bgr.shape[1], frame.bgr.shape[0]),
+                                    activity_kind=layout.activity_kind,
                                 )
                                 active_generation = generation
                                 active_result_level = None
@@ -536,6 +561,8 @@ class RecognitionCoordinator:
                                         retry_delay_seconds
                                     )
                                 )
+                                if layout.activity_kind is ActivityKind.TEACHERS_DAY:
+                                    retry_delay_seconds = min(.8, retry_delay_seconds)
 
             # New frame transitions above always invalidate stale generations first.
             if self._stop_event.is_set():
@@ -647,6 +674,8 @@ def _quiz_stability_signature(
     rendering in those boxes must not look like a new question.  Cache reuse
     remains guarded independently by :func:`_quiz_cache_identity`.
     """
+    if layout.activity_kind is ActivityKind.TEACHERS_DAY:
+        return _teacher_signature(frame, layout)
     rect = layout.question_rect
     metadata = hashlib.blake2b(digest_size=8)
     metadata.update((layout.profile_name or "").encode("utf-8"))
@@ -666,6 +695,26 @@ def _same_question_signature(left: str, right: str) -> bool:
     """Return whether two question fingerprints are perceptually equivalent."""
     if left == right:
         return True
+    if left.startswith("td:") or right.startswith("td:"):
+        try:
+            left_kind, left_meta, left_payload = left.split(":", 2)
+            right_kind, right_meta, right_payload = right.split(":", 2)
+            if left_kind != right_kind or left_meta != right_meta:
+                return False
+            a_parts, b_parts = left_payload.split("|"), right_payload.split("|")
+            if len(a_parts) != 5 or len(b_parts) != 5:
+                return False
+            for index, (a, b) in enumerate(zip(a_parts, b_parts, strict=True)):
+                a, b = bytes.fromhex(a), bytes.fromhex(b)
+                if len(a) != len(b):
+                    return False
+                changed = sum((x ^ y).bit_count() for x, y in zip(a, b, strict=True))
+                fraction = .025 if index == 0 else .002
+                if changed > max(2, round(len(a) * 8 * fraction)):
+                    return False
+            return True
+        except (TypeError, ValueError):
+            return False
     try:
         left_metadata, left_payload = left.split(":", 1)
         right_metadata, right_payload = right.split(":", 1)
@@ -688,6 +737,11 @@ def _quiz_cache_identity(
     layout: DetectedLayout,
 ) -> _QuizCacheIdentity:
     """Hash exact full-resolution ROI content before authorizing cache reuse."""
+    if layout.activity_kind is ActivityKind.TEACHERS_DAY:
+        return _QuizCacheIdentity(
+            "teachers-day", _layout_signature(layout),
+            _teacher_signature(frame, layout).encode("ascii"),
+        )
     digest = hashlib.blake2b(digest_size=32)
     digest.update((layout.profile_name or "").encode("utf-8"))
     for rect in (layout.question_rect, *layout.option_rects):
@@ -731,6 +785,10 @@ def _same_quiz_identity(
     left: _QuizCacheIdentity,
     right: _QuizCacheIdentity,
 ) -> bool:
+    if left.profile_name == right.profile_name == "teachers-day":
+        return left.layout_signature == right.layout_signature and _same_question_signature(
+            left.digest.decode("ascii"), right.digest.decode("ascii"),
+        )
     return left == right
 
 
@@ -749,10 +807,34 @@ def _frame_layout_identity(
 def _layout_signature(
     layout: DetectedLayout,
 ) -> tuple[tuple[int, int, int, int], ...]:
+    rectangles = (layout.question_rect, *layout.option_rects)
+    if layout.activity_kind is ActivityKind.TEACHERS_DAY and layout.icon_rect is not None:
+        rectangles = (layout.icon_rect, *layout.option_rects)
     return tuple(
         (rect.x, rect.y, rect.width, rect.height)
-        for rect in (layout.question_rect, *layout.option_rects)
+        for rect in rectangles
     )
+
+
+def _teacher_signature(frame, layout) -> str:
+    metadata = hashlib.blake2b(repr(_layout_signature(layout)).encode("ascii"), digest_size=8).hexdigest()
+    regions = (layout.icon_rect or layout.question_rect, *(layout.option_text_rects or layout.option_rects))
+    parts = []
+    for index, rect in enumerate(regions):
+        crop = frame[rect.y:rect.y+rect.height, rect.x:rect.x+rect.width]
+        gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+        if index == 0:
+            inset = max(1, round(min(gray.shape) * .1))
+            gray = gray[inset:-inset, inset:-inset]
+            normalized = cv2.resize(gray, (33, 32), interpolation=cv2.INTER_AREA)
+            bits = normalized[:, 1:] > normalized[:, :-1]
+        else:
+            h, w = gray.shape
+            text = gray[round(h*.22):round(h*.88), round(w*.14):round(w*.97)]
+            # Central dark glyphs survive hover fills; borders and option badges are excluded.
+            bits = cv2.resize(text, (128, 32), interpolation=cv2.INTER_AREA) < 110
+        parts.append(np.packbits(bits).tobytes().hex())
+    return "td:" + metadata + ":" + "|".join(parts)
 
 
 __all__ = ["RecognitionCoordinator"]

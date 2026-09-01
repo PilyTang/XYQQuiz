@@ -104,4 +104,38 @@ def _fsync_file(path: Path) -> None:
         os.fsync(handle.fileno())
 
 
+def initialize_teacher_assets(data_dir: Path, default_data_dir: Path) -> None:
+    """Seed only missing 0.4 assets when upgrading an existing data directory."""
+    data_dir, default_data_dir = Path(data_dir).resolve(), Path(default_data_dir).resolve()
+    if data_dir == default_data_dir:
+        return
+    source = default_data_dir / "teachers_day"
+    target = data_dir / "teachers_day"
+    if source.is_dir() and not target.exists():
+        from xyq_quiz.knowledge.teacher_bank import load_teacher_bank
+        load_teacher_bank(source)
+        data_dir.mkdir(parents=True, exist_ok=True)
+        temporary = data_dir / (".teachers-day-" + uuid4().hex)
+        try:
+            shutil.copytree(source, temporary)
+            load_teacher_bank(temporary)
+            os.replace(temporary, target)
+        finally:
+            if temporary.exists():
+                assert temporary.resolve().parent == data_dir
+                shutil.rmtree(temporary)
+    sources = [default_data_dir / "layouts" / "teachers-day.json"]
+    sources.extend((default_data_dir / "layouts" / "anchors").glob("teachers-day-*.png"))
+    for source_path in sources:
+        destination = data_dir / source_path.relative_to(default_data_dir)
+        if source_path.is_file() and not destination.exists():
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            temporary = destination.with_name("." + destination.name + "-" + uuid4().hex)
+            try:
+                shutil.copy2(source_path, temporary)
+                os.replace(temporary, destination)
+            finally:
+                temporary.unlink(missing_ok=True)
+
+
 __all__ = ["RuntimePaths", "initialize_portable_state"]

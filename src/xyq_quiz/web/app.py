@@ -41,6 +41,9 @@ from xyq_quiz.knowledge.local import (
 from xyq_quiz.knowledge.matcher import QuestionMatcher
 from xyq_quiz.knowledge.store import QuestionBank
 from xyq_quiz.knowledge.updater import QuestionBankUpdater, load_current_generation
+from xyq_quiz.knowledge.teacher_bank import TeacherBankSnapshot
+from xyq_quiz.knowledge.teacher_matcher import MATCHER_VERSION, TeacherIconMatcher
+from xyq_quiz.knowledge.teacher_updater import TeacherBankUpdater
 from xyq_quiz.performance.controller import PerformanceController
 from xyq_quiz.runtime.state import RuntimeSnapshot, RuntimeStore
 from xyq_quiz.web.protocol import (
@@ -72,6 +75,7 @@ class CaptureLifecycle(LifecycleService, Protocol):
 class MatcherPipeline(Protocol):
     def warm_up(self) -> None: ...
     def replace_matcher(self, matcher: QuestionMatcher) -> None: ...
+    def replace_teacher_matcher(self, matcher: TeacherIconMatcher) -> None: ...
     def close(self) -> None: ...
 
     def latest_crops(self) -> tuple[Any, ...]: ...
@@ -127,6 +131,8 @@ class Services:
     restart: Callable[[], None] | None = None
     performance: PerformanceController | None = None
     video_hub: LatestVideoHub | None = None
+    teacher_updater: TeacherBankUpdater | None = None
+    teacher_bank: TeacherBankSnapshot | None = None
     _lifespan_claimed: bool = field(default=False, init=False, repr=False)
     _claim_lock: threading.Lock = field(
         default_factory=threading.Lock,
@@ -194,7 +200,37 @@ class Services:
 
     def snapshot_diagnostic_metadata(self) -> Any:
         with self._knowledge_lock:
-            return copy.deepcopy(self.diagnostic_metadata)
+            metadata = copy.deepcopy(self.diagnostic_metadata)
+            if self.teacher_bank is not None and isinstance(metadata, dict):
+                metadata["teachers_day"] = dict(self.teacher_bank.metadata)
+                metadata["teachers_day"]["matcher_version"] = MATCHER_VERSION
+            return metadata
+
+    def install_teacher_bank(self, bank: TeacherBankSnapshot) -> None:
+        matcher = TeacherIconMatcher(bank)
+        with self._knowledge_lock:
+            self.coordinator.invalidate_cache()
+            self.pipeline.replace_teacher_matcher(matcher)
+            self.teacher_bank = bank
+            self.coordinator.invalidate_cache()
+
+    def bank_status(self) -> dict:
+        with self._knowledge_lock:
+            metadata = self.official_metadata if isinstance(self.official_metadata, dict) else {}
+            teacher = self.teacher_bank
+            return {
+                "keju": {
+                    "available": self.official_bank is not None,
+                    "record_count": self.official_bank.count if self.official_bank else metadata.get("record_count", 0),
+                    "updated_at": metadata.get("updated_at"),
+                },
+                "teachers_day": {
+                    "available": teacher is not None,
+                    "record_count": teacher.count if teacher else 0,
+                    "updated_at": teacher.metadata.get("updated_at") if teacher else None,
+                    "message": teacher.recovery_reason if teacher else "教师节题库不可用",
+                },
+            }
 
     @staticmethod
     def diagnostic_metadata_for(
@@ -341,6 +377,7 @@ def create_app(
     async def status() -> dict[str, object]:
         payload = _runtime_payload(services.runtime.snapshot())
         payload["capture"] = jsonable_encoder(asdict(services.capture.status()))
+        payload["question_banks"] = services.bank_status()
         return payload
 
     @app.get("/api/performance")
@@ -495,6 +532,35 @@ def create_app(
                 )
                 services.install_knowledge(snapshot, generation.metadata)
             return result, generation
+
+        if services.teacher_updater is not None:
+            def update_all():
+                banks = {}
+                try:
+                    keju_result, _ = update()
+                    banks["keju"] = {"ok": True, "record_count": keju_result.record_count}
+                except Exception as error:
+                    banks["keju"] = {"ok": False, "error": str(error)}
+                try:
+                    teacher_bank = services.teacher_updater.update()
+                    services.install_teacher_bank(teacher_bank)
+                    banks["teachers_day"] = {"ok": True, "record_count": teacher_bank.count}
+                except Exception as error:
+                    banks["teachers_day"] = {"ok": False, "error": str(error)}
+                return banks
+            banks = await asyncio.to_thread(services.run_knowledge_mutation, update_all)
+            ok = all(result["ok"] for result in banks.values())
+            any_ok = any(result["ok"] for result in banks.values())
+            labels = {"keju": "科举", "teachers_day": "教师节"}
+            message = "；".join(
+                f"{labels[name]}：更新成功（{value['record_count']} 条）" if value["ok"]
+                else f"{labels[name]}：更新失败，保留原题库（{value['error']}）"
+                for name, value in banks.items()
+            )
+            return JSONResponse(status_code=200 if any_ok else 500, content={
+                "ok": ok, "partial_success": any_ok and not ok,
+                "banks": banks, "message": message, "error": None if ok else message,
+            })
 
         try:
             result, generation = await asyncio.to_thread(
@@ -1211,6 +1277,7 @@ def _state_payload(
 ) -> dict[str, object]:
     payload = _runtime_payload(snapshot)
     payload["capture"] = jsonable_encoder(asdict(services.capture.status()))
+    payload["question_banks"] = services.bank_status()
     return payload
 
 

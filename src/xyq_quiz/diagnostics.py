@@ -20,6 +20,7 @@ import numpy as np
 from xyq_quiz import __version__
 from xyq_quiz.capture.models import CapturedFrame
 from xyq_quiz.runtime.state import RuntimeSnapshot
+from xyq_quiz.recognition.models import ActivityKind
 
 
 _CROP_NAMES = (
@@ -85,7 +86,8 @@ class DiagnosticWriter:
         try:
             with ZipFile(temporary, "w", compression=ZIP_DEFLATED) as archive:
                 archive.writestr("frame.jpg", _encode_image(snapshot.frame.bgr, ".jpg"))
-                for name, crop in zip(_CROP_NAMES, snapshot.crops, strict=False):
+                crop_names = ("skill-icon.png", *_CROP_NAMES[1:]) if snapshot.runtime.activity_kind is ActivityKind.TEACHERS_DAY else _CROP_NAMES
+                for name, crop in zip(crop_names, snapshot.crops, strict=False):
                     archive.writestr(name, _encode_image(crop, ".png"))
                 archive.writestr("state.json", _json_bytes(snapshot.runtime))
                 archive.writestr(
@@ -196,6 +198,7 @@ class EnvironmentDiagnosticWriter:
             "target": manifest.get("target"),
             "signed": manifest.get("signed"),
             "question_bank": manifest.get("question_bank", {}),
+            "teachers_day_bank": manifest.get("teachers_day_bank", {}),
             "dependencies": manifest.get("dependencies", {}),
             "file_count": len(files) if isinstance(files, list) else None,
         }

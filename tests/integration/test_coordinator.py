@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 from concurrent.futures import Future, ThreadPoolExecutor
 import json
+from dataclasses import replace
 from pathlib import Path
 import threading
 import time
@@ -21,6 +22,7 @@ from xyq_quiz.capture.models import (
     Rect,
 )
 from xyq_quiz.recognition.models import (
+    ActivityKind,
     ConfidenceLevel,
     DetectedLayout,
     RecognitionResult,
@@ -327,6 +329,38 @@ def make_coordinator(pipeline):
         scan_fps=60,
     )
     return capture, hub, detector, pipeline, store, coordinator
+
+
+@pytest.mark.parametrize("transition", ["icon", "options", "close", "activity", "bank-update"])
+def test_teacher_transitions_discard_inflight_results(transition):
+    _capture, hub, detector, pipeline, store, coordinator = make_coordinator(GatedPipeline())
+    detector.layout = replace(LAYOUT, activity_kind=ActivityKind.TEACHERS_DAY,
+                              profile_name="teachers-day", icon_rect=LAYOUT.question_rect)
+    coordinator.start()
+    try:
+        publish_detected(hub, detector, frame(1, 1))
+        publish_detected(hub, detector, frame(2, 1))
+        assert pipeline.started[1].wait(timeout=.5)
+        old_generation = store.snapshot().generation_id
+        if transition == "close":
+            detector.present = False
+        elif transition == "activity":
+            detector.layout = LAYOUT
+        elif transition == "bank-update":
+            coordinator.invalidate_cache()
+        changed = frame_with_option_change(3,1,0) if transition == "options" else frame(3,2)
+        publish_detected(hub, detector, changed)
+        wait_until(lambda: store.snapshot().generation_id > old_generation)
+        assert store.snapshot().overlay is None
+        pipeline.gates[1].set()
+        assert pipeline.finished[1].wait(timeout=.5)
+        time.sleep(.04)
+        assert store.snapshot().question_text != "题目-1"
+        assert store.snapshot().overlay is None
+    finally:
+        pipeline.gates[1].set()
+        pipeline.gates[2].set()
+        coordinator.stop()
 
 
 def test_coordinator_passes_measured_layout_to_capable_pipeline() -> None:

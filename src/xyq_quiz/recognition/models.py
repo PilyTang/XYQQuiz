@@ -20,6 +20,12 @@ class ConfidenceLevel(StrEnum):
     HIGH = "HIGH"
 
 
+class ActivityKind(StrEnum):
+    KEJU = "keju"
+    TEACHERS_DAY = "teachers_day"
+    UNKNOWN = "unknown"
+
+
 @dataclass(frozen=True, slots=True)
 class NormalizedRect:
     x: float
@@ -59,6 +65,17 @@ class DetectedLayout:
     option_rects: tuple[Rect, ...]
     anchor_scores: tuple[float, ...]
     profile_name: str | None = None
+    activity_kind: ActivityKind = ActivityKind.KEJU
+    panel_rect: Rect | None = None
+    icon_rect: Rect | None = None
+    option_text_rects: tuple[Rect, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class ActivityDetection:
+    activity_kind: ActivityKind | None
+    layout: DetectedLayout | None = None
+    reason: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -95,6 +112,11 @@ class RecognitionResult:
     confidence_level: ConfidenceLevel = ConfidenceLevel.NONE
     confidence_score: float | None = None
     confidence_reason: str | None = None
+    activity_kind: ActivityKind = ActivityKind.KEJU
+    image_score: float = 0.0
+    image_runner_up_score: float = 0.0
+    bank_generation: str | None = None
+    image_candidates: tuple[tuple[str, float], ...] = ()
 
     def __post_init__(self) -> None:
         # Preserve compatibility with callers that only know the v0.1

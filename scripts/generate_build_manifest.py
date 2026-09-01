@@ -101,8 +101,24 @@ def build_manifest(
         "verified_platforms": ["Windows 11 x64"],
         "signed": signed,
         "question_bank": load_question_bank_manifest(package_root),
+        "teachers_day_bank": load_teacher_bank_manifest(package_root),
         "dependencies": versions,
         "files": files,
+    }
+
+
+def load_teacher_bank_manifest(package_root: Path) -> dict[str, object]:
+    from xyq_quiz.knowledge.teacher_bank import load_teacher_bank
+    from xyq_quiz.knowledge.teacher_matcher import MATCHER_VERSION
+    bank = load_teacher_bank(package_root / "_internal/defaults/data/teachers_day")
+    return {
+        "generation_id": bank.generation_id,
+        "source_url": bank.metadata["source_url"],
+        "retrieved_at": bank.metadata["updated_at"],
+        "record_count": bank.count,
+        "image_count": bank.metadata["image_count"],
+        "sha256": bank.metadata["records_sha256"],
+        "matcher_version": MATCHER_VERSION,
     }
 
 
