@@ -7,6 +7,7 @@ from dataclasses import replace
 from pathlib import Path
 import threading
 import time
+from types import SimpleNamespace
 
 import cv2
 import numpy as np
@@ -516,22 +517,40 @@ def test_uncertain_results_retry_without_clearing_candidate_overlay(
     first_phase: RuntimePhase,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(coordinator_module, "_RECOGNITION_RETRY_SECONDS", 0.04)
+    # Control retry deadlines without changing the real thread-wait clock.
+    clock = SimpleNamespace(now=100.0)
+    monkeypatch.setattr(
+        coordinator_module,
+        "time",
+        SimpleNamespace(monotonic=lambda: clock.now, perf_counter=time.perf_counter),
+    )
     _capture, hub, detector, pipeline, store, coordinator = make_coordinator(
         RetryingPipeline(first_level)
     )
+    third_frame_processed = threading.Event()
+    real_wait_after = hub.wait_after
+
+    def wait_after(frame_id: int, timeout: float) -> CapturedFrame | None:
+        if frame_id == 3:
+            # The next hub wait starts after frame 3's retry decision completed.
+            third_frame_processed.set()
+        return real_wait_after(frame_id, timeout)
+
+    monkeypatch.setattr(hub, "wait_after", wait_after)
     coordinator.start()
     try:
         publish_detected(hub, detector, frame(1, 13))
+        clock.now = 100.02
         publish_detected(hub, detector, frame(2, 13))
         wait_until(lambda: store.snapshot().phase is first_phase)
         first = store.snapshot()
 
+        clock.now = 100.04
         publish_detected(hub, detector, frame(3, 13))
-        time.sleep(0.01)
+        assert third_frame_processed.wait(timeout=0.5)
         assert pipeline.calls == [13]
 
-        time.sleep(0.04)
+        clock.now = 100.23
         publish_detected(hub, detector, frame(4, 13))
         assert pipeline.second_started.wait(timeout=0.5)
         retrying = store.snapshot()
