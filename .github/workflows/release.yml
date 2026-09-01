@@ -76,13 +76,16 @@ jobs:
           }
           $SelfTestDirectory = Join-Path $ReportRoot "self-test"
           $SelfTestProcess = Start-Process -FilePath $Exe -ArgumentList @("--self-test", "--headless", "--report-dir", $SelfTestDirectory) -WindowStyle Hidden -Wait -PassThru
-          if ($SelfTestProcess.ExitCode -ne 0) {
-            throw "Frozen self-test failed with exit code $($SelfTestProcess.ExitCode)"
+          $SelfTestPath = Get-ChildItem -LiteralPath $SelfTestDirectory -Filter "*.json" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1
+          if ($null -eq $SelfTestPath) {
+            throw "Frozen self-test produced no JSON report (exit code $($SelfTestProcess.ExitCode))"
           }
-          $SelfTestPath = Get-ChildItem -LiteralPath $SelfTestDirectory -Filter "*.json" -File | Sort-Object LastWriteTime | Select-Object -Last 1
           $SelfTest = Get-Content -Raw -LiteralPath $SelfTestPath.FullName | ConvertFrom-Json
-          if (-not $SelfTest.ok) {
-            throw "Frozen self-test report is not successful"
+          foreach ($Check in $SelfTest.checks) {
+            Write-Output "$($Check.status): $($Check.name) - $($Check.detail)"
+          }
+          if ($SelfTestProcess.ExitCode -ne 0 -or -not $SelfTest.ok) {
+            throw "Frozen self-test failed (exit code $($SelfTestProcess.ExitCode)); see check details above"
           }
           $ZipPath = (Resolve-Path -LiteralPath ".\release\XYQQuiz-v$Version-win10-win11-x64.zip").Path
           $ExpectedHash = ((Get-Content -Raw -LiteralPath "$ZipPath.sha256").Trim() -split "\s+")[0]
