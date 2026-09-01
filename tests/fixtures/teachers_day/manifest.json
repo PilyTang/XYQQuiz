@@ -2,6 +2,7 @@
   {
     "sample": 1,
     "answer": "勘察令",
+    "confidence_level": "CANDIDATE",
     "option_index": 3,
     "options": [
       "推气过宫",
@@ -51,6 +52,23 @@
       "option-b": "feedback-3-option-b.png",
       "option-c": "feedback-3-option-c.png",
       "option-d": "feedback-3-option-d.png"
+    }
+  },
+  {
+    "sample": 4,
+    "answer": "鹰击",
+    "option_index": 0,
+    "confidence_level": "CANDIDATE",
+    "option_score": 50.0,
+    "option_runner_up_score": 25.0,
+    "options": ["鹰击", "龙卷雨击", "龙腾", "飘渺式"],
+    "ocr_options": ["鷹击", "龙卷雨击", "龙腾", "飘渺式"],
+    "files": {
+      "icon": "feedback-4-icon.png",
+      "option-a": "feedback-4-option-a.png",
+      "option-b": "feedback-4-option-b.png",
+      "option-c": "feedback-4-option-c.png",
+      "option-d": "feedback-4-option-d.png"
     }
   }
 ]

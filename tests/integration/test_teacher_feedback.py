@@ -68,15 +68,24 @@ def test_real_feedback_ocr_and_answer_mapping(pipeline, case, reverse):
     result = pipeline.recognize(frame, 1)
     expected = 3-case["option_index"] if reverse else case["option_index"]
     assert result.activity_kind is ActivityKind.TEACHERS_DAY
-    assert result.option_texts == tuple(case["options"][::-1] if reverse else case["options"])
+    ocr_options = case.get("ocr_options", case["options"])
+    assert result.option_texts == tuple(ocr_options[::-1] if reverse else ocr_options)
     assert result.official_answer == case["answer"]
     assert result.option_index == expected
-    assert result.confidence_level is ConfidenceLevel.HIGH
+    level = ConfidenceLevel(case.get("confidence_level", "HIGH"))
+    assert result.confidence_level is level
+    assert result.high_confidence is (level is ConfidenceLevel.HIGH)
+    if "option_score" in case:
+        assert result.option_score == case["option_score"]
+        assert result.option_runner_up_score == case["option_runner_up_score"]
+        assert result.confidence_score <= result.option_score
     store = RuntimeStore()
     generation = store.begin_question("feedback", 1, frame_size=(1024, 768))
     assert store.complete(generation, result)
     assert store.snapshot().overlay is not None
     assert store.snapshot().option_index == expected
+    assert store.snapshot().confidence_level is level
+    assert store.snapshot().high_confidence is (level is ConfidenceLevel.HIGH)
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda case: f"feedback-{case['sample']}")

@@ -5,20 +5,19 @@ from functools import lru_cache
 
 import cv2
 import numpy as np
+from rapidfuzz.distance import OSA
 
 from xyq_quiz.knowledge.models import normalize_text
 from xyq_quiz.knowledge.teacher_bank import TeacherBankSnapshot, TeacherSkillRecord
 from xyq_quiz.recognition.models import ConfidenceLevel
 
 
-MATCHER_VERSION = "teachers-day-0.4.1-1"
+MATCHER_VERSION = "teachers-day-0.4.1-2"
 
-# Literal game labels observed in feedback differ from the official web bank.
-# These are explicit aliases, not generic edit-distance substitutions.
-_VERIFIED_OPTION_ALIASES = {
-    "堪察令": "勘察令",
-    "中药医理": "中医药理",
-}
+
+def _near_name(left: str, right: str) -> bool:
+    """Allow one OCR edit, including an adjacent transposition, in real names."""
+    return min(len(left), len(right)) >= 2 and OSA.distance(left, right) == 1
 
 
 def _unit(values: np.ndarray) -> np.ndarray:
@@ -48,6 +47,8 @@ class TeacherMatch:
     level: ConfidenceLevel
     reason: str
     candidates: tuple[tuple[str, float], ...] = ()
+    option_score: float = 0.
+    option_runner_up_score: float = 0.
 
 
 class TeacherIconMatcher:
@@ -91,22 +92,49 @@ class TeacherIconMatcher:
             best = max(best, .55 * color + .30 * body + .15 * edge)
         return max(0.0, best)
 
+    def _fuzzy_option(self, scores, ranked, names, options, candidates):
+        """A strong image may support an approximate label, always as CANDIDATE."""
+        index = ranked[0]
+        record = self.bank.records[index]
+        name = normalize_text(record.name)
+        if name in names:
+            return None
+        image_score = scores[index]
+        image_runner = max(
+            (scores[i] for i in ranked if normalize_text(self.bank.records[i].name) != name),
+            default=0.,
+        )
+        if image_score < .72 or image_score - image_runner < .10:
+            return None
+        similarities = [OSA.normalized_similarity(name, option) for option in names]
+        order = sorted(range(len(names)), key=similarities.__getitem__, reverse=True)
+        option, second = order[:2]
+        text_score, text_runner = similarities[option], similarities[second]
+        # Do not reinterpret an exact label for a different known skill. Compare
+        # against ALL four options, so a tie cannot be hidden by eligibility.
+        if (
+            names[option] in self.bank.by_name
+            or not _near_name(name, names[option])
+            or text_score < .5
+            or text_score - text_runner < .20
+        ):
+            return None
+        return TeacherMatch(
+            record, option, round(image_score * 100, 2), round(image_runner * 100, 2),
+            ConfidenceLevel.CANDIDATE,
+            f"图标匹配{record.name}；选项{options[option]}文字最接近"
+            f"（{text_score * 100:.0f}分，次近{text_runner * 100:.0f}分），仅作低可信候选",
+            candidates, round(text_score * 100, 2), round(text_runner * 100, 2),
+        )
+
     def match(self, icon: np.ndarray, options: tuple[str, ...]) -> TeacherMatch:
         def reject(reason, score=0., runner=0., candidates=()):
             return TeacherMatch(None, None, round(score * 100, 2), round(runner * 100, 2), ConfidenceLevel.NONE, reason, candidates)
-        raw_names = tuple(normalize_text(text) for text in options)
-        if len(raw_names) != 4 or len(set(raw_names)) != 4 or not all(raw_names):
+        names = tuple(normalize_text(text) for text in options)
+        if len(names) != 4 or len(set(names)) != 4 or not all(names):
             return reject("四个选项尚未完整识别，正在重试")
-        names = tuple(
-            name if name in self.bank.by_name else _VERIFIED_OPTION_ALIASES.get(name, name)
-            for name in raw_names
-        )
-        if len(set(names)) != 4:
-            return reject("多个选项对应同一技能，无法唯一定位")
         option_records = tuple(self.bank.by_name.get(name, ()) for name in names)
         mapped_options = [i for i, indexes in enumerate(option_records) if indexes]
-        if not mapped_options:
-            return reject("当前选项未能对应题库技能")
         has_unknown_options = len(mapped_options) < 4
         if icon.size == 0 or min(icon.shape[:2]) < 16 or float(icon.std()) < 8:
             return reject("技能图标为空或不完整")
@@ -119,9 +147,20 @@ class TeacherIconMatcher:
         selected = set(np.argsort(coarse)[-min(12, len(coarse)):].tolist())
         for indexes in option_records:
             selected.update(indexes)
+        # Misspelled options must not depend solely on coarse image retrieval.
+        for option in names:
+            if option not in self.bank.by_name:
+                for name, indexes in self.bank.by_name.items():
+                    if _near_name(name, option):
+                        selected.update(indexes)
         scores = {index: self._score(icon, templates[index]) for index in selected}
         ranked = sorted(scores, key=scores.get, reverse=True)
         candidates = tuple((self.bank.records[index].name, round(scores[index] * 100, 2)) for index in ranked[:5])
+        fuzzy = self._fuzzy_option(scores, ranked, names, options, candidates)
+        if fuzzy is not None:
+            return fuzzy
+        if not mapped_options:
+            return reject("当前选项未能唯一对应题库技能", candidates=candidates)
         option_best = {
             option: max(option_records[option], key=lambda index: scores[index])
             for option in mapped_options
@@ -131,6 +170,11 @@ class TeacherIconMatcher:
         index = option_best[option]
         score = scores[index]
         runner = scores[option_best[order[1]]] if len(order) > 1 else 0.
+        if any(
+            not option_records[i] and _near_name(names[option], name)
+            for i, name in enumerate(names) if i != option
+        ):
+            return reject("多个选项文字接近同一技能，无法唯一定位", score, runner, candidates)
         outside = [i for i in ranked if normalize_text(self.bank.records[i].name) not in names]
         if outside and scores[outside[0]] >= .72 and scores[outside[0]] - score > .10:
             return reject("图标与当前选项冲突，正在重新识别", score, runner, candidates)
@@ -149,10 +193,8 @@ class TeacherIconMatcher:
             return reject("图标证据不足或选项之间仍有歧义", score, runner, candidates)
         level = ConfidenceLevel.HIGH if score >= .72 and score - runner >= .10 else ConfidenceLevel.CANDIDATE
         reason = "图标与选项唯一对应" if level is ConfidenceLevel.HIGH else "候选唯一，图像清晰度不足以达到高可信"
-        if raw_names[option] != names[option]:
-            reason += f"（{options[option]}对应{self.bank.records[index].name}）"
         return TeacherMatch(
             self.bank.records[index], option, round(score * 100, 2), round(runner * 100, 2), level,
             reason,
-            candidates,
+            candidates, 100.,
         )

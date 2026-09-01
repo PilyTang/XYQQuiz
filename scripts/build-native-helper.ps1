@@ -9,15 +9,34 @@ $ProjectRoot = Split-Path -Parent $PSScriptRoot
 $ProjectPath = Join-Path $ProjectRoot "native\preview-helper\XYQPreviewHelper.vcxproj"
 $ShaderPath = Join-Path $ProjectRoot "native\preview-helper\preview.hlsl"
 $ShaderDirectory = Split-Path -Parent $ShaderPath
-$FxcCandidates = @(
-    "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\fxc.exe"
-)
-$Fxc = $FxcCandidates |
-    Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } |
+$ProgramFilesX86 = [Environment]::GetFolderPath('ProgramFilesX86')
+$SdkBin = Join-Path $ProgramFilesX86 'Windows Kits\10\bin'
+$Sdk = Get-ChildItem -LiteralPath $SdkBin -Directory -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -match '^10\.0\.\d+\.\d+$' -and (Test-Path -LiteralPath (Join-Path $_.FullName 'x64\fxc.exe')) } |
+    Sort-Object { [version]$_.Name } -Descending |
     Select-Object -First 1
-if (-not $Fxc) {
+if (-not $Sdk) {
     throw "Windows SDK x64 fxc.exe was not found."
 }
+$Fxc = Join-Path $Sdk.FullName 'x64\fxc.exe'
+$VsWhere = Join-Path $ProgramFilesX86 'Microsoft Visual Studio\Installer\vswhere.exe'
+if (-not (Test-Path -LiteralPath $VsWhere -PathType Leaf)) {
+    throw "Visual Studio Installer vswhere.exe was not found; install Desktop development with C++."
+}
+$VisualStudioPaths = @(& $VsWhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)
+if ($LASTEXITCODE -ne 0 -or $VisualStudioPaths.Count -eq 0) {
+    throw "Visual Studio with x64 C++ build tools was not found."
+}
+$VisualStudioRoot = $VisualStudioPaths[0].Trim()
+$MSBuild = Join-Path $VisualStudioRoot 'MSBuild\Current\Bin\MSBuild.exe'
+$Toolset = Get-ChildItem -Path (Join-Path $VisualStudioRoot 'MSBuild\Microsoft\VC\*\Platforms\x64\PlatformToolsets\v*') -Directory |
+    Where-Object { $_.Name -match '^v\d+$' -and (Test-Path -LiteralPath (Join-Path $_.FullName 'Toolset.props')) } |
+    Sort-Object { [int]$_.Name.Substring(1) } -Descending |
+    Select-Object -First 1
+if (-not (Test-Path -LiteralPath $MSBuild -PathType Leaf) -or -not $Toolset) {
+    throw "MSBuild or the x64 C++ platform toolset was not found in $VisualStudioRoot."
+}
+Write-Output "Native build: toolset $($Toolset.Name), Windows SDK $($Sdk.Name), MSBuild $MSBuild"
 $Shaders = @(
     @{ Entry = "VSMain"; Target = "vs_5_0"; Header = "preview_vs.h"; Variable = "g_preview_vs" },
     @{ Entry = "PSMain"; Target = "ps_5_0"; Header = "preview_ps.h"; Variable = "g_preview_ps" }
@@ -45,17 +64,6 @@ foreach ($Shader in $Shaders) {
         ForEach-Object { $_.TrimEnd() }
     Set-Content -LiteralPath $HeaderPath -Value $HeaderLines -Encoding ascii
 }
-$MSBuildCandidates = @(
-    "C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\MSBuild\Current\Bin\MSBuild.exe",
-    "C:\Program Files\Microsoft Visual Studio\18\BuildTools\MSBuild\Current\Bin\MSBuild.exe"
-)
-$MSBuild = $MSBuildCandidates |
-    Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } |
-    Select-Object -First 1
-if (-not $MSBuild) {
-    throw "Visual Studio Build Tools 18 with MSBuild was not found."
-}
-
 $Arguments = @(
     $ProjectPath
     "/nologo"
@@ -63,6 +71,8 @@ $Arguments = @(
     "/t:Build"
     "/p:Configuration=$Configuration"
     "/p:Platform=$Platform"
+    "/p:PlatformToolset=$($Toolset.Name)"
+    "/p:WindowsTargetPlatformVersion=$($Sdk.Name)"
     "/verbosity:minimal"
 )
 & $MSBuild @Arguments

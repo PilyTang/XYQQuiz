@@ -47,10 +47,14 @@ def recognize_teacher(frame, generation_id, layout, matcher, read_options, store
     return result(
         option_texts=texts,official_answer=record.name if record else None,
         source_id=record.source_id if record else None,
-        option_score=100. if matched.option_index is not None else 0.,
+        option_score=matched.option_score,
+        option_runner_up_score=matched.option_runner_up_score,
         high_confidence=matched.level is ConfidenceLevel.HIGH,
         confidence_level=matched.level,
-        confidence_score=matched.score*min(item.confidence for item in ocrs) if record else 0.,
+        confidence_score=(
+            matched.score * matched.option_score / 100 * min(item.confidence for item in ocrs)
+            if record else 0.
+        ),
         confidence_reason=matched.reason,
         image_score=matched.score,image_runner_up_score=matched.runner_up_score,
         image_candidates=matched.candidates,option_index=matched.option_index,

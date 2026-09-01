@@ -50,7 +50,8 @@ def test_official_icons_map_to_current_option_order(matcher, name, options, inde
     query = query_for(matcher, name, size)
     match = matcher.match(query, options)
     assert match.record.name == name and match.option_index == index
-    assert match.level is ConfidenceLevel.HIGH
+    expected_level = ConfidenceLevel.HIGH if name in options else ConfidenceLevel.CANDIDATE
+    assert match.level is expected_level
     reordered = matcher.match(query, options[::-1])
     assert reordered.option_index == 3-index and reordered.record.name == name
 
@@ -75,15 +76,75 @@ def test_unknown_distractors_are_allowed_only_with_unique_strong_image_evidence(
     assert all_unknown.option_index is None
 
 
-def test_aliases_never_choose_between_two_equivalent_options(matcher):
+def test_near_duplicate_labels_never_choose_between_two_options(matcher):
     options = ("堪察令", "勘察令", "推气过宫", "无穷妙道")
     result = matcher.match(query_for(matcher, "勘察令"), options)
     assert result.option_index is None and result.level is ConfidenceLevel.NONE
 
 
-def test_verified_transposition_alias_can_be_the_answer(matcher):
+def test_transposed_characters_give_only_a_candidate(matcher):
     result = matcher.match(query_for(matcher, "中医药理"), ("巧匠之术", "中药医理", "炼金术", "打造技巧"))
     assert result.option_index == 1 and result.record.name == "中医药理"
+    assert result.level is ConfidenceLevel.CANDIDATE
+    assert result.option_score == 75.
+
+
+@pytest.mark.parametrize("name,observed", [
+    ("鹰击", "鷹击"),
+    ("鹰击", "鹰去"),
+    ("连环击", "连环去"),
+    ("连环击", "连击"),
+    ("连环击", "连环环击"),
+    ("勘察令", "堪察令"),
+])
+def test_single_ocr_edits_use_general_low_confidence_matching(matcher, name, observed):
+    options = (observed, "龙卷雨击", "龙腾", "飘渺式")
+    result = matcher.match(query_for(matcher, name), options)
+    assert result.record.name == name and result.option_index == 0
+    assert result.level is ConfidenceLevel.CANDIDATE
+    assert 50. <= result.option_score < 100.
+    assert observed in result.reason and name in result.reason
+    reordered = matcher.match(query_for(matcher, name), options[::-1])
+    assert reordered.option_index == 3 and reordered.level is ConfidenceLevel.CANDIDATE
+
+
+def test_fuzzy_matching_can_recover_without_any_exactly_known_option(matcher):
+    result = matcher.match(query_for(matcher, "鹰击"), ("鷹击", "未收录甲", "未收录乙", "未收录丙"))
+    assert result.option_index == 0 and result.level is ConfidenceLevel.CANDIDATE
+
+
+@pytest.mark.parametrize("options", [
+    ("鷹击", "鹰去", "龙腾", "飘渺式"),  # Two equally close unknown labels.
+    ("鷹击", "破击", "龙腾", "飘渺式"),  # Known distractors count in the text margin.
+    ("鷹击", "龙卷击", "龙腾", "飘渺式"),  # Best label has too little separation.
+    ("破击", "龙卷雨击", "龙腾", "飘渺式"),  # Do not reinterpret another known skill.
+    ("击", "龙卷雨击", "龙腾", "飘渺式"),  # One character is too little evidence.
+    ("飞天", "龙卷雨击", "龙腾", "飘渺式"),  # No close label.
+])
+def test_fuzzy_matching_rejects_text_ties_conflicts_and_weak_labels(matcher, options):
+    result = matcher.match(query_for(matcher, "鹰击"), options)
+    assert result.option_index is None and result.level is ConfidenceLevel.NONE
+
+
+@pytest.mark.parametrize("image_kind", ["noise", "weak", "collision"])
+def test_fuzzy_matching_requires_strong_unique_image_evidence(matcher, image_kind):
+    from types import MappingProxyType
+    source = matcher.bank.by_name["鹰击"][0]
+    record = matcher.bank.records[source]
+    bank = replace(matcher.bank,
+        records=(record, replace(record, source_id="teachers_day:collision", name="其他技能")),
+        images=(matcher.bank.images[source], matcher.bank.images[source]),
+        by_name=MappingProxyType({"鹰击": (0,), "其他技能": (1,)}))
+    local = TeacherIconMatcher(bank)
+    query = query_for(matcher, "鹰击")
+    if image_kind == "noise":
+        query = np.random.default_rng(42).integers(0, 256, query.shape, dtype=np.uint8)
+    elif image_kind == "weak":
+        # Even a unique score below the image threshold cannot enable fuzzy text.
+        values = iter((.71, .20))
+        local._score = lambda *_: next(values)
+    result = local.match(query, ("鷹击", "龙卷雨击", "龙腾", "飘渺式"))
+    assert result.option_index is None and result.level is ConfidenceLevel.NONE
 
 
 def test_unknown_distractor_requires_separation_from_outside_bank_candidates(matcher):
@@ -115,7 +176,7 @@ def test_missing_or_conflicting_evidence_never_forces_an_answer(matcher, kind):
     elif kind == "duplicate-options":
         options = (*options[:3], options[0])
     else:
-        options = (*options[:3], "连环去")
+        options = (*options[:3], "无关技能")
     result = matcher.match(query, options)
     assert result.level is ConfidenceLevel.NONE and result.option_index is None
 
