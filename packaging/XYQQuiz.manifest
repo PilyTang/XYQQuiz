@@ -14,4 +14,9 @@
       <supportedOS Id="{4f476546-9370-4f83-8e2d-2c6bf7e58bd5}" />
     </application>
   </compatibility>
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+    </windowsSettings>
+  </application>
 </assembly>
