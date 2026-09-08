@@ -18,6 +18,7 @@ import pyjson5
 
 from xyq_quiz.knowledge.teacher_bank import (
     TeacherSkillRecord, decode_icon, load_teacher_bank, load_teacher_generation,
+    with_teacher_supplements,
 )
 from xyq_quiz.knowledge.updater import (
     DEFAULT_SOURCE_URL, UpdateInProgressError, UpdaterParseError,
@@ -112,7 +113,8 @@ class TeacherBankUpdater:
         if len(rows) < self.minimum_records:
             raise ValueError("教师节题库记录数过少，保留原题库")
         try:
-            previous = load_teacher_bank(self.data_dir)
+            previous_pointer = json.loads((self.data_dir / "current.json").read_text(encoding="utf-8"))
+            previous = load_teacher_generation(self.data_dir, previous_pointer["generation_id"])
         except (OSError, ValueError, KeyError, TypeError):
             previous = None
         if previous is not None and len(rows) < previous.count * .8:
@@ -152,7 +154,7 @@ class TeacherBankUpdater:
             }
             _write_json(stage / "metadata.json", metadata)
             os.replace(stage, final)
-            snapshot = load_teacher_generation(self.data_dir, generation)
+            snapshot = with_teacher_supplements(load_teacher_generation(self.data_dir, generation), self.data_dir)
             # A pointer is published only after every record and icon can be read.
             pointer = self.data_dir / (".current-" + uuid4().hex + ".tmp")
             try:

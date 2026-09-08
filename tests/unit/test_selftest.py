@@ -17,6 +17,13 @@ def _paths(tmp_path: Path) -> RuntimePaths:
     )
 
 
+def test_self_test_checks_real_configured_recognition_layouts() -> None:
+    config = Path(__file__).parents[2] / "config.example.json"
+    detail = selftest_module._check_recognition_layouts(config)
+    assert "anchors=" in detail
+    assert int(detail.rsplit("=", 1)[1]) > 0
+
+
 def test_self_test_writes_machine_and_human_reports_with_exit_boundary(
     tmp_path: Path,
 ) -> None:

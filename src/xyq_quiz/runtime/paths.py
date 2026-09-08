@@ -125,6 +125,23 @@ def initialize_teacher_assets(data_dir: Path, default_data_dir: Path) -> None:
                 assert temporary.resolve().parent == data_dir
                 shutil.rmtree(temporary)
     sources = [default_data_dir / "layouts" / "teachers-day.json"]
+    # Official updates replace only the official pointer/generations. Seed the
+    # separately versioned supplement once, including for existing installs.
+    supplement_source = source / "supplements"
+    supplement_target = target / "supplements"
+    if supplement_source.is_dir() and not supplement_target.exists():
+        from xyq_quiz.knowledge.teacher_bank import load_teacher_bank
+        load_teacher_bank(supplement_source)
+        target.mkdir(parents=True, exist_ok=True)
+        temporary = target / (".supplements-" + uuid4().hex)
+        try:
+            shutil.copytree(supplement_source, temporary)
+            load_teacher_bank(temporary)
+            os.replace(temporary, supplement_target)
+        finally:
+            if temporary.exists():
+                assert temporary.resolve().parent == target
+                shutil.rmtree(temporary)
     sources.extend((default_data_dir / "layouts" / "anchors").glob("teachers-day-*.png"))
     for source_path in sources:
         destination = data_dir / source_path.relative_to(default_data_dir)

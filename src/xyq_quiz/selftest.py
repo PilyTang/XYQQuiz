@@ -225,6 +225,7 @@ def _default_checks(
         ),
         ("portable-state", lambda: _check_state(config_path)),
         ("teachers-day-assets", lambda: _check_teacher_assets(paths, config_path)),
+        ("recognition-layouts", lambda: _check_recognition_layouts(config_path)),
         ("native-imports", _check_native_imports),
         ("ocr-inference", _check_ocr_inference),
         ("local-web-security", _check_web_security),
@@ -287,6 +288,16 @@ def _check_teacher_assets(paths: RuntimePaths, config_path: Path) -> str:
     TeacherIconMatcher(bank)
     TeacherLayoutDetector(config.data_dir / "layouts/teachers-day.json")
     return f"教师节题库、图标和定位资源可用，records={bank.count}"
+
+
+def _check_recognition_layouts(config_path: Path) -> str:
+    from xyq_quiz.recognition.layout import LayoutProfile, validate_anchor_templates
+
+    config = AppConfig.load(config_path)
+    count = 0
+    for path in config.effective_layout_paths:
+        count += len(validate_anchor_templates(LayoutProfile.load(path)))
+    return f"科举定位资源可用，anchors={count}"
 
 
 def _check_native_imports() -> str:

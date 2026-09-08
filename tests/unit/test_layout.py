@@ -232,6 +232,18 @@ def test_layout_maps_normalized_rois_to_current_frame(tmp_path: Path) -> None:
     assert all(score >= 0.99 for score in layout.anchor_scores)
 
 
+def test_layout_reads_anchors_from_chinese_directory(tmp_path: Path) -> None:
+    import shutil
+
+    profile_path, frame = _write_profile(tmp_path)
+    destination = tmp_path / "中文路径 空格"
+    destination.mkdir()
+    for path in (profile_path, tmp_path / "anchor-one.png", tmp_path / "anchor-two.png"):
+        shutil.copy2(path, destination / path.name)
+    detector = TemplateLayoutDetector(LayoutProfile.load(destination / profile_path.name))
+    assert detector.detect(frame) is not None
+
+
 def test_layout_rejects_frame_when_any_required_anchor_fails(tmp_path: Path) -> None:
     profile_path, frame = _write_profile(tmp_path)
     frame[110:126, 140:156] = 0

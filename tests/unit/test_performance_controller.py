@@ -64,12 +64,12 @@ def _controller(
     )
 
 
-def test_auto_starts_on_cpu_and_dml_is_hidden_until_selftest(tmp_path: Path) -> None:
+def test_auto_prefers_gpu_and_manual_dml_waits_for_selftest(tmp_path: Path) -> None:
     controller = _controller(tmp_path)
 
     before = controller.snapshot()
     assert before.ocr.requested == "auto"
-    assert before.ocr.effective == "cpu"
+    assert before.ocr.effective == "directml:0"
     assert not next(
         option for option in before.ocr_options if option.value == "directml:0"
     ).selectable
@@ -81,6 +81,65 @@ def test_auto_starts_on_cpu_and_dml_is_hidden_until_selftest(tmp_path: Path) -> 
     assert next(
         option for option in after.ocr_options if option.value == "directml:0"
     ).selectable
+
+
+def test_auto_tries_next_gpu_and_probe_cannot_relabel_runtime(tmp_path):
+    engines = {0: FakeEngine(error=RuntimeError("bad GPU")), 1: FakeEngine()}
+    controller = _controller(tmp_path, dml_factory=engines.__getitem__)
+    engine = controller.create_ocr_engine()
+    frame = np.zeros((8, 8, 3), dtype=np.uint8)
+    engine.recognize(frame)
+    assert controller.snapshot().ocr.effective == "directml:1"
+    assert engines[0].calls == 1
+    engines[0].error = None
+    controller._probe_directml()
+    assert controller.snapshot().ocr.effective == "directml:1"
+    engine.recognize(frame)
+    assert engines[1].calls == 2
+
+
+def test_auto_all_gpus_fail_then_cpu_stays_active_after_probe(tmp_path):
+    controller = _controller(tmp_path, dml_factory=lambda _: FakeEngine(error=RuntimeError("bad GPU")))
+    engine = controller.create_ocr_engine()
+    frame = np.zeros((8, 8, 3), dtype=np.uint8)
+    assert engine.recognize(frame).text == "ok"
+    assert controller.snapshot().ocr.effective == "cpu"
+    controller._dml_engine_factory = lambda _: FakeEngine()
+    controller._probe_directml()
+    assert controller.snapshot().ocr.effective == "cpu"
+    assert engine.recognize(frame).text == "ok"
+
+
+def test_manual_cpu_and_missing_directml_use_cpu(tmp_path):
+    for preferences, provider_ok in [(PerformanceConfig(ocr_backend="cpu", preview_backend="cpu"), True), (PerformanceConfig(), False)]:
+        controller = _controller(tmp_path, preferences, provider_ok=provider_ok,
+                                 dml_factory=lambda _: pytest.fail("must not construct GPU"))
+        assert isinstance(controller.create_ocr_engine(), FakeEngine)
+        assert controller.snapshot().ocr.effective == "cpu"
+
+
+def test_auto_preview_uses_hardware_and_reports_cpu_fallback(tmp_path):
+    helper = tmp_path / "helper.exe"
+    helper.write_bytes(b"test")
+    config = AppConfig()
+    controller = PerformanceController(config.performance, config_path=tmp_path / "config.json",
+        fallback_config=config, desktop_mode=True, adapter_provider=lambda: _ADAPTERS,
+        dml_provider_probe=lambda: (False, "no DML"), native_preview_helper=helper)
+    assert controller.preview_device_id() == -1
+    assert controller.snapshot().preview.requested == "auto"
+    controller.mark_preview_failure(-1, "capture failed")
+    assert controller.preview_device_id() is None
+    assert controller.snapshot().preview.requested == "auto"
+    assert controller.snapshot().preview.effective == "cpu"
+
+
+def test_provider_inspection_error_also_falls_back(tmp_path):
+    class BrokenProvider(FakeEngine):
+        def execution_providers(self):
+            raise RuntimeError("provider inspection failed")
+    controller = _controller(tmp_path, PerformanceConfig(ocr_backend="directml:0"), dml_factory=lambda _: BrokenProvider())
+    assert controller.create_ocr_engine().recognize(np.zeros((8,8,3),np.uint8)).text == "ok"
+    assert controller.snapshot().ocr.effective == "cpu"
 
 
 def test_saved_unavailable_backend_is_hidden_and_falls_back(
@@ -150,7 +209,7 @@ def test_save_persists_independent_pending_choices(tmp_path: Path) -> None:
     persisted = json.loads((tmp_path / "config.json").read_text("utf-8"))
     assert saved.ocr_backend == "directml:1"
     assert controller.snapshot().pending_ocr == "directml:1"
-    assert controller.snapshot().ocr.effective == "cpu"
+    assert controller.snapshot().ocr.effective == "directml:0"
     assert persisted["performance"] == {
         "ocr_backend": "directml:1",
         "preview_backend": "cpu",

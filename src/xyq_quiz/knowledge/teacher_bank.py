@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import hashlib
 import json
 from pathlib import Path
@@ -104,7 +104,43 @@ def load_teacher_bank(root: Path) -> TeacherBankSnapshot:
     pointer = json.loads((Path(root) / "current.json").read_text(encoding="utf-8"))
     if not isinstance(pointer, dict) or pointer.get("schema_version") != 1:
         raise ValueError("教师节题库指针版本无效")
-    return load_teacher_generation(root, pointer["generation_id"])
+    return with_teacher_supplements(load_teacher_generation(root, pointer["generation_id"]), root)
+
+
+def with_teacher_supplements(bank: TeacherBankSnapshot, root: Path) -> TeacherBankSnapshot:
+    """Combine independently stored supplements with an official generation."""
+    supplement_root = Path(root) / "supplements"
+    if not supplement_root.exists():
+        return bank
+    pointer = json.loads((supplement_root / "current.json").read_text(encoding="utf-8"))
+    if not isinstance(pointer, dict) or pointer.get("schema_version") != 1:
+        raise ValueError("教师节补充题库指针版本无效")
+    extra = load_teacher_generation(supplement_root, pointer["generation_id"])
+    records, images = list(bank.records), list(bank.images)
+    ids = {record.source_id for record in records}
+    keys = {(normalize_text(record.name), record.image_sha256) for record in records}
+    for record, image in zip(extra.records, extra.images, strict=True):
+        key = (normalize_text(record.name), record.image_sha256)
+        if key in keys:
+            continue
+        if record.source_id in ids:
+            raise ValueError("教师节补充题库编号冲突")
+        records.append(record)
+        images.append(image)
+        ids.add(record.source_id)
+        keys.add(key)
+    names: dict[str, list[int]] = {}
+    for index, record in enumerate(records):
+        names.setdefault(normalize_text(record.name), []).append(index)
+    metadata = dict(bank.metadata)
+    metadata.update(record_count=len(records), official_record_count=bank.count,
+                    supplement_record_count=len(records)-bank.count,
+                    supplement_generation_id=extra.generation_id,
+                    image_count=len({record.image_sha256 for record in records}))
+    return replace(bank, generation_id=bank.generation_id+"+"+extra.generation_id,
+                   records=tuple(records), images=tuple(images),
+                   by_name=MappingProxyType({name: tuple(indexes) for name, indexes in names.items()}),
+                   metadata=MappingProxyType(metadata))
 
 
 def recover_teacher_bank(root: Path, default_root: Path | None = None) -> TeacherBankSnapshot | None:
@@ -119,7 +155,7 @@ def recover_teacher_bank(root: Path, default_root: Path | None = None) -> Teache
         if not directory.is_dir() or directory.name.startswith("."):
             continue
         try:
-            return replace(load_teacher_generation(root, directory.name), recovery_reason="已恢复上一有效教师节题库")
+            return replace(with_teacher_supplements(load_teacher_generation(root, directory.name), root), recovery_reason="已恢复上一有效教师节题库")
         except (OSError, ValueError, KeyError, TypeError):
             continue
     if default_root is not None and Path(default_root).resolve() != Path(root).resolve():

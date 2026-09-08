@@ -62,7 +62,7 @@ class WebViewDesktopController:
         background_color: str = "#10151f",
         startup_timeout: float = 30.0,
         load_timeout: float = 10.0,
-        join_timeout: float = 5.0,
+        join_timeout: float = 20.0,
         webview_loader: Callable[[], Any] | None = None,
         thread_factory: Callable[..., Any] = threading.Thread,
         health_check: Callable[[str], bool] | None = None,
@@ -472,13 +472,15 @@ class WebViewDesktopController:
             server = self._server
             preserve_server = self._preserve_server_on_window_close
             native_callback = self._native_window_callback
+        # Native preview IPC may be stalled. Start server/lifespan shutdown
+        # before notifying it so capture.stop() can terminate the helper.
+        if server is not None and not preserve_server:
+            server.should_exit = True
         if native_callback is not None:
             try:
                 native_callback(0)
             except Exception:
                 _LOGGER.exception("Failed to clear pywebview native HWND")
-        if server is not None and not preserve_server:
-            server.should_exit = True
 
     def set_native_window_callback(
         self,

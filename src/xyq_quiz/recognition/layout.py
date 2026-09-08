@@ -914,7 +914,11 @@ def _map_transformed_rect(
 def validate_anchor_templates(profile: LayoutProfile) -> tuple[NDArray[np.uint8], ...]:
     templates: list[NDArray[np.uint8]] = []
     for anchor in profile.anchors:
-        template = cv2.imread(str(anchor.template_path), cv2.IMREAD_GRAYSCALE)
+        try:
+            payload = anchor.template_path.read_bytes()
+            template = cv2.imdecode(np.frombuffer(payload, dtype=np.uint8), cv2.IMREAD_GRAYSCALE) if payload else None
+        except (OSError, cv2.error):
+            template = None
         if template is None or template.size == 0:
             raise ValueError(f"anchor 不可读：{anchor.template_path}")
         templates.append(template)

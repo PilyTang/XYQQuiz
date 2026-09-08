@@ -44,12 +44,12 @@ def directml_provider_available() -> tuple[bool, str | None]:
 
 
 class _ResilientOCREngine:
-    """Permanently fall back to CPU after one accelerated runtime failure."""
+    """Permanently advance to the fallback after one accelerated failure."""
 
     def __init__(
         self,
         primary: RapidOCREngine,
-        fallback: RapidOCREngine,
+        fallback: RapidOCREngine | _ResilientOCREngine,
         *,
         on_success: Callable[[], None],
         on_failure: Callable[[str], None],
@@ -85,27 +85,18 @@ class _ResilientOCREngine:
         if not use_fallback:
             try:
                 result = getattr(self._primary, method)(*args, **kwargs)
+                providers = self._primary.execution_providers()
+                if not providers or any(not current or current[0] != "DmlExecutionProvider" for current in providers):
+                    raise RuntimeError(f"DirectML OCR 实际 provider 校验失败：{providers}")
             except Exception as error:
                 reason = f"DirectML OCR 运行失败：{error}"
                 with self._lock:
                     first_failure = not self._failed
                     self._failed = True
                 if first_failure:
-                    _LOGGER.exception("%s；本次运行回退 CPU", reason)
+                    _LOGGER.exception("%s；本次运行使用下一备用后端", reason)
                     self._on_failure(reason)
             else:
-                providers = self._primary.execution_providers()
-                if any(
-                    current[0] != "DmlExecutionProvider"
-                    for current in providers
-                ):
-                    reason = f"DirectML OCR 实际 provider 校验失败：{providers}"
-                    with self._lock:
-                        first_failure = not self._failed
-                        self._failed = True
-                    if first_failure:
-                        self._on_failure(reason)
-                    return getattr(self._fallback, method)(*args, **kwargs)
                 with self._lock:
                     first_success = not self._success_reported
                     self._success_reported = True
@@ -175,6 +166,24 @@ class PerformanceController:
 
     def create_ocr_engine(self):
         requested = self._current_preferences.ocr_backend
+        if requested == "auto" and self._dml_provider_ok:
+            engine = self._cpu_engine_factory()
+            # Try larger dedicated-memory adapters first, retaining DXGI IDs.
+            # Each adapter is verified by its first real inference; failures
+            # advance to the next adapter, with CPU as the final fallback.
+            for adapter in reversed(self._auto_ocr_adapters()):
+                device_id = adapter.device_id
+                try:
+                    primary = self._dml_engine_factory(device_id)
+                except Exception as error:
+                    self._mark_dml_failure(device_id, str(error))
+                    continue
+                engine = _ResilientOCREngine(
+                    primary, engine,
+                    on_success=lambda device_id=device_id: self._mark_dml_success(device_id),
+                    on_failure=lambda reason, device_id=device_id: self._mark_dml_failure(device_id, reason),
+                )
+            return engine
         if requested.startswith("directml:"):
             device_id = int(requested.partition(":")[2])
             adapter = self._adapter(device_id)
@@ -186,8 +195,10 @@ class PerformanceController:
                 on_success=lambda: self._mark_dml_success(device_id),
                 on_failure=lambda reason: self._mark_dml_failure(device_id, reason),
             )
-        # Without a valid benchmark cache Auto deliberately starts on CPU.
         return self._cpu_engine_factory()
+
+    def _auto_ocr_adapters(self) -> tuple[GraphicsAdapter, ...]:
+        return tuple(sorted(self._adapters, key=lambda item: (-item.dedicated_video_memory, item.device_id)))
 
     def start(self) -> None:
         with self._lock:
@@ -320,7 +331,7 @@ class PerformanceController:
                     affect_runtime=False,
                 )
             else:
-                self._mark_dml_success(adapter.device_id)
+                self._mark_dml_success(adapter.device_id, affect_runtime=False)
             finally:
                 del engine
                 gc.collect()
@@ -345,15 +356,15 @@ class PerformanceController:
                     self._failed_preview.pop(adapter.device_id, None)
                     self._verified_preview.add(adapter.device_id)
 
-    def _mark_dml_success(self, device_id: int) -> None:
+    def _mark_dml_success(self, device_id: int, *, affect_runtime: bool = True) -> None:
         with self._lock:
             self._failed_dml.pop(device_id, None)
             self._verified_dml.add(device_id)
             value = f"directml:{device_id}"
-            if self._ocr_state.requested == value:
+            if affect_runtime and self._ocr_state.requested in {"auto", value}:
                 adapter = self._adapter(device_id)
                 self._ocr_state = BackendRuntimeState(
-                    requested=value,
+                    requested=self._ocr_state.requested,
                     effective=value,
                     label=self._dml_label(adapter, device_id),
                 )
@@ -369,15 +380,21 @@ class PerformanceController:
             self._verified_dml.discard(device_id)
             self._failed_dml[device_id] = reason
             value = f"directml:{device_id}"
-            if affect_runtime and self._ocr_state.requested == value:
+            if affect_runtime and self._ocr_state.requested in {"auto", value}:
                 self._ocr_state = BackendRuntimeState(
-                    requested=value,
+                    requested=self._ocr_state.requested,
                     effective="cpu",
                     label="OCR CPU",
                     fallback_reason=reason,
                 )
 
     def _initial_ocr_state(self, requested: str) -> BackendRuntimeState:
+        if requested == "auto":
+            adapters = self._auto_ocr_adapters()
+            if self._dml_provider_ok and adapters:
+                adapter = adapters[0]
+                return BackendRuntimeState(requested, f"directml:{adapter.device_id}", self._dml_label(adapter, adapter.device_id))
+            return BackendRuntimeState(requested, "cpu", "OCR CPU", self._dml_provider_reason or "未发现可用显卡")
         if not requested.startswith("directml:"):
             return BackendRuntimeState(requested, "cpu", "OCR CPU")
         device_id = int(requested.partition(":")[2])
@@ -402,7 +419,7 @@ class PerformanceController:
         )
 
     def _initial_preview_state(self, requested: str) -> BackendRuntimeState:
-        if requested == "windows_hardware:auto":
+        if requested in {"auto", "windows_hardware:auto"}:
             if not self._desktop_mode:
                 return BackendRuntimeState(
                     requested,
@@ -419,14 +436,14 @@ class PerformanceController:
                 )
             return BackendRuntimeState(
                 requested,
-                requested,
+                "windows_hardware:auto",
                 self._preview_label(),
             )
         return BackendRuntimeState(requested, "cpu", "预览 CPU")
 
     def _ocr_options(self) -> tuple[BackendOption, ...]:
         options = [
-            BackendOption("auto", "自动", BackendCapability.OCR, True, True),
+            BackendOption("auto", "自动（显卡优先）", BackendCapability.OCR, True, True),
             BackendOption("cpu", "CPU", BackendCapability.OCR, True, True),
         ]
         requested = self._pending_preferences.ocr_backend
@@ -461,7 +478,7 @@ class PerformanceController:
 
     def _preview_options(self) -> tuple[BackendOption, ...]:
         options = [
-            BackendOption("auto", "自动", BackendCapability.PREVIEW, True, True),
+            BackendOption("auto", "自动（显卡优先）", BackendCapability.PREVIEW, True, True),
             BackendOption("cpu", "CPU", BackendCapability.PREVIEW, True, True),
         ]
         if self._desktop_mode and self._verified_preview:
@@ -485,9 +502,9 @@ class PerformanceController:
             self._verified_preview.add(device_id)
             self._failed_preview.pop(device_id, None)
             requested = "windows_hardware:auto"
-            if self._preview_state.requested == requested:
+            if self._preview_state.requested in {"auto", requested}:
                 self._preview_state = BackendRuntimeState(
-                    requested,
+                    self._preview_state.requested,
                     requested,
                     self._preview_label(),
                 )
@@ -496,9 +513,9 @@ class PerformanceController:
         failed_value = "windows_hardware:auto"
         with self._lock:
             self._failed_preview[device_id] = reason
-            if self._preview_state.requested == failed_value:
+            if self._preview_state.requested in {"auto", failed_value}:
                 self._preview_state = BackendRuntimeState(
-                    failed_value,
+                    self._preview_state.requested,
                     "cpu",
                     "预览 CPU",
                     reason,

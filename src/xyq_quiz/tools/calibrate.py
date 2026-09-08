@@ -38,7 +38,11 @@ def calibrate(
 ) -> bool:
     image_file = Path(image_path)
     output_file = Path(output_path)
-    image = cv2.imread(str(image_file), cv2.IMREAD_COLOR)
+    try:
+        payload = image_file.read_bytes()
+        image = cv2.imdecode(np.frombuffer(payload, dtype=np.uint8), cv2.IMREAD_COLOR) if payload else None
+    except (OSError, cv2.error):
+        image = None
     if image is None or image.size == 0:
         raise ValueError(f"cannot load calibration image: {image_file}")
 

@@ -776,6 +776,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                             host=config.web.host,
                             port=config.web.port,
                             log_config=None,
+                            timeout_graceful_shutdown=3.0,
                         )
                     )
                     server_holder["server"] = server

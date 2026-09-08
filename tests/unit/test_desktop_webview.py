@@ -168,6 +168,18 @@ def make_controller(
     )
 
 
+def test_close_starts_shutdown_before_native_preview_notification() -> None:
+    server = FakeServer()
+    observed = []
+    controller = make_controller(
+        FakeWebview(),
+        native_window_callback=lambda hwnd: observed.append((hwnd, server.should_exit)),
+    )
+    controller._server = server
+    controller._on_closed()
+    assert observed == [(0, True)]
+
+
 def test_pywebview_is_loaded_lazily_before_server_is_started() -> None:
     server = FakeServer()
 
