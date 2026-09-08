@@ -220,6 +220,59 @@ def test_partial_dialog_and_no_dialog_are_not_accepted():
     assert detector.detect(np.full_like(frame,60)) is None
 
 
+@pytest.mark.parametrize("size,scale", [((1024,768),.5), ((2560,1440),1.), ((3840,2160),1.5)])
+def test_coarse_search_keeps_small_and_large_canvas_support(size, scale):
+    frame = dialog_canvas(size, scale)
+    layout = TeacherLayoutDetector(PROFILE).detect(frame)
+    assert layout is not None
+    assert abs(layout.panel_rect.width-629*scale) <= 8
+
+
+def test_new_dialog_appears_without_waiting_for_search_backoff():
+    detector = TeacherLayoutDetector(PROFILE)
+    assert detector.detect(np.full((768,1024,3),60,np.uint8)) is None
+    assert detector.detect(dialog_canvas()) is not None
+
+
+def test_move_clears_old_layout_then_reacquires_new_location():
+    detector = TeacherLayoutDetector(PROFILE)
+    first = dialog_canvas((1920,1080),1.,origin=(100,100))
+    second = dialog_canvas((1920,1080),1.,origin=(800,400))
+    assert detector.detect(first) is not None
+    assert detector.detect(second) is None
+    moved = detector.detect(second)
+    assert moved is not None and abs(moved.panel_rect.x-800) <= 5
+    assert detector.detect(np.full_like(second,60)) is None
+
+
+def test_cached_detection_uses_small_search_regions(monkeypatch):
+    detector = TeacherLayoutDetector(PROFILE)
+    frame = dialog_canvas((1920,1080),1.)
+    assert detector.detect(frame) is not None
+    original = cv2.matchTemplate
+    shapes = []
+    def tracked(image, template, method):
+        shapes.append(image.shape)
+        return original(image, template, method)
+    monkeypatch.setattr(cv2,"matchTemplate",tracked)
+    assert detector.detect(frame) is not None
+    assert shapes and max(h*w for h,w in shapes) < 1920*1080/20
+
+
+def test_title_without_exit_and_prompt_never_accepts_dialog():
+    profile=json.loads(PROFILE.read_text(encoding="utf-8"))
+    frame=np.full((768,1024,3),60,np.uint8)
+    anchor=profile['anchors']['title']
+    title=cv2.imdecode(np.frombuffer((PROFILE.parent/anchor['template_path']).read_bytes(),np.uint8),1)
+    frame[200:200+title.shape[0],400:400+title.shape[1]]=title
+    detector=TeacherLayoutDetector(PROFILE)
+    assert detector.detect(frame) is None
+    assert not detector.suspected
+    expected = object()
+    router = ActivityLayoutDetector(SimpleNamespace(detect=lambda _: expected), detector)
+    assert router.detect(frame) is expected
+
+
 def test_suspected_teacher_dialog_never_routes_to_keju():
     called = []
     keju = SimpleNamespace(detect=lambda frame: called.append(True))

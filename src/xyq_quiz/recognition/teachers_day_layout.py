@@ -25,9 +25,20 @@ class TeacherLayoutDetector:
             self.templates[name] = image
         self.suspected = False
         self._last = None
+        self._scaled_templates = {}
 
-    @staticmethod
-    def _find(gray, template, sx, sy, bounds=None):
+    def _template(self, template, sx, sy):
+        width, height = max(3, round(template.shape[1]*sx)), max(3, round(template.shape[0]*sy))
+        key = (id(template), width, height, sx < 1)
+        resized = self._scaled_templates.get(key)
+        if resized is None:
+            resized = cv2.resize(template, (width, height), interpolation=cv2.INTER_AREA if sx < 1 else cv2.INTER_LINEAR)
+            if len(self._scaled_templates) >= 128:
+                self._scaled_templates.pop(next(iter(self._scaled_templates)))
+            self._scaled_templates[key] = resized
+        return resized
+
+    def _find(self, gray, template, sx, sy, bounds=None):
         frame_h, frame_w = gray.shape
         if bounds is None:
             left, top, right, bottom = 0, 0, frame_w, frame_h
@@ -38,7 +49,7 @@ class TeacherLayoutDetector:
         width, height = max(3, round(template.shape[1]*sx)), max(3, round(template.shape[0]*sy))
         if right-left < width or bottom-top < height:
             return (-1., 0, 0, width, height)
-        resized = cv2.resize(template, (width, height), interpolation=cv2.INTER_AREA if sx < 1 else cv2.INTER_LINEAR)
+        resized = self._template(template, sx, sy)
         result = cv2.matchTemplate(gray[top:bottom, left:right], resized, cv2.TM_CCOEFF_NORMED)
         _, score, _, (x, y) = cv2.minMaxLoc(result)
         return (float(score), x+left, y+top, width, height)
@@ -53,12 +64,33 @@ class TeacherLayoutDetector:
             # Clear the previous answer immediately when its dialog disappears.
             # A following frame performs the slower global search for relocation.
             return []
-        factor = min(1., 1280 / gray.shape[1])
+        # Search a small image first, then score only promising neighborhoods
+        # at original resolution. Coarse scores can nominate but never accept
+        # a dialog; title/exit/prompt still pass the original fine thresholds.
+        old_factor = min(1., 1280 / gray.shape[1])
+        factor = min(1., 640 / gray.shape[1])
         analysis = cv2.resize(gray, None, fx=factor, fy=factor, interpolation=cv2.INTER_AREA) if factor < 1 else gray
         matches = []
         for scale in (.5, .6, .7, .8, .9, 1., 1.1, 1.2, 1.35, 1.5, 1.75, 2.):
-            score, x, y, w, h = self._find(analysis, self.templates["title"], scale, scale)
-            matches.append((score, round(x/factor), round(y/factor), w/factor, h/factor))
+            native_scale = scale / old_factor
+            template = self._template(self.templates["title"], native_scale*factor, native_scale*factor)
+            h, w = template.shape
+            if h > analysis.shape[0] or w > analysis.shape[1]:
+                continue
+            response = cv2.matchTemplate(analysis, template, cv2.TM_CCOEFF_NORMED)
+            # Retain several peaks so an unrelated small label cannot hide
+            # the real title after downsampling.
+            for _ in range(3):
+                _, score, _, (x, y) = cv2.minMaxLoc(response)
+                if not np.isfinite(score) or score < .40:
+                    break
+                margin = 8 / factor
+                left, top = x/factor, y/factor
+                bounds = (left-margin, top-margin, left+w/factor+margin, top+h/factor+margin)
+                for refinement in (.95, 1., 1.05):
+                    fine_scale = native_scale * refinement
+                    matches.append(self._find(gray, self.templates["title"], fine_scale, fine_scale, bounds))
+                response[max(0,y-h):y+h+1,max(0,x-w):x+w+1] = -1
         return sorted(matches, reverse=True)[:4]
 
     def detect(self, frame: np.ndarray) -> DetectedLayout | None:
@@ -73,7 +105,6 @@ class TeacherLayoutDetector:
             score, x, y, tw, th = title
             if score < .65:
                 continue
-            self.suspected = True
             sx, sy = tw/title_ref[2], th/title_ref[3]
             ox, oy = x-title_ref[0]*sx, y-title_ref[1]*sy
             ex, ey = ox+exit_ref[0]*sx, oy+exit_ref[1]*sy
@@ -81,7 +112,16 @@ class TeacherLayoutDetector:
             bounds = (ex-margin, ey-margin, ex+exit_ref[2]*sx+margin, ey+exit_ref[3]*sy+margin)
             exit_match = max((self._find(gray,self.templates["exit"],sx*s,sy*s,bounds) for s in (.95,1.,1.05)), key=lambda item:item[0])
             if exit_match[0] < .68:
+                # A generic blue header alone is not enough to block Keju or
+                # force continuous teacher searches. Keep partial dialogs
+                # guarded when their independent question prompt is present.
+                px, py, pw, ph = self.profile["anchors"]["prompt"]["rect"]
+                prompt_bounds = (ox+(px-10)*sx, oy+(py-8)*sy,
+                                 ox+(px+pw+10)*sx, oy+(py+ph+8)*sy)
+                if self._find(gray, self.templates["prompt"], sx, sy, prompt_bounds)[0] >= .62:
+                    self.suspected = True
                 continue
+            self.suspected = True
             _, ex, ey, ew, eh = exit_match
             txc, tyc = title_ref[0]+title_ref[2]/2, title_ref[1]+title_ref[3]/2
             exc, eyc = exit_ref[0]+exit_ref[2]/2, exit_ref[1]+exit_ref[3]/2
