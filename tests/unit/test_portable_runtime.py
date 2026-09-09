@@ -8,6 +8,7 @@ import pytest
 
 from xyq_quiz.config import AppConfig
 from xyq_quiz.runtime.paths import RuntimePaths, initialize_portable_state
+from xyq_quiz.runtime.paths import _publish_seed
 from xyq_quiz.runtime.portable import (
     STATE_SCHEMA_VERSION,
     StateSchemaError,
@@ -41,6 +42,60 @@ def test_source_paths_do_not_depend_on_current_working_directory(tmp_path: Path)
 
     assert paths.app_root == (tmp_path / "repo").resolve()
     assert paths.default_config_path == (tmp_path / "repo" / "config.example.json").resolve()
+
+
+@pytest.mark.parametrize('directory',[False,True])
+def test_seed_retries_transient_access_denial_without_partial_publish(tmp_path,monkeypatch,directory):
+    import xyq_quiz.runtime.paths as module
+    source,target=tmp_path/'staged',tmp_path/'data'
+    if directory:
+        source.mkdir()
+        (source/'current.json').write_text('complete')
+    else:
+        source.write_text('complete')
+    rename=module.os.rename
+    attempts=[]
+    def flaky(src,dst):
+        attempts.append(1)
+        if len(attempts)<3:
+            assert not target.exists()
+            error=PermissionError('busy')
+            error.winerror=5
+            raise error
+        rename(src,dst)
+    monkeypatch.setattr(module.os,'rename',flaky)
+    monkeypatch.setattr(module.time,'sleep',lambda _:None)
+    _publish_seed(source,target)
+    assert len(attempts)==3
+    assert (target/'current.json' if directory else target).read_text()=='complete'
+
+
+def test_seed_race_preserves_other_initializer_state(tmp_path,monkeypatch):
+    import xyq_quiz.runtime.paths as module
+    source,target=tmp_path/'staged',tmp_path/'data'
+    source.mkdir()
+    def race(src,dst):
+        target.mkdir()
+        (target/'current.json').write_text('other-state')
+        raise PermissionError('destination now exists')
+    monkeypatch.setattr(module.os,'rename',race)
+    _publish_seed(source,target)
+    assert (target/'current.json').read_text()=='other-state'
+
+
+def test_seed_persistent_denial_is_bounded_and_retains_staged_copy(tmp_path,monkeypatch):
+    import xyq_quiz.runtime.paths as module
+    source,target=tmp_path/'staged',tmp_path/'data'
+    source.mkdir()
+    attempts=[]
+    def denied(*args):
+        attempts.append(1)
+        raise PermissionError('denied')
+    monkeypatch.setattr(module.os,'rename',denied)
+    monkeypatch.setattr(module.time,'sleep',lambda _:None)
+    with pytest.raises(PermissionError):
+        _publish_seed(source,target)
+    assert len(attempts)==6 and source.exists() and not target.exists()
 
 
 def test_missing_portable_state_is_seeded_without_overwriting_existing_state(

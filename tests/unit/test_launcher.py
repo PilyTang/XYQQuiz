@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from contextlib import nullcontext
+from contextlib import nullcontext, contextmanager
 import logging
 from pathlib import Path
 import threading
@@ -32,6 +32,29 @@ from xyq_quiz.launcher import (
 )
 from xyq_quiz.runtime.paths import RuntimePaths
 from xyq_quiz.performance.settings import save_performance_settings
+
+
+def test_initialization_is_locked_and_denial_becomes_readable_startup_error(tmp_path,monkeypatch):
+    paths=RuntimePaths.discover(executable=tmp_path/'XYQQuiz.exe',frozen=True)
+    held=[False]
+    @contextmanager
+    def instance(_name):
+        held[0]=True
+        try: yield
+        finally: held[0]=False
+    def denied(_paths):
+        assert held[0]
+        raise PermissionError('WinError 5')
+    messages=[]
+    monkeypatch.setattr(launcher_module.RuntimePaths,'discover',lambda:paths)
+    monkeypatch.setattr(launcher_module,'activate_existing',lambda *a,**kw:False)
+    monkeypatch.setattr(launcher_module,'ensure_elevated',lambda *a:True)
+    monkeypatch.setattr(launcher_module,'SingleInstance',instance)
+    monkeypatch.setattr(launcher_module,'initialize_portable_state',denied)
+    monkeypatch.setattr(launcher_module,'_show_message',lambda *a,**kw:messages.append(a))
+    assert launcher_module.main([])==2
+    assert not held[0]
+    assert '初始化便携资源失败' in messages[0][1]
 
 
 def test_reserve_loopback_port_reports_conflict_and_releases_socket() -> None:

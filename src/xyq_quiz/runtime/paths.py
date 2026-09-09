@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import shutil
 import sys
+import time
 from uuid import uuid4
 
 
@@ -67,6 +68,30 @@ class RuntimePaths:
         return self.user_data_dir / "questions.json"
 
 
+def _publish_seed(temporary: Path, destination: Path) -> None:
+    """Publish complete initial state; tolerate short Windows sharing denials.
+
+    Unlike replace, Windows rename never overwrites state published by a
+    competing initializer. Keep the staged copy intact until publication.
+    """
+    directory = temporary.is_dir()
+    for attempt in range(6):
+        if destination.exists():
+            if destination.is_dir() == directory:
+                return
+            raise FileExistsError(f"初始化目标类型不正确：{destination}")
+        try:
+            os.rename(temporary, destination)
+            return
+        except OSError as error:
+            if destination.exists() and destination.is_dir() == directory:
+                return
+            if (getattr(error, 'winerror', None) not in (5, 32, 33)
+                    and not isinstance(error, PermissionError)) or attempt == 5:
+                raise
+            time.sleep(.1 * 2 ** attempt)
+
+
 def initialize_portable_state(paths: RuntimePaths) -> None:
     """Atomically seed missing mutable state without replacing user state."""
 
@@ -78,7 +103,7 @@ def initialize_portable_state(paths: RuntimePaths) -> None:
         try:
             shutil.copy2(paths.default_config_path, temporary)
             _fsync_file(temporary)
-            os.replace(temporary, paths.config_path)
+            _publish_seed(temporary, paths.config_path)
         finally:
             temporary.unlink(missing_ok=True)
 
@@ -88,10 +113,10 @@ def initialize_portable_state(paths: RuntimePaths) -> None:
         temporary = paths.app_root / f".data-{uuid4().hex}.tmp"
         try:
             shutil.copytree(paths.default_data_dir, temporary)
-            os.replace(temporary, paths.data_dir)
+            _publish_seed(temporary, paths.data_dir)
         finally:
             if temporary.exists():
-                shutil.rmtree(temporary)
+                shutil.rmtree(temporary, ignore_errors=True)
 
     paths.user_data_dir.mkdir(parents=True, exist_ok=True)
     paths.logs_dir.mkdir(parents=True, exist_ok=True)
@@ -119,11 +144,11 @@ def initialize_teacher_assets(data_dir: Path, default_data_dir: Path) -> None:
         try:
             shutil.copytree(source, temporary)
             load_teacher_bank(temporary)
-            os.replace(temporary, target)
+            _publish_seed(temporary, target)
         finally:
             if temporary.exists():
                 assert temporary.resolve().parent == data_dir
-                shutil.rmtree(temporary)
+                shutil.rmtree(temporary, ignore_errors=True)
     sources = [default_data_dir / "layouts" / "teachers-day.json"]
     # Official updates replace only the official pointer/generations. Seed the
     # separately versioned supplement once, including for existing installs.
@@ -137,11 +162,11 @@ def initialize_teacher_assets(data_dir: Path, default_data_dir: Path) -> None:
         try:
             shutil.copytree(supplement_source, temporary)
             load_teacher_bank(temporary)
-            os.replace(temporary, supplement_target)
+            _publish_seed(temporary, supplement_target)
         finally:
             if temporary.exists():
                 assert temporary.resolve().parent == target
-                shutil.rmtree(temporary)
+                shutil.rmtree(temporary, ignore_errors=True)
     sources.extend((default_data_dir / "layouts" / "anchors").glob("teachers-day-*.png"))
     for source_path in sources:
         destination = data_dir / source_path.relative_to(default_data_dir)
@@ -150,7 +175,7 @@ def initialize_teacher_assets(data_dir: Path, default_data_dir: Path) -> None:
             temporary = destination.with_name("." + destination.name + "-" + uuid4().hex)
             try:
                 shutil.copy2(source_path, temporary)
-                os.replace(temporary, destination)
+                _publish_seed(temporary, destination)
             finally:
                 temporary.unlink(missing_ok=True)
 

@@ -716,14 +716,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         _show_message("XYQQuiz 启动失败", str(error), error=True)
         return 1
 
-    if paths.frozen:
-        initialize_portable_state(paths)
-        migrate_portable_state(paths.config_path, paths.data_dir)
-    config_path = _select_runtime_config_path(args.config, paths)
-    config = AppConfig.load(config_path)
-    log_handler = configure_logging(config.log_path)
+    log_handler = None
     try:
         with SingleInstance(names.mutex):
+            if paths.frozen:
+                try:
+                    initialize_portable_state(paths)
+                    migrate_portable_state(paths.config_path, paths.data_dir)
+                except OSError as error:
+                    raise StartupAssetError(
+                        f"初始化便携资源失败：{paths.app_root}\n"
+                        f"{error}\n请稍后重试，或解压到新的可写目录；已有配置和题库不会被覆盖。"
+                    ) from error
+            config_path = _select_runtime_config_path(args.config, paths)
+            config = AppConfig.load(config_path)
+            log_handler = configure_logging(config.log_path)
             from xyq_quiz.performance.hardware_profile import initialize_resource_profile
             config = initialize_resource_profile(config, config_path or paths.config_path)
             requested_port = config.web.port if args.external_browser else 0
@@ -871,13 +878,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         logging.getLogger(__name__).exception("XYQ Quiz 启动失败")
         _show_message(
             "XYQQuiz 启动失败",
-            "程序启动失败，详细原因已写入 logs\\app.log。",
+            ("程序启动失败，详细原因已写入 logs\\app.log。" if log_handler is not None
+             else "程序启动失败，尚未建立日志。请检查配置文件或解压到新的可写目录。"),
             error=True,
         )
         return 1
     finally:
-        logging.getLogger().removeHandler(log_handler)
-        log_handler.close()
+        if log_handler is not None:
+            logging.getLogger().removeHandler(log_handler)
+            log_handler.close()
 
 
 def _show_message(title: str, message: str, *, error: bool = False) -> None:
