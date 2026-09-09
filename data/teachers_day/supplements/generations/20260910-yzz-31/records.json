@@ -1,0 +1,281 @@
+[
+  {
+    "source_id": "teachers_day:yzz:480c2d095086a7bd",
+    "name": "远古之镜",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i3.cdn.yzz.cn/xyq/imgx2021/09/07/605_135108_29b42.png",
+    "image_path": "icons/e78206e1567cabe689d92e7cc520fc168f32c319f2fc92042a1100a7e3cf50aa.png",
+    "image_sha256": "e78206e1567cabe689d92e7cc520fc168f32c319f2fc92042a1100a7e3cf50aa"
+  },
+  {
+    "source_id": "teachers_day:yzz:faec3ba7dcb6ecd4",
+    "name": "混沌之谜",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2021/09/07/605_135116_e0895.png",
+    "image_path": "icons/b1c49b00361fbd1153549af55d2f26b38e67c108f9fc53cd3878547c0dc75d23.png",
+    "image_sha256": "b1c49b00361fbd1153549af55d2f26b38e67c108f9fc53cd3878547c0dc75d23"
+  },
+  {
+    "source_id": "teachers_day:yzz:e35fdcbd315bc467",
+    "name": "长生之祀",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2021/09/07/605_135126_c7aca.png",
+    "image_path": "icons/6e985dc3e45403c9e973763d1e0e54ac85711746abde93ef3379b8cc47ddf953.png",
+    "image_sha256": "6e985dc3e45403c9e973763d1e0e54ac85711746abde93ef3379b8cc47ddf953"
+  },
+  {
+    "source_id": "teachers_day:yzz:328b08d2163f701c",
+    "name": "潮汐之咒",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i3.cdn.yzz.cn/xyq/imgx2021/09/07/605_135136_f915e.png",
+    "image_path": "icons/4c47881e21741c748c32248eacd09a3adcce294d65f9d686f98b648175669267.png",
+    "image_sha256": "4c47881e21741c748c32248eacd09a3adcce294d65f9d686f98b648175669267"
+  },
+  {
+    "source_id": "teachers_day:yzz:9c011edd18be78ad",
+    "name": "澄心之浪",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2021/09/07/605_135144_3c004.png",
+    "image_path": "icons/549452a0b0d1034bae27352f190dd3de733435a3ceccae6c9eb08d2052d2732b.png",
+    "image_sha256": "549452a0b0d1034bae27352f190dd3de733435a3ceccae6c9eb08d2052d2732b"
+  },
+  {
+    "source_id": "teachers_day:yzz:79f1c110d1e17c7b",
+    "name": "遨游",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2021/09/07/605_135151_a3761.png",
+    "image_path": "icons/b77b42c9d96ee4d24db76a3bf18a39d814db2699bf61c74d0d189cb05ce0f811.png",
+    "image_sha256": "b77b42c9d96ee4d24db76a3bf18a39d814db2699bf61c74d0d189cb05ce0f811"
+  },
+  {
+    "source_id": "teachers_day:yzz:6e1b0f5dc8e6f6c7",
+    "name": "慈悲为怀",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_165233_6483c_lit.png",
+    "image_path": "icons/8b205709622372e53ee4f23fa95ddc482c5359c8f5014ec7a77eadcd370d1468.png",
+    "image_sha256": "8b205709622372e53ee4f23fa95ddc482c5359c8f5014ec7a77eadcd370d1468"
+  },
+  {
+    "source_id": "teachers_day:yzz:df933b3d63f3c653",
+    "name": "光明净土",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_165249_aba08_lit.png",
+    "image_path": "icons/ce701adc46766b7e8b6b306a2792fc63132a536e2d5aa7561bc5fe515b9d4ff8.png",
+    "image_sha256": "ce701adc46766b7e8b6b306a2792fc63132a536e2d5aa7561bc5fe515b9d4ff8"
+  },
+  {
+    "source_id": "teachers_day:yzz:4f3db9e7a45a816d",
+    "name": "怒啸",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i3.cdn.yzz.cn/xyq/imgx2023/09/07/605_110652_fb15c.png",
+    "image_path": "icons/6fcab3c3fb5b4e4f2a27a9b2ba20ae36e9001cd81cb67f568253b6d26553f650.png",
+    "image_sha256": "6fcab3c3fb5b4e4f2a27a9b2ba20ae36e9001cd81cb67f568253b6d26553f650"
+  },
+  {
+    "source_id": "teachers_day:yzz:69bf4fef1571407f",
+    "name": "吃茶去了",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163202_8855d_lit.png",
+    "image_path": "icons/de3ed5d32c04bddeb9d52ad888f84bf9f4070c07c8788402aa9d3955268d59e5.png",
+    "image_sha256": "de3ed5d32c04bddeb9d52ad888f84bf9f4070c07c8788402aa9d3955268d59e5"
+  },
+  {
+    "source_id": "teachers_day:yzz:d74fad077795d7f4",
+    "name": "天花乱坠",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163216_5b6db_lit.png",
+    "image_path": "icons/f72ac3c9998f55ccc990ab8c1bb7235e54b3f0a9cfc3bd9e2215c850b7cd4a39.png",
+    "image_sha256": "f72ac3c9998f55ccc990ab8c1bb7235e54b3f0a9cfc3bd9e2215c850b7cd4a39"
+  },
+  {
+    "source_id": "teachers_day:yzz:3b361d2d80974afc",
+    "name": "一叶菩提",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163412_2d620_lit.png",
+    "image_path": "icons/d91687d316ecd0f99db001859a9a086bebb5e2947dfec214ccd457913e2c2ef1.png",
+    "image_sha256": "d91687d316ecd0f99db001859a9a086bebb5e2947dfec214ccd457913e2c2ef1"
+  },
+  {
+    "source_id": "teachers_day:yzz:c182fd68d04667c5",
+    "name": "随遇而安",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163425_e111c_lit.png",
+    "image_path": "icons/f69e014a3e31da50593cc593107f4aa7e776b2cca436767c9bb47583ea43f984.png",
+    "image_sha256": "f69e014a3e31da50593cc593107f4aa7e776b2cca436767c9bb47583ea43f984"
+  },
+  {
+    "source_id": "teachers_day:yzz:1e1a73c6a308d0f6",
+    "name": "福至心灵",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163454_0cf6f_lit.png",
+    "image_path": "icons/25f32762eff202ddc41d49296e33577113cea73334ba123e266cb9d2391d74f0.png",
+    "image_sha256": "25f32762eff202ddc41d49296e33577113cea73334ba123e266cb9d2391d74f0"
+  },
+  {
+    "source_id": "teachers_day:yzz:9c582d8bcfbcfabb",
+    "name": "知足常乐",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163505_a45fd_lit.png",
+    "image_path": "icons/fa545a92f3e686526aab9c45cbfcb059e5634f1479c5458fcb00a427c0926c0f.png",
+    "image_sha256": "fa545a92f3e686526aab9c45cbfcb059e5634f1479c5458fcb00a427c0926c0f"
+  },
+  {
+    "source_id": "teachers_day:yzz:7ca97d96fc846090",
+    "name": "立地成佛",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163516_806ba_lit.png",
+    "image_path": "icons/1f556284fb7ffa659d8d1b75c31e206e1fc951a41f707b084c5dc14b9ffdcb13.png",
+    "image_sha256": "1f556284fb7ffa659d8d1b75c31e206e1fc951a41f707b084c5dc14b9ffdcb13"
+  },
+  {
+    "source_id": "teachers_day:yzz:111cdb4c212b2d8d",
+    "name": "吉人天相",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163524_605a3_lit.png",
+    "image_path": "icons/ec3557f7f9ece45bc97f5fdf7071e334784d15b5436bc7163a0842e1f592eb59.png",
+    "image_sha256": "ec3557f7f9ece45bc97f5fdf7071e334784d15b5436bc7163a0842e1f592eb59"
+  },
+  {
+    "source_id": "teachers_day:yzz:b6ca629edfa88c39",
+    "name": "因果·无争",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163552_cff4c_lit.png",
+    "image_path": "icons/312bea34a174a4a5d5a4cfb13f926c0e9167dd446ffd468fd8005620fe3d4563.png",
+    "image_sha256": "312bea34a174a4a5d5a4cfb13f926c0e9167dd446ffd468fd8005620fe3d4563"
+  },
+  {
+    "source_id": "teachers_day:yzz:232a6b04ac656c9f",
+    "name": "福慧无量",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165243_4898b_lit.png",
+    "image_path": "icons/aca88b603def1aa081db9e53d31ff8458440cd450fa3b2b2676a935e200006c7.png",
+    "image_sha256": "aca88b603def1aa081db9e53d31ff8458440cd450fa3b2b2676a935e200006c7"
+  },
+  {
+    "source_id": "teachers_day:yzz:efd228c2ebba3839",
+    "name": "欢喜自在",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165254_610d4_lit.png",
+    "image_path": "icons/2f0d63900e8758246f3d36fe94458d9d3ca150e9f52a1698456606795973a8d2.png",
+    "image_sha256": "2f0d63900e8758246f3d36fe94458d9d3ca150e9f52a1698456606795973a8d2"
+  },
+  {
+    "source_id": "teachers_day:yzz:a29c59e3496ea9d7",
+    "name": "来去自如",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165302_10926_lit.png",
+    "image_path": "icons/bdafdd98ff9e206cdaacbcd277947b413400749675e995e04f828d7c8379ed06.png",
+    "image_sha256": "bdafdd98ff9e206cdaacbcd277947b413400749675e995e04f828d7c8379ed06"
+  },
+  {
+    "source_id": "teachers_day:yzz:ad3fced15aad853f",
+    "name": "善果圆成",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165318_14d39_lit.png",
+    "image_path": "icons/b529b6f460adbc40f1429d29802d78dcfca1fe829809dcf2a8e814f05dcd4c90.png",
+    "image_sha256": "b529b6f460adbc40f1429d29802d78dcfca1fe829809dcf2a8e814f05dcd4c90"
+  },
+  {
+    "source_id": "teachers_day:yzz:1fda8656ac18d106",
+    "name": "缘起法随",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165324_d80e9_lit.png",
+    "image_path": "icons/c2748c720a78777ac78d0f2fedfa06027f7b3c848ff81ce8b6b196df351edb48.png",
+    "image_sha256": "c2748c720a78777ac78d0f2fedfa06027f7b3c848ff81ce8b6b196df351edb48"
+  },
+  {
+    "source_id": "teachers_day:yzz:e2127b7dcc79d7b9",
+    "name": "大肚能容",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_163540_66fef_lit.png",
+    "image_path": "icons/0aaf65c6463c1e7027e0da4b630c8df4c6651000649b2cf3b2801eb407bfbe13.png",
+    "image_sha256": "0aaf65c6463c1e7027e0da4b630c8df4c6651000649b2cf3b2801eb407bfbe13"
+  },
+  {
+    "source_id": "teachers_day:yzz:6216204dff9d07be",
+    "name": "因果·戒宝",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_163616_ea60c_lit.png",
+    "image_path": "icons/a15b691f0c59317d82834482a27fcf7c45ec67790c7eea0c8460b30bbbb1f745.png",
+    "image_sha256": "a15b691f0c59317d82834482a27fcf7c45ec67790c7eea0c8460b30bbbb1f745"
+  },
+  {
+    "source_id": "teachers_day:yzz:65f596630b7ce9b9",
+    "name": "因果·止怒",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163623_bc73c_lit.png",
+    "image_path": "icons/21b582b23bfd1c0dd74953c326599a026498fb72aed75c37c6912d44c3095ba8.png",
+    "image_sha256": "21b582b23bfd1c0dd74953c326599a026498fb72aed75c37c6912d44c3095ba8"
+  },
+  {
+    "source_id": "teachers_day:yzz:5e219ca8f108a7a2",
+    "name": "因果·释物",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163632_e3f81_lit.png",
+    "image_path": "icons/b5580d8e358dae3ddf5d29e1fc4a776261dbfe858265b270d3c5e1dcdf6913a9.png",
+    "image_sha256": "b5580d8e358dae3ddf5d29e1fc4a776261dbfe858265b270d3c5e1dcdf6913a9"
+  },
+  {
+    "source_id": "teachers_day:yzz:0b0ef5ac9bf7776c",
+    "name": "以和为贵",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163653_2020e_lit.png",
+    "image_path": "icons/0f9015a18034e156ca13a67ea466c6d3ef1be6a59682b318b1fa4227c8f8ac6a.png",
+    "image_sha256": "0f9015a18034e156ca13a67ea466c6d3ef1be6a59682b318b1fa4227c8f8ac6a"
+  },
+  {
+    "source_id": "teachers_day:yzz:fd9b287d53d702da",
+    "name": "广结善缘",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163702_ea3b4_lit.png",
+    "image_path": "icons/b1f297ea6372e04006ae8ae87b940d7fa5fc4fe66920d79c5b9152f4117f006a.png",
+    "image_sha256": "b1f297ea6372e04006ae8ae87b940d7fa5fc4fe66920d79c5b9152f4117f006a"
+  },
+  {
+    "source_id": "teachers_day:yzz:58da26bd2d0f76e7",
+    "name": "返本归真",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_163715_460df_lit.png",
+    "image_path": "icons/03e27c220b7e1b796478556300294f6fb44f3372067c2c9dcc0b9fd73bb23c09.png",
+    "image_sha256": "03e27c220b7e1b796478556300294f6fb44f3372067c2c9dcc0b9fd73bb23c09"
+  },
+  {
+    "source_id": "teachers_day:yzz:92dd2d65a25dd1a9",
+    "name": "随心如意",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_163728_373ef_lit.png",
+    "image_path": "icons/72a53198525f9682ba2666a62f4aaa8bce88adb8c8a1cae99c5c9bf2a99f61c2.png",
+    "image_sha256": "72a53198525f9682ba2666a62f4aaa8bce88adb8c8a1cae99c5c9bf2a99f61c2"
+  }
+]

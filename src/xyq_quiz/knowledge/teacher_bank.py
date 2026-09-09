@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 import hashlib
 import json
+import os
+import shutil
 from pathlib import Path
 import re
 from types import MappingProxyType
 from typing import Mapping
+from uuid import uuid4
 
 import cv2
 import numpy as np
@@ -48,6 +51,68 @@ def decode_icon(data: bytes) -> np.ndarray:
         raise ValueError("技能图标无法解码或尺寸无效")
     image.setflags(write=False)
     return image
+
+
+def merge_teacher_supplements(source: Path, target: Path) -> int:
+    """Add verified bundled supplements without deleting local records.
+
+    Write a complete immutable generation before atomically switching the
+    supplement pointer. The official generation and pointer are never touched.
+    """
+    source, target = Path(source).resolve(), Path(target).resolve()
+    if source == target:
+        return 0
+    incoming = load_teacher_bank(source)
+    existing = load_teacher_bank(target)
+    records = list(existing.records)
+    payloads = {r.image_sha256:(existing.directory/r.image_path).read_bytes() for r in records}
+    seen = {(normalize_text(r.name),r.image_sha256) for r in records}
+    ids = {r.source_id for r in records}
+    added = 0
+    for record in incoming.records:
+        identity = (normalize_text(record.name),record.image_sha256)
+        if identity in seen:
+            continue
+        payloads[record.image_sha256]=(incoming.directory/record.image_path).read_bytes()
+        if record.source_id in ids:
+            record=replace(record,source_id=record.source_id+':'+record.image_sha256[:16])
+        if record.source_id in ids:
+            raise ValueError('补充题库编号冲突，保留现有题库')
+        records.append(record)
+        seen.add(identity)
+        ids.add(record.source_id)
+        added+=1
+    if not added:
+        return 0
+    encoded=(json.dumps([asdict(r) for r in records],ensure_ascii=False,indent=2)+'\n').encode('utf-8')
+    digest=hashlib.sha256(encoded).hexdigest()
+    generation='merged-'+digest[:24]
+    generations=target/'generations'
+    generations.mkdir(parents=True,exist_ok=True)
+    staged=generations/('.seed-'+uuid4().hex)
+    pointer=target/('.current-'+uuid4().hex+'.tmp')
+    try:
+        staged.mkdir()
+        (staged/'icons').mkdir()
+        for record in records:
+            (staged/record.image_path).write_bytes(payloads[record.image_sha256])
+        (staged/'records.json').write_bytes(encoded)
+        metadata=dict(schema_version=1,generation_id=generation,record_count=len(records),
+                      image_count=len(records),records_sha256=digest,
+                      source_url=incoming.metadata.get('source_url'),
+                      merged_from=[existing.generation_id,incoming.generation_id])
+        (staged/'metadata.json').write_text(json.dumps(metadata,ensure_ascii=False,indent=2),encoding='utf-8')
+        from xyq_quiz.runtime.paths import _publish_seed, _fsync_file
+        _publish_seed(staged,generations/generation)
+        load_teacher_generation(target,generation)
+        pointer.write_text(json.dumps(dict(schema_version=1,generation_id=generation)),encoding='utf-8')
+        _fsync_file(pointer)
+        os.replace(pointer,target/'current.json')
+    finally:
+        if staged.exists():
+            shutil.rmtree(staged,ignore_errors=True)
+        pointer.unlink(missing_ok=True)
+    return added
 
 
 def load_teacher_generation(root: Path, generation_id: str) -> TeacherBankSnapshot:

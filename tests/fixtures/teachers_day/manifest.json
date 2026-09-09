@@ -116,5 +116,23 @@
       "option-c": "feedback-6-option-c.png",
       "option-d": "feedback-6-option-d.png"
     }
+  },
+  {
+    "sample": 7,
+    "answer": "以和为贵",
+    "option_index": 1,
+    "options": [
+      "无所遁形",
+      "以和为贵",
+      "移形换影",
+      "魔王回首"
+    ],
+    "files": {
+      "icon": "feedback-7-icon.png",
+      "option-a": "feedback-7-option-a.png",
+      "option-b": "feedback-7-option-b.png",
+      "option-c": "feedback-7-option-c.png",
+      "option-d": "feedback-7-option-d.png"
+    }
   }
 ]

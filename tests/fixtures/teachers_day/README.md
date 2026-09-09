@@ -8,7 +8,8 @@ applies to these regression assets.
 
 `manifest.json` records the literal on-screen option labels and the expected
 canonical skill. In particular, the game says 堪察令 and 中药医理, while the
-bundled web bank says 勘察令 and 中医药理. 以和为贵 is an unknown distractor.
+bundled web bank says 勘察令 and 中医药理. 以和为贵 was an unknown distractor
+before the 2026-09-10 supplement update and is now a known skill.
 
 The fourth case displays 鹰击 but the real OCR model returns 鷹击. Its
 `ocr_options` preserve that observed output separately from the visible labels.
@@ -27,3 +28,6 @@ Case 6 is the 2026-09-09 11:03 UTC diagnostic crop for 牛刀小试. The officia
 45px asset includes a thin rim that shifts its required rendered scale beyond
 the nominal template range. Test the original 69px lossless diagnostic crop
 as well as the reconstructed dialog; it must beat the 吃茶去了 distractor.
+# 2026-09-10 补充回归
+
+`feedback-7-*` 仅包含“以和为贵”诊断的技能图标及四个选项裁剪，验证新增资源后选择 B，原始完整游戏截图不入库。
