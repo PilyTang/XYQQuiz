@@ -524,6 +524,7 @@ class ResilientNativeCaptureService:
         self._fallback_active = False
         self._status = CaptureStatus(CapturePhase.WAITING_FOR_WINDOW)
         self._owner_hwnd = 0
+        self._owner_visible = True
         self._preview_layout = (0, 0, 0, 0, 1.0, False)
         self._preview_overlay: tuple[tuple[float, float, float, float] | None, float, int] = (
             None,
@@ -612,6 +613,18 @@ class ResilientNativeCaptureService:
         if session is not None:
             self._send_layout(session, layout)
 
+    def set_preview_owner_visible(self, visible: bool) -> None:
+        with self._lock:
+            self._owner_visible = bool(visible)
+            session, layout = self._session, self._preview_layout
+        if session is not None:
+            self._send_layout(session, layout)
+
+    def _preview_is_visible(self) -> bool:
+        with self._lock:
+            return (self._owner_visible and self._preview_layout[5]
+                    and self._preview_layout[2] > 0 and self._preview_layout[3] > 0)
+
     def set_preview_overlay(
         self,
         rect: tuple[float, float, float, float] | None,
@@ -632,6 +645,7 @@ class ResilientNativeCaptureService:
     ) -> None:
         with self._lock:
             owner_hwnd = self._owner_hwnd
+            owner_visible = self._owner_visible
         x, y, width, height, scale, visible = layout
         session.update_preview_layout(
             owner_hwnd=owner_hwnd,
@@ -640,7 +654,7 @@ class ResilientNativeCaptureService:
             width=width,
             height=height,
             scale=scale,
-            visible=visible,
+            visible=visible and owner_visible,
         )
 
     def _run(self) -> None:
@@ -680,10 +694,8 @@ class ResilientNativeCaptureService:
                 score=overlay[1],
                 level=overlay[2],
             )
-            if not session.wait_first_present(20.0):
-                if self._stop.is_set():
-                    return
-                raise NativePreviewError("原生预览在二十秒内没有完成首次显示")
+            if not _wait_visible_first_present(session, self._stop, self._preview_is_visible):
+                return
             if self._stop.is_set():
                 return
             with self._lock:
@@ -712,6 +724,21 @@ class ResilientNativeCaptureService:
                 self._session = None
             if session is not None:
                 session.stop()
+
+
+def _wait_visible_first_present(session, stop, is_visible, timeout_seconds=20.0) -> bool:
+    remaining = timeout_seconds
+    while not stop.is_set():
+        visible = is_visible()
+        started = time.monotonic()
+        if session.wait_first_present(.1):
+            return True
+        session.raise_if_failed()
+        if visible:
+            remaining -= time.monotonic()-started
+            if remaining <= 0:
+                raise NativePreviewError("原生预览在二十秒可见时间内没有完成首次显示")
+    return False
 
 
 def _read_exact(stream: BinaryIO, size: int) -> bytes:

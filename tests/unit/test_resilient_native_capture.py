@@ -53,6 +53,47 @@ class _FailingNativeSession:
         self.stopped += 1
 
 
+@pytest.mark.parametrize('mode',['hidden_then_visible','visible_timeout','stop_hidden'])
+def test_first_present_timeout_counts_only_visible_time(monkeypatch,mode):
+    clock = [0.]
+    stop = threading.Event()
+    monkeypatch.setattr(native_module.time,'monotonic',lambda: clock[0])
+    class Session:
+        calls = 0
+        def wait_first_present(self,timeout):
+            self.calls += 1
+            clock[0] += timeout
+            if mode == 'stop_hidden' and self.calls == 5:
+                stop.set()
+            return mode == 'hidden_then_visible' and self.calls == 12
+        def raise_if_failed(self): pass
+    session = Session()
+    visible = lambda: mode == 'visible_timeout' or (mode == 'hidden_then_visible' and session.calls >= 10)
+    if mode == 'visible_timeout':
+        with pytest.raises(NativePreviewError):
+            native_module._wait_visible_first_present(session,stop,visible,.3)
+    else:
+        assert native_module._wait_visible_first_present(session,stop,visible,.3) == (mode == 'hidden_then_visible')
+
+
+def test_desktop_restore_does_not_override_user_preview_pause(monkeypatch,tmp_path):
+    monkeypatch.setattr(native_module,'CaptureService',_FakeCaptureService)
+    service = ResilientNativeCaptureService(AppConfig(),LatestFrameHub(),LatestVideoHub(),
+        adapter_id=0,helper_path=tmp_path/'helper.exe')
+    layouts = []
+    class Session:
+        def update_preview_layout(self,**layout): layouts.append(layout)
+    service._session = Session()
+    service.set_preview_layout(0,0,640,480,1.,True)
+    service.set_preview_owner_visible(False)
+    assert not layouts[-1]['visible'] and not service._preview_is_visible()
+    service.set_preview_owner_visible(True)
+    assert layouts[-1]['visible'] and service._preview_is_visible()
+    service.set_preview_layout(0,0,640,480,1.,False)
+    service.set_preview_owner_visible(True)
+    assert not layouts[-1]['visible'] and not service._preview_is_visible()
+
+
 def test_native_failure_replaces_low_rate_ocr_with_full_rate_cpu_preview(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,

@@ -765,8 +765,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                         desktop_mode=desktop_controller is not None,
                     )
                     if desktop_controller is not None:
+                        def preview_visibility_changed(visible: bool) -> None:
+                            services.preview_owner_visible = visible
+                            callback = getattr(services.capture, "set_preview_owner_visible", None)
+                            if callable(callback):
+                                callback(visible)
                         desktop_controller.set_preview_visibility_callback(
-                            lambda visible: setattr(services, "preview_owner_visible", visible)
+                            preview_visibility_changed
                         )
                         preview_owner = getattr(
                             services.capture,
