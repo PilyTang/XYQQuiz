@@ -250,6 +250,8 @@ class PerformanceController:
                 canvas_fps=self._canvas_fps,
                 low_resource_mode=self._current_preferences.low_resource_mode,
                 pending_low_resource_mode=self._pending_preferences.low_resource_mode,
+                resource_profile_origin=self._current_preferences.resource_profile_origin,
+                resource_profile_reason=self._current_preferences.resource_profile_reason,
             )
 
     def payload(self) -> dict[str, object]:
@@ -268,6 +270,7 @@ class PerformanceController:
         preview_backend: str,
         low_resource_mode: bool | None = None,
     ) -> SavedPerformanceSettings:
+        manual_profile = low_resource_mode is not None
         if low_resource_mode is None:
             low_resource_mode = self._pending_preferences.low_resource_mode
         if not isinstance(low_resource_mode, bool):
@@ -290,10 +293,13 @@ class PerformanceController:
             ocr_backend=validated.ocr_backend,
             preview_backend=validated.preview_backend,
             fallback_config=self._fallback_config,
-            low_resource_mode=validated.low_resource_mode,
+            low_resource_mode=validated.low_resource_mode if manual_profile else None,
         )
         with self._lock:
-            self._pending_preferences = validated
+            self._pending_preferences = validated.model_copy(update={
+                "resource_profile_origin": saved.resource_profile_origin,
+                "resource_profile_reason": saved.resource_profile_reason,
+            })
         return saved
 
     def _probe_available_backends(self) -> None:
@@ -620,6 +626,8 @@ class PerformanceController:
                 ocr_backend=saved.ocr_backend,
                 preview_backend=saved.preview_backend,
                 low_resource_mode=saved.low_resource_mode,
+                resource_profile_origin=saved.resource_profile_origin,
+                resource_profile_reason=saved.resource_profile_reason,
             )
         _LOGGER.info(
             "重复图形适配器配置已迁移：OCR %s，预览 %s",

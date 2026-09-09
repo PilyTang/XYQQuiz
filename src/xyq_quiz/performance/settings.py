@@ -16,6 +16,8 @@ class SavedPerformanceSettings:
     ocr_backend: str
     preview_backend: str
     low_resource_mode: bool = False
+    resource_profile_origin: str = "manual"
+    resource_profile_reason: str = ""
 
 
 def runtime_performance_config(config: AppConfig) -> AppConfig:
@@ -52,11 +54,15 @@ def save_performance_settings(
     else:
         document = AppConfig().model_dump(mode="json")
 
+    previous = PerformanceConfig.model_validate(document.get("performance", {}))
+    manual_choice = low_resource_mode is not None
     if low_resource_mode is None:
         low_resource_mode = document.get("performance", {}).get("low_resource_mode", False)
     if not isinstance(low_resource_mode, bool):
         raise ValueError("low_resource_mode 必须是布尔值")
     validated.low_resource_mode = low_resource_mode
+    validated.resource_profile_origin = "manual" if manual_choice else previous.resource_profile_origin
+    validated.resource_profile_reason = "" if manual_choice else previous.resource_profile_reason
     document["performance"] = validated.model_dump(mode="json")
     path.parent.mkdir(parents=True, exist_ok=True)
     _atomic_write_json(path, document)
@@ -64,6 +70,8 @@ def save_performance_settings(
         validated.ocr_backend,
         validated.preview_backend,
         validated.low_resource_mode,
+        validated.resource_profile_origin,
+        validated.resource_profile_reason,
     )
 
 

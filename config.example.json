@@ -18,6 +18,8 @@
     "ocr_workers": 1
   },
   "performance": {
+    "resource_profile_origin": "pending",
+    "resource_profile_reason": "",
     "low_resource_mode": false,
     "ocr_backend": "auto",
     "preview_backend": "auto"

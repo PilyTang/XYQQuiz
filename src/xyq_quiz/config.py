@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Self
+from typing import Self, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from xyq_quiz.runtime.portable import STATE_SCHEMA_VERSION, migrate_config_document
 
@@ -45,6 +45,17 @@ class PerformanceConfig(BaseModel):
     ocr_backend: str = "auto"
     preview_backend: str = "auto"
     low_resource_mode: bool = Field(default=False, strict=True)
+    resource_profile_origin: Literal["pending", "automatic", "manual"] = "pending"
+    resource_profile_reason: str = ""
+
+    @model_validator(mode="before")
+    @classmethod
+    def preserve_existing_resource_choice(cls, values):
+        # Older releases saved an explicit switch but had no origin field.
+        # New bundled defaults explicitly say pending so they are evaluated.
+        if isinstance(values, dict) and "low_resource_mode" in values and "resource_profile_origin" not in values:
+            return {**values, "resource_profile_origin": "manual"}
+        return values
 
     @field_validator("ocr_backend")
     @classmethod

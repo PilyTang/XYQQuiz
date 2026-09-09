@@ -51,3 +51,5 @@ class PerformanceSnapshot:
     canvas_fps: float | None = None
     low_resource_mode: bool = False
     pending_low_resource_mode: bool = False
+    resource_profile_origin: str = "pending"
+    resource_profile_reason: str = ""

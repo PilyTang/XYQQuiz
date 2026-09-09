@@ -75,6 +75,8 @@ def test_save_performance_settings_preserves_other_config_fields(tmp_path: Path)
         "ocr_backend": "directml:0",
         "preview_backend": "cpu",
         "low_resource_mode": False,
+        "resource_profile_origin": "pending",
+        "resource_profile_reason": "",
     }
     assert persisted["match"]["question_score"] == 87
 

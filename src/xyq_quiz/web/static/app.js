@@ -426,6 +426,8 @@ function renderPerformanceDialog({preserveSelection = false} = {}) {
   const ocrReason = performanceSnapshot.ocr.fallback_reason
     ? `；回退：${performanceSnapshot.ocr.fallback_reason}`
     : "";
+  document.getElementById("resourceProfileReason").textContent = performanceSnapshot.resource_profile_reason
+    || (performanceSnapshot.resource_profile_origin === "manual" ? "当前沿用手动保存的高低配选择。" : "首次运行将自动选择，之后保留你的设置。");
   const previewReason = performanceSnapshot.preview.fallback_reason
     ? `；回退：${performanceSnapshot.preview.fallback_reason}`
     : "";

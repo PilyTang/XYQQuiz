@@ -214,6 +214,8 @@ def test_save_persists_independent_pending_choices(tmp_path: Path) -> None:
         "ocr_backend": "directml:1",
         "preview_backend": "cpu",
         "low_resource_mode": False,
+        "resource_profile_origin": "pending",
+        "resource_profile_reason": "",
     }
 
 

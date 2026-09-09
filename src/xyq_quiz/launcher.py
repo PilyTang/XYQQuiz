@@ -724,6 +724,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     log_handler = configure_logging(config.log_path)
     try:
         with SingleInstance(names.mutex):
+            from xyq_quiz.performance.hardware_profile import initialize_resource_profile
+            config = initialize_resource_profile(config, config_path or paths.config_path)
             requested_port = config.web.port if args.external_browser else 0
             with reserve_loopback_port(config.web.host, requested_port) as web_socket:
                 actual_port = int(web_socket.getsockname()[1])
