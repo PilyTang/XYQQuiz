@@ -15,6 +15,17 @@ from xyq_quiz.runtime.portable import migrate_config_document
 class SavedPerformanceSettings:
     ocr_backend: str
     preview_backend: str
+    low_resource_mode: bool = False
+
+
+def runtime_performance_config(config: AppConfig) -> AppConfig:
+    """Cap runtime work without rewriting the user's normal-mode preferences."""
+    if not config.performance.low_resource_mode:
+        return config
+    return config.model_copy(update={
+        "capture": config.capture.model_copy(update={"preview_fps": min(10,config.capture.preview_fps)}),
+        "recognition": config.recognition.model_copy(update={"scan_fps": min(5,config.recognition.scan_fps)}),
+    })
 
 
 def save_performance_settings(
@@ -23,6 +34,7 @@ def save_performance_settings(
     ocr_backend: str,
     preview_backend: str,
     fallback_config: AppConfig | None = None,
+    low_resource_mode: bool | None = None,
 ) -> SavedPerformanceSettings:
     validated = PerformanceConfig.model_validate(
         {
@@ -40,12 +52,18 @@ def save_performance_settings(
     else:
         document = AppConfig().model_dump(mode="json")
 
+    if low_resource_mode is None:
+        low_resource_mode = document.get("performance", {}).get("low_resource_mode", False)
+    if not isinstance(low_resource_mode, bool):
+        raise ValueError("low_resource_mode 必须是布尔值")
+    validated.low_resource_mode = low_resource_mode
     document["performance"] = validated.model_dump(mode="json")
     path.parent.mkdir(parents=True, exist_ok=True)
     _atomic_write_json(path, document)
     return SavedPerformanceSettings(
         validated.ocr_backend,
         validated.preview_backend,
+        validated.low_resource_mode,
     )
 
 

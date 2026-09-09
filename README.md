@@ -76,6 +76,8 @@ Copy-Item config.example.json config.json
 
 新配置默认使用 `capture.preview_fps: 30` 和 `recognition.scan_fps: 15`。若升级时复制了明确写有 `preview_fps: 15` 的旧 `config.json`，程序会尊重旧值；需要 30 FPS 预览时请将该项改为 `30`。
 
+性能设置中的“低配模式”将预览限制为最高 10 FPS、软件预览宽度最高 640 像素，识别独立以最高 5 FPS 检查新题，OCR 保留原图清晰度。保存后重启生效，关闭该模式可恢复原配置。“暂停预览”按钮立即停止显示画面，识别与答案文字继续更新；最小化或隐藏页面也会暂停预览处理。细节见 [低配模式](docs/low-resource-mode.md)。
+
 ## 测试
 
 ```powershell

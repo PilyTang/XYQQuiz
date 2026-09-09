@@ -213,7 +213,18 @@ def test_save_persists_independent_pending_choices(tmp_path: Path) -> None:
     assert persisted["performance"] == {
         "ocr_backend": "directml:1",
         "preview_backend": "cpu",
+        "low_resource_mode": False,
     }
+
+
+def test_low_mode_remains_pending_until_restart_and_survives_backend_save(tmp_path):
+    controller = _controller(tmp_path)
+    controller.save(ocr_backend="cpu",preview_backend="cpu",low_resource_mode=True)
+    snapshot = controller.snapshot()
+    assert snapshot.pending_low_resource_mode and not snapshot.low_resource_mode
+    controller.save(ocr_backend="auto",preview_backend="auto")
+    assert controller.snapshot().pending_low_resource_mode
+    assert json.loads((tmp_path/'config.json').read_text())['performance']['low_resource_mode']
 
 
 def test_external_browser_hides_unavailable_saved_hardware_preview(

@@ -74,6 +74,7 @@ def test_save_performance_settings_preserves_other_config_fields(tmp_path: Path)
     assert persisted["performance"] == {
         "ocr_backend": "directml:0",
         "preview_backend": "cpu",
+        "low_resource_mode": False,
     }
     assert persisted["match"]["question_score"] == 87
 
@@ -89,3 +90,26 @@ def test_graphics_adapter_keeps_directml_device_order() -> None:
 
     assert adapter.device_id == 1
     assert adapter.name == "Example GPU"
+
+
+def test_low_mode_caps_preview_independently_and_preserves_normal_settings(tmp_path):
+    from xyq_quiz.performance.settings import runtime_performance_config
+    config = AppConfig(performance=PerformanceConfig(low_resource_mode=True))
+    runtime = runtime_performance_config(config)
+    assert (runtime.capture.preview_fps,runtime.recognition.scan_fps) == (10,5)
+    assert (config.capture.preview_fps,config.recognition.scan_fps) == (30,15)
+    assert runtime.performance.ocr_backend == runtime.performance.preview_backend == "auto"
+    saved = save_performance_settings(tmp_path/'config.json',ocr_backend='auto',preview_backend='auto',fallback_config=config)
+    assert saved.low_resource_mode
+    saved = save_performance_settings(tmp_path/'config.json',ocr_backend='cpu',preview_backend='cpu')
+    assert saved.low_resource_mode  # Older clients/migrations preserve the switch.
+    save_performance_settings(tmp_path/'config.json',ocr_backend='auto',preview_backend='auto',low_resource_mode=False)
+    restored = runtime_performance_config(AppConfig.load(tmp_path/'config.json'))
+    assert (restored.capture.preview_fps,restored.recognition.scan_fps) == (30,15)
+
+
+def test_low_mode_does_not_increase_user_selected_lower_rates():
+    from xyq_quiz.performance.settings import runtime_performance_config
+    config = AppConfig.model_validate({'capture':{'preview_fps':5},'recognition':{'scan_fps':2},'performance':{'low_resource_mode':True}})
+    runtime = runtime_performance_config(config)
+    assert (runtime.capture.preview_fps,runtime.recognition.scan_fps) == (5,2)

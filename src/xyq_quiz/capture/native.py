@@ -661,7 +661,7 @@ class ResilientNativeCaptureService:
                 target=target,
                 adapter_id=self._adapter_id,
                 video_hub=self._video_hub,
-                preview_width=1024,
+                preview_width=640 if self._config.performance.low_resource_mode else 1024,
                 preview_fps=self._config.capture.preview_fps,
                 recognition_fps=0,
                 mapping_capacity=3840 * 2160 * 4,

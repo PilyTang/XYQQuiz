@@ -196,7 +196,8 @@ def test_main_reports_port_conflict_with_dedicated_exit_code(
     ]
 
 
-def test_build_services_uses_fixed_single_ocr_worker() -> None:
+@pytest.mark.parametrize("low_mode",[False,True])
+def test_build_services_uses_fixed_single_ocr_worker(low_mode) -> None:
     config = AppConfig(
         layout_paths=[
             Path("data/layouts/keju-default.json"),
@@ -204,10 +205,14 @@ def test_build_services_uses_fixed_single_ocr_worker() -> None:
         ]
     )
 
+    config.performance.low_resource_mode = low_mode
     services = build_services(config)
     try:
         assert services.pipeline._executor._max_workers == 1
-        assert services.coordinator._scan_fps == config.recognition.scan_fps
+        assert services.coordinator._scan_fps == (5 if low_mode else config.recognition.scan_fps)
+        assert services.preview_width == (640 if low_mode else 1024)
+        assert services.capture._config.capture.preview_fps == (10 if low_mode else 30)
+        assert services.performance._fallback_config.capture.preview_fps == 30
     finally:
         services.pipeline.close()
 

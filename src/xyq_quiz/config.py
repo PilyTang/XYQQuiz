@@ -44,6 +44,7 @@ class PerformanceConfig(BaseModel):
 
     ocr_backend: str = "auto"
     preview_backend: str = "auto"
+    low_resource_mode: bool = Field(default=False, strict=True)
 
     @field_validator("ocr_backend")
     @classmethod

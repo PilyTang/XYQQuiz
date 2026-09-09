@@ -248,6 +248,8 @@ class PerformanceController:
                 probing=probing,
                 benchmark_status=self._benchmark_status,
                 canvas_fps=self._canvas_fps,
+                low_resource_mode=self._current_preferences.low_resource_mode,
+                pending_low_resource_mode=self._pending_preferences.low_resource_mode,
             )
 
     def payload(self) -> dict[str, object]:
@@ -264,11 +266,17 @@ class PerformanceController:
         *,
         ocr_backend: str,
         preview_backend: str,
+        low_resource_mode: bool | None = None,
     ) -> SavedPerformanceSettings:
+        if low_resource_mode is None:
+            low_resource_mode = self._pending_preferences.low_resource_mode
+        if not isinstance(low_resource_mode, bool):
+            raise ValueError("low_resource_mode 必须是布尔值")
         validated = PerformanceConfig.model_validate(
             {
                 "ocr_backend": ocr_backend,
                 "preview_backend": preview_backend,
+                "low_resource_mode": low_resource_mode,
             }
         )
         snapshot = self.snapshot()
@@ -282,6 +290,7 @@ class PerformanceController:
             ocr_backend=validated.ocr_backend,
             preview_backend=validated.preview_backend,
             fallback_config=self._fallback_config,
+            low_resource_mode=validated.low_resource_mode,
         )
         with self._lock:
             self._pending_preferences = validated
@@ -610,6 +619,7 @@ class PerformanceController:
             self._pending_preferences = PerformanceConfig(
                 ocr_backend=saved.ocr_backend,
                 preview_backend=saved.preview_backend,
+                low_resource_mode=saved.low_resource_mode,
             )
         _LOGGER.info(
             "重复图形适配器配置已迁移：OCR %s，预览 %s",

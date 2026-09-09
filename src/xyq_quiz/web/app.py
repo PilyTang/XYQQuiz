@@ -122,6 +122,8 @@ class Services:
     # The preview is informational; OCR keeps the untouched native frame.
     # 1024 px avoids encoding and transferring pixels the UI cannot use.
     preview_width: int = 1024
+    preview_visible: bool = True
+    preview_owner_visible: bool = True
     owns_lifecycle: bool = True
     diagnostic_writer: DiagnosticWriter | None = None
     environment_diagnostic_writer: EnvironmentDiagnosticWriter | None = None
@@ -410,10 +412,16 @@ def create_app(
                 str,
             ):
                 raise ValueError("OCR 与预览后端必须是字符串")
+            mode_options = {}
+            if "low_resource_mode" in payload:
+                if not isinstance(payload["low_resource_mode"], bool):
+                    raise ValueError("low_resource_mode 必须是布尔值")
+                mode_options["low_resource_mode"] = payload["low_resource_mode"]
             saved = await asyncio.to_thread(
                 controller.save,
                 ocr_backend=ocr_backend,
                 preview_backend=preview_backend,
+                **mode_options,
             )
             if action == "apply":
                 callback = services.restart
@@ -431,6 +439,7 @@ def create_app(
                 "action": action,
                 "pending_ocr": saved.ocr_backend,
                 "pending_preview": saved.preview_backend,
+                "pending_low_resource_mode": saved.low_resource_mode,
             }
         )
 
@@ -458,8 +467,6 @@ def create_app(
     @app.post("/api/preview/layout")
     async def preview_layout(request: Request) -> JSONResponse:
         callback = getattr(services.capture, "set_preview_layout", None)
-        if not callable(callback):
-            return JSONResponse(content={"ok": True, "native": False})
         try:
             payload = await _request_object(request)
             x = int(payload.get("x", 0))
@@ -470,6 +477,9 @@ def create_app(
             visible = bool(payload.get("visible", True))
             if width < 0 or height < 0 or scale <= 0 or scale > 8:
                 raise ValueError("invalid native preview layout")
+            services.preview_visible = visible and width > 0 and height > 0
+            if not callable(callback):
+                return JSONResponse(content={"ok": True, "native": False})
             await asyncio.to_thread(
                 callback,
                 x,
@@ -1115,6 +1125,9 @@ async def _stream_i420_until_mode_change(
     while True:
         if _disconnect_finished(disconnect):
             return
+        if not services.preview_visible or not services.preview_owner_visible:
+            await asyncio.sleep(0.1)
+            continue
         if (
             services.performance is not None
             and services.video_hub is not None
@@ -1178,9 +1191,18 @@ async def _stream_hardware_until_mode_change(
     video_hub.request_key_frame()
     sequence = 0
     started = False
+    preview_was_hidden = False
     while True:
         if _disconnect_finished(disconnect):
             return
+        if not services.preview_visible or not services.preview_owner_visible:
+            preview_was_hidden = True
+            await asyncio.sleep(0.1)
+            continue
+        if preview_was_hidden:
+            preview_was_hidden = False
+            started = False
+            video_hub.request_key_frame()
         if (
             services.performance is None
             or not services.performance.snapshot().preview.effective.startswith(

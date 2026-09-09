@@ -497,6 +497,9 @@ def build_services(
     desktop_mode: bool = True,
 ) -> Services:
     """Build one fresh, single-use service graph for one Uvicorn lifespan."""
+    from xyq_quiz.performance.settings import runtime_performance_config
+    saved_config = config
+    config = runtime_performance_config(config)
     layout_profiles = validate_recognition_asset_bundle(
         config.effective_layout_paths
     )
@@ -538,7 +541,7 @@ def build_services(
     performance = PerformanceController(
         config.performance,
         config_path=config_path or paths.config_path,
-        fallback_config=config,
+        fallback_config=saved_config,
         desktop_mode=desktop_mode,
         native_preview_helper=native_preview_helper,
     )
@@ -607,6 +610,7 @@ def build_services(
         ),
         performance=performance,
         video_hub=video_hub,
+        preview_width=640 if config.performance.low_resource_mode else 1024,
     )
 
 
@@ -761,6 +765,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                         desktop_mode=desktop_controller is not None,
                     )
                     if desktop_controller is not None:
+                        desktop_controller.set_preview_visibility_callback(
+                            lambda visible: setattr(services, "preview_owner_visible", visible)
+                        )
                         preview_owner = getattr(
                             services.capture,
                             "set_preview_owner",

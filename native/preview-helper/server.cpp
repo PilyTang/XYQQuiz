@@ -1289,6 +1289,10 @@ public:
         layout_height_.store(layout.height);
         layout_scale_.store(layout.scale);
         layout_visible_.store(layout.visible);
+        {
+            std::scoped_lock lock(source_mutex_);
+            if (source_texture_) source_changed_ = true;
+        }
         render_condition_.notify_all();
         const HWND window = window_.load();
         if (window != nullptr) PostMessageW(window, kLayoutMessage, 0, 0);
@@ -1299,7 +1303,16 @@ public:
         overlay_ = overlay;
     }
 
+    bool IsPreviewVisible() const noexcept {
+        const auto layout = SnapshotLayout();
+        const HWND owner = reinterpret_cast<HWND>(
+            static_cast<std::uintptr_t>(layout.owner_hwnd));
+        return layout.visible != 0 && layout.width > 0 && layout.height > 0
+            && (owner == nullptr || (IsWindow(owner) && IsWindowVisible(owner) && !IsIconic(owner)));
+    }
+
     void Submit(ID3D11Texture2D* texture, UINT32 width, UINT32 height) noexcept {
+        if (!IsPreviewVisible()) return;
         {
             std::scoped_lock lock(source_mutex_);
             source_texture_ = texture;
@@ -1512,6 +1525,12 @@ private:
             auto next_frame = std::chrono::steady_clock::now();
             const auto interval = std::chrono::microseconds(1'000'000 / frame_rate_);
             while (!stopping_.load()) {
+                if (!IsPreviewVisible()) {
+                    std::unique_lock lock(source_mutex_);
+                    render_condition_.wait_for(lock, std::chrono::milliseconds(100));
+                    next_frame = std::chrono::steady_clock::now();
+                    continue;
+                }
                 if (!current) {
                     std::unique_lock lock(source_mutex_);
                     render_condition_.wait_for(lock, std::chrono::milliseconds(100), [this] {
@@ -2062,6 +2081,11 @@ private:
                     "capture window size changed during hardware preview");
             }
             if (trace_first) writer_.SendText(MessageType::debug, "frame_size_valid");
+            if (native_preview_ && arguments_.recognition_fps == 0
+                && !native_preview_->IsPreviewVisible()) {
+                frame.Close();
+                return;
+            }
             ComPtr<ID3D11Texture2D> texture;
             const auto access = frame.Surface().as<IDirect3DDxgiInterfaceAccess>();
             Check(access->GetInterface(IID_PPV_ARGS(&texture)), "IDirect3DDxgiInterfaceAccess");
@@ -2075,6 +2099,9 @@ private:
             const std::int64_t timestamp_100ns = FrameTimestamp100ns(
                 frame.SystemRelativeTime());
             frame.Close();
+            // Native presentation owns the texture. With recognition handled
+            // by the separate capture, there is no CPU processing to queue.
+            if (native_preview_ && arguments_.recognition_fps == 0) return;
             LARGE_INTEGER counter{};
             QueryPerformanceCounter(&counter);
             PendingCapture pending{

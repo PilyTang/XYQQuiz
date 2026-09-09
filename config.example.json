@@ -18,6 +18,7 @@
     "ocr_workers": 1
   },
   "performance": {
+    "low_resource_mode": false,
     "ocr_backend": "auto",
     "preview_backend": "auto"
   },

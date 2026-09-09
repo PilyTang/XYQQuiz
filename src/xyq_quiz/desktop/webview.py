@@ -92,6 +92,7 @@ class WebViewDesktopController:
         self._clock = clock
         self._wait = wait
         self._native_window_callback = native_window_callback
+        self._preview_visibility_callback: Callable[[bool], None] | None = None
 
         self._state_lock = threading.RLock()
         self._focus_lock = threading.Lock()
@@ -454,16 +455,19 @@ class WebViewDesktopController:
     def _on_minimized(self) -> None:
         with self._state_lock:
             self._window_minimized = True
+        self._notify_preview_visibility(False)
 
     def _on_maximized(self) -> None:
         with self._state_lock:
             self._window_minimized = False
             self._window_maximized = True
+        self._notify_preview_visibility(True)
 
     def _on_restored(self) -> None:
         with self._state_lock:
             self._window_minimized = False
             self._window_maximized = False
+        self._notify_preview_visibility(True)
 
     def _on_closed(self) -> None:
         with self._state_lock:
@@ -488,6 +492,14 @@ class WebViewDesktopController:
     ) -> None:
         with self._state_lock:
             self._native_window_callback = callback
+
+    def set_preview_visibility_callback(self, callback: Callable[[bool], None]) -> None:
+        self._preview_visibility_callback = callback
+
+    def _notify_preview_visibility(self, visible: bool) -> None:
+        callback = self._preview_visibility_callback
+        if callback is not None:
+            callback(visible)
 
     def _desktop_start_failure(self) -> DesktopUnavailable | None:
         with self._state_lock:

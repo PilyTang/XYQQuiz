@@ -39,6 +39,7 @@ let previewMode = "i420";
 let videoDecoder = null;
 const videoFrameIds = new Map();
 let confirmationResolver = null;
+let previewPaused = false;
 
 function websocketUrl(path) {
   const scheme = location.protocol === "https:" ? "wss" : "ws";
@@ -131,6 +132,10 @@ function createLatestFrameDecoder(decodeFrame, renderFrame) {
 }
 
 function renderFrame(frameId, bitmap) {
+  if (previewPaused || document.visibilityState !== "visible") {
+    bitmap.close();
+    return;
+  }
   currentFrameId = frameId;
   const bitmapWidth = bitmap.displayWidth || bitmap.width;
   const bitmapHeight = bitmap.displayHeight || bitmap.height;
@@ -288,6 +293,7 @@ async function reportNativePreviewLayout() {
     && rect.width > 0
     && rect.height > 0
     && noOpenDialog
+    && !previewPaused
   );
   try {
     await apiFetch("/api/preview/layout", {
@@ -364,12 +370,13 @@ function renderBackendStatus() {
   const fps = Number.isFinite(lastCanvasFps)
     ? lastCanvasFps
     : performanceSnapshot.canvas_fps;
-  const fpsLabel = Number.isFinite(fps) ? `${fps.toFixed(1)} FPS` : "— FPS";
+  const fpsLabel = previewPaused ? "已暂停" : Number.isFinite(fps) ? `${fps.toFixed(1)} FPS` : "— FPS";
   element.textContent = [
     shortBackendLabel(performanceSnapshot.ocr, "ocr"),
     shortBackendLabel(performanceSnapshot.preview, "preview"),
     fpsLabel,
-  ].join(" · ");
+    performanceSnapshot.low_resource_mode ? "低配模式" : "",
+  ].filter(Boolean).join(" · ");
   const reasons = [
     performanceSnapshot.ocr?.fallback_reason,
     performanceSnapshot.preview?.fallback_reason,
@@ -400,6 +407,9 @@ function renderPerformanceDialog({preserveSelection = false} = {}) {
   if (!performanceSnapshot) return;
   const ocrSelect = document.getElementById("ocrBackendSelect");
   const previewSelect = document.getElementById("previewBackendSelect");
+  if (!preserveSelection) {
+    document.getElementById("lowResourceMode").checked = Boolean(performanceSnapshot.pending_low_resource_mode);
+  }
   const selectedOcr = preserveSelection
     ? ocrSelect.value
     : performanceSnapshot.pending_ocr;
@@ -480,6 +490,7 @@ async function saveBackendSettings(action) {
         action,
         ocr_backend: document.getElementById("ocrBackendSelect").value,
         preview_backend: document.getElementById("previewBackendSelect").value,
+        low_resource_mode: document.getElementById("lowResourceMode").checked,
       },
     });
     const result = await response.json();
@@ -781,6 +792,15 @@ async function initialize() {
 new ResizeObserver(scheduleNativePreviewLayout).observe(canvasStack);
 window.addEventListener("resize", scheduleNativePreviewLayout);
 document.addEventListener("visibilitychange", scheduleNativePreviewLayout);
+document.getElementById("previewPauseButton").addEventListener("click", () => {
+  previewPaused = !previewPaused;
+  canvasStack.classList.toggle("preview-paused", previewPaused);
+  const button = document.getElementById("previewPauseButton");
+  button.textContent = previewPaused ? "恢复预览" : "暂停预览（识别继续）";
+  button.setAttribute("aria-pressed", String(previewPaused));
+  renderBackendStatus();
+  void reportNativePreviewLayout();
+});
 
 function requestConfirmation({eyebrow, title, message, acceptLabel = "确认"}) {
   if (confirmationResolver !== null) {

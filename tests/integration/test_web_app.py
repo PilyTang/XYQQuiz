@@ -169,11 +169,12 @@ class FakePerformance:
             "canvas_fps": None,
         }
 
-    def save(self, *, ocr_backend: str, preview_backend: str):
+    def save(self, *, ocr_backend: str, preview_backend: str, low_resource_mode: bool = False):
         self.saved.append((ocr_backend, preview_backend))
         return SimpleNamespace(
             ocr_backend=ocr_backend,
             preview_backend=preview_backend,
+            low_resource_mode=low_resource_mode,
         )
 
     def record_canvas_fps(self, fps: float) -> None:
@@ -935,12 +936,66 @@ def test_performance_api_reports_saves_and_records_canvas_fps(
         "action": "save",
         "pending_ocr": "directml:0",
         "pending_preview": "cpu",
+        "pending_low_resource_mode": False,
     }
     assert performance.saved == [("directml:0", "cpu")]
     assert fps.json() == {"ok": True}
     assert performance.fps == [29.8]
     assert "performance.start" in fixture.events
     assert "performance.stop" in fixture.events
+
+
+def test_low_mode_api_and_software_visibility_do_not_stop_recognition(tmp_path):
+    fixture = _services(tmp_path)
+    fixture.services.performance = FakePerformance(fixture.events)
+    with TestClient(create_app(fixture.services)) as client:
+        response = client.post('/api/performance/settings',json={
+            'ocr_backend':'auto','preview_backend':'auto','low_resource_mode':True})
+        assert response.json()['pending_low_resource_mode'] is True
+        bad = client.post('/api/performance/settings',json={
+            'ocr_backend':'auto','preview_backend':'auto','low_resource_mode':'false'})
+        assert bad.status_code == 400
+        for visible in (False,True):
+            response = client.post('/api/preview/layout',json={'width':640,'height':480,'visible':visible})
+            assert response.json() == {'ok':True,'native':False}
+            assert fixture.services.preview_visible == visible
+            assert 'coordinator.stop' not in fixture.events and 'capture.stop' not in fixture.events
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('hidden_field',['preview_visible','preview_owner_visible'])
+async def test_hidden_preview_skips_conversion_and_resumes_with_latest_frame(tmp_path,monkeypatch,hidden_field):
+    import xyq_quiz.web.app as module
+    fixture = _services(tmp_path)
+    services = fixture.services
+    setattr(services,hidden_field,False)
+    calls = []
+    def encode(frame,width):
+        calls.append((frame.frame_id,width,frame.bgr.shape))
+        return b'latest'
+    monkeypatch.setattr(module,'_encode_preview_i420',encode)
+    done = asyncio.get_running_loop().create_future()
+    sent = asyncio.Event()
+    class Socket:
+        async def send_json(self,_): pass
+        async def send_bytes(self,packet):
+            assert packet == b'latest'
+            done.set_result(None)
+            sent.set()
+    services.hub.publish(CapturedFrame.create(1,1,np.zeros((100,120,3),np.uint8)))
+    task = asyncio.create_task(module._stream_i420_until_mode_change(Socket(),services,done))
+    try:
+        await asyncio.sleep(.12)
+        assert calls == []
+        services.hub.publish(CapturedFrame.create(2,2,np.zeros((100,120,3),np.uint8)))
+        setattr(services,hidden_field,True)
+        await asyncio.wait_for(sent.wait(),1.)
+        await asyncio.wait_for(task,1.)
+        assert calls == [(2,services.preview_width,(100,120,3))]
+    finally:
+        if not task.done():
+            task.cancel()
+            await asyncio.gather(task,return_exceptions=True)
 
 
 def test_performance_apply_schedules_restart_after_response(tmp_path: Path) -> None:

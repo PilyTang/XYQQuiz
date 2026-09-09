@@ -49,3 +49,5 @@ class PerformanceSnapshot:
     probing: bool = False
     benchmark_status: str = "idle"
     canvas_fps: float | None = None
+    low_resource_mode: bool = False
+    pending_low_resource_mode: bool = False

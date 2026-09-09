@@ -27,6 +27,18 @@ class FakeEvent:
         return [handler(*args) for handler in tuple(self.handlers)]
 
 
+def test_minimize_and_restore_notify_preview_without_closing_services():
+    controller = WebViewDesktopController()
+    visible = []
+    controller.set_preview_visibility_callback(visible.append)
+    controller._on_minimized()
+    controller._on_restored()
+    controller._on_minimized()
+    controller._on_maximized()
+    assert visible == [False,True,False,True]
+    assert not controller._window_closed
+
+
 class FakeEvents:
     def __init__(self) -> None:
         self.initialized = FakeEvent()
