@@ -18,3 +18,7 @@ case reporting 50 for the closest option and 25 for the next closest option.
 Integration tests place these crops into a synthetic dialog with the existing
 layout anchors. This checks the OCR/matcher/runtime result path; it is not
 evidence that the original cropped screenshots contain a complete dialog.
+
+Case 5 adds the 2026-09-09 吃茶去了 feedback. The source website icon has
+a decorative border absent from the in-game icon. This real-image case must
+match B at HIGH confidence without relaxing any image score threshold.

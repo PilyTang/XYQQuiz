@@ -14,7 +14,7 @@ from xyq_quiz.knowledge.teacher_matcher import TeacherIconMatcher
 from xyq_quiz.recognition.activity import ActivityLayoutDetector
 from xyq_quiz.recognition.models import ActivityKind, ConfidenceLevel
 from xyq_quiz.recognition.teachers_day_layout import TeacherLayoutDetector
-from xyq_quiz.runtime.coordinator import _quiz_stability_signature, _same_question_signature, _quiz_cache_identity, _same_quiz_identity
+from xyq_quiz.runtime.coordinator import _quiz_stability_signature, _same_question_signature, _quiz_cache_identity, _same_quiz_identity, _teacher_cursor_continuity
 
 
 ROOT = Path(__file__).parents[2]
@@ -181,6 +181,73 @@ def test_missing_or_conflicting_evidence_never_forces_an_answer(matcher, kind):
     assert result.level is ConfidenceLevel.NONE and result.option_index is None
 
 
+@pytest.mark.parametrize("hidden", range(4))
+@pytest.mark.parametrize("reverse", [False, True])
+def test_partial_options_use_visible_answer_without_guessing_hidden_one(matcher, hidden, reverse):
+    options = CASES[1][1][::-1] if reverse else CASES[1][1]
+    answer = options.index("健身术")
+    visible = tuple("" if i == hidden else text for i,text in enumerate(options))
+    query = query_for(matcher,"健身术")
+    assert matcher.match(query,visible).option_index is None
+    matched = matcher.match(query,visible,allow_partial=True)
+    if hidden == answer:
+        assert matched.option_index is None
+    else:
+        assert matched.option_index == answer
+        assert matched.level is ConfidenceLevel.HIGH
+
+
+@pytest.mark.parametrize("options", [
+    ("", "", "龙腾", "飘渺式"),
+    ("", "鹰击", "鹰击", "飘渺式"),
+    ("", "鷹击", "龙腾", "飘渺式"),
+])
+def test_partial_options_reject_multiple_missing_duplicate_or_fuzzy_labels(matcher,options):
+    assert matcher.match(query_for(matcher,"鹰击"),options,allow_partial=True).option_index is None
+
+
+@pytest.mark.parametrize("kind", ["collision", "weak", "noise"])
+def test_partial_options_require_strong_separated_image_evidence(matcher,kind):
+    from types import MappingProxyType
+    source = matcher.bank.by_name["鹰击"][0]
+    record = matcher.bank.records[source]
+    bank = replace(matcher.bank,records=(record,replace(record,source_id="collision",name="相似技能")),
+                   images=(matcher.bank.images[source],matcher.bank.images[source]),
+                   by_name=MappingProxyType({"鹰击":(0,),"相似技能":(1,)}))
+    local = TeacherIconMatcher(bank)
+    query = query_for(matcher,"鹰击")
+    if kind == "weak":
+        local._score = lambda *_: .71
+    elif kind == "noise":
+        query = np.random.default_rng(5).integers(0,256,query.shape,dtype=np.uint8)
+    assert local.match(query,("", "鹰击", "龙腾", "飘渺式"),allow_partial=True).option_index is None
+
+
+@pytest.mark.parametrize("hidden,confidence", [(0,0.),(0,.5),(1,.5)])
+def test_teacher_pipeline_partial_ocr_uses_only_current_readable_options(matcher,hidden,confidence):
+    from xyq_quiz.capture.models import CapturedFrame, Rect
+    from xyq_quiz.recognition.models import DetectedLayout, OCRText
+    from xyq_quiz.recognition.teachers_day import recognize_teacher
+    query = query_for(matcher,"健身术")
+    image = np.full((200,500,3),170,np.uint8)
+    h,w = query.shape[:2]
+    image[:h,:w] = query
+    layout = DetectedLayout(question_rect=Rect(0,0,w,h),icon_rect=Rect(0,0,w,h),
+                            option_rects=tuple(Rect(i*100,100,90,50) for i in range(4)),
+                            anchor_scores=(1.,),activity_kind=ActivityKind.TEACHERS_DAY)
+    ocrs = tuple(OCRText(text=("" if confidence == 0 else "健身术") if i==hidden else text,
+                        confidence=confidence if i==hidden else .97,elapsed_ms=0.) for i,text in enumerate(CASES[1][1]))
+    recognized = recognize_teacher(CapturedFrame.create(8,0,image),3,layout,matcher,
+                                   lambda *_: ocrs,lambda *_: None,0.)
+    assert recognized.frame_id == 8 and recognized.generation_id == 3
+    if hidden == 1:
+        assert recognized.option_index is None and recognized.overlay_rect is None
+    else:
+        assert recognized.option_index == 1 and recognized.high_confidence
+        assert recognized.confidence_score > 70
+        assert recognized.overlay_rect == layout.option_rects[1]
+
+
 def dialog_canvas(size=(1024,768), scale=1., origin=None):
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
     panel = np.full((375,629,3),170,np.uint8)
@@ -303,3 +370,38 @@ def test_teacher_identity_tracks_icon_and_option_order_ignoring_counter_and_back
     changed = frame.copy()
     changed[icon.y:icon.y+icon.height,icon.x:icon.x+icon.width] = 160
     assert not _same_question_signature(signature,_quiz_stability_signature(changed,layout))
+
+
+@pytest.mark.parametrize("option", range(4))
+@pytest.mark.parametrize("scale", [.8, 1., 1.5])
+def test_teacher_cursor_occlusion_preserves_continuity_but_not_cache(option, scale):
+    frame = dialog_canvas((1920,1080), scale)
+    layout = TeacherLayoutDetector(PROFILE).detect(frame)
+    baseline = _quiz_stability_signature(frame, layout)
+    rect = layout.option_rects[option]
+    changed = frame.copy()
+    x, y = rect.x+round(rect.width*.30), rect.y+round(rect.height*.40)
+    cv2.rectangle(changed, (x,y), (x+round(18*scale),y+round(15*scale)), (255,220,20), -1)
+    signature = _quiz_stability_signature(changed, layout)
+    assert _teacher_cursor_continuity(signature, baseline)
+    assert not _same_question_signature(signature, baseline)
+    assert not _same_quiz_identity(_quiz_cache_identity(changed,layout), _quiz_cache_identity(frame,layout))
+    # No unoccluded baseline means no permission to reuse a hidden answer.
+    assert not _teacher_cursor_continuity(baseline, signature)
+    icon = layout.icon_rect
+    changed[icon.y:icon.y+icon.height,icon.x:icon.x+icon.width] = 160
+    assert not _teacher_cursor_continuity(_quiz_stability_signature(changed,layout), baseline)
+
+
+def test_teacher_occlusion_does_not_hide_reordered_options_or_large_cover():
+    frame = dialog_canvas()
+    layout = TeacherLayoutDetector(PROFILE).detect(frame)
+    baseline = _quiz_stability_signature(frame, layout)
+    a, b = layout.option_rects[:2]
+    changed = frame.copy()
+    cv2.rectangle(changed, (a.x+50,a.y+20), (a.x+68,a.y+35), (255,220,20), -1)
+    changed[b.y:b.y+b.height,b.x:b.x+b.width] = cv2.resize(frame[a.y:a.y+a.height,a.x:a.x+a.width],(b.width,b.height))
+    assert not _teacher_cursor_continuity(_quiz_stability_signature(changed,layout),baseline)
+    changed = frame.copy()
+    changed[a.y:a.y+a.height,a.x:a.x+a.width] = (255,220,20)
+    assert not _teacher_cursor_continuity(_quiz_stability_signature(changed,layout),baseline)

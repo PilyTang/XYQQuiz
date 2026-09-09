@@ -38,10 +38,18 @@ def recognize_teacher(frame, generation_id, layout, matcher, read_options, store
     ocrs=read_options(raw,fallback)
     ocr_ms=(time.perf_counter()-ocr_started)*1000
     texts=tuple(item.text for item in ocrs)
-    if any(not item.text.strip() or item.confidence < .8 for item in ocrs):
+    readable=tuple(bool(item.text.strip()) and item.confidence >= .8 for item in ocrs)
+    if len(ocrs) != 4 or sum(readable) < 3:
         return result(option_texts=texts,confidence_reason="选项文字尚未读清，正在重试")
     match_started=time.perf_counter()
-    matched=matcher.match(icon,texts)
+    if all(readable):
+        matched=matcher.match(icon,texts)
+    else:
+        # Discard unreliable OCR rather than pretending the covered text was
+        # read. Partial matching can only select an exact, readable option
+        # supported by strong image evidence against other bank candidates.
+        visible=tuple(text if clear else "" for text,clear in zip(texts,readable,strict=True))
+        matched=matcher.match(icon,visible,allow_partial=True)
     match_ms=(time.perf_counter()-match_started)*1000
     record=matched.record
     return result(
@@ -52,7 +60,7 @@ def recognize_teacher(frame, generation_id, layout, matcher, read_options, store
         high_confidence=matched.level is ConfidenceLevel.HIGH,
         confidence_level=matched.level,
         confidence_score=(
-            matched.score * matched.option_score / 100 * min(item.confidence for item in ocrs)
+            matched.score * matched.option_score / 100 * min(item.confidence for item,clear in zip(ocrs,readable,strict=True) if clear)
             if record else 0.
         ),
         confidence_reason=matched.reason,

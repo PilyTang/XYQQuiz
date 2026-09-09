@@ -164,7 +164,9 @@ def test_official_duplicate_of_supplement_is_merged_once(tmp_path):
     assert len(bank.by_name[record.name]) == 1
 
 
-def test_all_supplement_icons_match_after_game_size_rescale():
+@pytest.mark.parametrize("side", [32,40,56])
+@pytest.mark.parametrize("border", [0,3,5])
+def test_all_supplement_icons_match_after_game_size_rescale(side,border):
     from xyq_quiz.knowledge.teacher_matcher import TeacherIconMatcher
     bank = load_teacher_bank(ROOT / "data/teachers_day")
     matcher = TeacherIconMatcher(bank)
@@ -173,8 +175,10 @@ def test_all_supplement_icons_match_after_game_size_rescale():
         if not record.source_id.startswith("teachers_day:yzz:"):
             continue
         count += 1
-        query = cv2.copyMakeBorder(cv2.resize(image, (40, 40)), 3, 3, 3, 3, cv2.BORDER_CONSTANT, value=(160,160,180))
+        body = image[border:-border,border:-border] if border else image
+        padding = max(2,round(side*.075))
+        query = cv2.copyMakeBorder(cv2.resize(body, (side, side)), padding, padding, padding, padding, cv2.BORDER_CONSTANT, value=(160,160,180))
         result = matcher.match(query, ("牛刀小试", record.name, "变化咒", "龙腾"))
-        assert result.option_index == 1, record.name
+        assert result.option_index == 1, (record.name,side,border,result.reason)
         assert result.record.name == record.name
     assert count == 18

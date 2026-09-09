@@ -383,6 +383,44 @@ def test_coordinator_passes_measured_layout_to_capable_pipeline() -> None:
         coordinator.stop()
 
 
+def test_teacher_answer_survives_cursor_motion_and_clears_on_new_icon():
+    _capture, hub, detector, pipeline, store, coordinator = make_coordinator(ImmediatePipeline())
+    options = tuple(Rect(30+i%2*280, 90+i//2*80, 240, 60) for i in range(4))
+    icon = Rect(10,10,40,40)
+    detector.layout = replace(LAYOUT, activity_kind=ActivityKind.TEACHERS_DAY,
+                              profile_name="teachers-day", icon_rect=icon,
+                              option_rects=options, option_text_rects=options)
+    base = np.full((260,600,3),170,np.uint8)
+    base[10:50,10:50] = np.random.default_rng(7).integers(0,256,(40,40,3),dtype=np.uint8)
+    for i, rect in enumerate(options):
+        cv2.putText(base, f"Skill {i}", (rect.x+45,rect.y+35), cv2.FONT_HERSHEY_SIMPLEX,.6,(15,15,15),1)
+    def publish(number, image):
+        publish_detected(hub, detector, CapturedFrame.create(number,time.monotonic_ns(),image.copy()))
+    coordinator.start()
+    try:
+        publish(1,base)
+        publish(2,base)
+        wait_until(lambda: store.snapshot().phase is RuntimePhase.ANSWERED)
+        original = store.snapshot()
+        # Move the software cursor over every option, remaining there across
+        # multiple scans. Neither generation nor OCR attempts should change.
+        for i in range(12):
+            rect = options[i%4]
+            image = base.copy()
+            cv2.rectangle(image,(rect.x+60,rect.y+22),(rect.x+78,rect.y+37),(255,220,20),-1)
+            publish(i+3,image)
+            time.sleep(.02)
+            assert store.snapshot().generation_id == original.generation_id
+            assert store.snapshot().overlay == original.overlay
+        assert len(pipeline.calls) == 1
+        image[10:50,10:50] = 160
+        publish(15,image)
+        wait_until(lambda: store.snapshot().generation_id > original.generation_id)
+        assert store.snapshot().overlay is None
+    finally:
+        coordinator.stop()
+
+
 def publish_detected(
     hub: LatestFrameHub,
     detector: FakeLayoutDetector,

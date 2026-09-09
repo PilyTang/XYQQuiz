@@ -43,7 +43,7 @@ def feedback_frame(case, reverse=False, missing=False):
         put(anchor["rect"], read_image(PROFILE.parent / anchor["template_path"]))
     put(profile["icon_rect"], read_image(FIXTURES / case["files"]["icon"]), padding=3)
     for rect, letter in zip(profile["option_rects"], "dcba" if reverse else "abcd"):
-        if not (missing and letter == "a"):
+        if not (missing and letter == ("a" if missing is True else missing)):
             put(rect, read_image(FIXTURES / case["files"][f"option-{letter}"]))
     return CapturedFrame.create(1, time.monotonic_ns(), frame)
 
@@ -89,7 +89,18 @@ def test_real_feedback_ocr_and_answer_mapping(pipeline, case, reverse):
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda case: f"feedback-{case['sample']}")
-def test_unreadable_distractor_still_blocks_answer(pipeline, case):
+def test_unreadable_distractor_allows_only_exact_high_confidence_answer(pipeline, case):
     result = pipeline.recognize(feedback_frame(case, missing=True), 1)
-    assert result.option_index is None
-    assert result.confidence_level is ConfidenceLevel.NONE
+    if case.get("confidence_level", "HIGH") == "HIGH":
+        assert result.option_index == case["option_index"]
+        assert result.confidence_level is ConfidenceLevel.HIGH
+        assert result.option_texts[0] == ""
+    else:
+        assert result.option_index is None
+        assert result.confidence_level is ConfidenceLevel.NONE
+
+
+@pytest.mark.parametrize("case", CASES, ids=lambda case: f"feedback-{case['sample']}")
+def test_unreadable_answer_is_not_selected_by_elimination(pipeline, case):
+    result = pipeline.recognize(feedback_frame(case, missing="abcd"[case["option_index"]]), 1)
+    assert result.option_index is None and result.overlay_rect is None

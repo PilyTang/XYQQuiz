@@ -12,7 +12,7 @@ from xyq_quiz.knowledge.teacher_bank import TeacherBankSnapshot, TeacherSkillRec
 from xyq_quiz.recognition.models import ConfidenceLevel
 
 
-MATCHER_VERSION = "teachers-day-0.4.1-2"
+MATCHER_VERSION = "teachers-day-partial-options-border-1"
 
 
 def _near_name(left: str, right: str) -> bool:
@@ -57,17 +57,34 @@ class TeacherIconMatcher:
     def __init__(self, bank: TeacherBankSnapshot) -> None:
         self.bank = bank
         self._features = np.stack([_feature(image) for image in bank.images])
+        self._image_variants = []
+        self._body_indexes = []
+        body_features = []
+        for index, (record, image) in enumerate(zip(bank.records, bank.images, strict=True)):
+            variants = [image]
+            if record.source_id.startswith("teachers_day:yzz:"):
+                # Supplemental website icons include a decorative outer frame
+                # absent from the game. Retain both renditions; never rewrite
+                # the verified source assets or lower the acceptance gates.
+                inset = max(1, round(min(image.shape[:2]) * .08))
+                body = image[inset:-inset, inset:-inset]
+                variants.append(body)
+                self._body_indexes.append(index)
+                body_features.append(_feature(body))
+            self._image_variants.append(tuple(variants))
+        self._body_features = np.stack(body_features) if body_features else None
 
     @lru_cache(maxsize=4)
     def _templates(self, nominal: int):
         prepared = []
-        for image in self.bank.images:
+        for images in self._image_variants:
             variants = []
-            for side in range(max(8, nominal - 3), nominal + 4):
-                scale = side / max(image.shape[:2])
-                size = (max(8, round(image.shape[1] * scale)), max(8, round(image.shape[0] * scale)))
-                template = cv2.resize(image, size, interpolation=cv2.INTER_AREA if scale < 1 else cv2.INTER_CUBIC)
-                variants.append(template)
+            for image in images:
+                for side in range(max(8, nominal - 3), nominal + 4):
+                    scale = side / max(image.shape[:2])
+                    size = (max(8, round(image.shape[1] * scale)), max(8, round(image.shape[0] * scale)))
+                    template = cv2.resize(image, size, interpolation=cv2.INTER_AREA if scale < 1 else cv2.INTER_CUBIC)
+                    variants.append(template)
             prepared.append(tuple(variants))
         return tuple(prepared)
 
@@ -127,11 +144,12 @@ class TeacherIconMatcher:
             candidates, round(text_score * 100, 2), round(text_runner * 100, 2),
         )
 
-    def match(self, icon: np.ndarray, options: tuple[str, ...]) -> TeacherMatch:
+    def match(self, icon: np.ndarray, options: tuple[str, ...], *, allow_partial: bool = False) -> TeacherMatch:
         def reject(reason, score=0., runner=0., candidates=()):
             return TeacherMatch(None, None, round(score * 100, 2), round(runner * 100, 2), ConfidenceLevel.NONE, reason, candidates)
         names = tuple(normalize_text(text) for text in options)
-        if len(names) != 4 or len(set(names)) != 4 or not all(names):
+        partial = allow_partial and len(names) == 4 and names.count("") == 1
+        if len(names) != 4 or len(set(names)) != 4 or (not all(names) and not partial):
             return reject("四个选项尚未完整识别，正在重试")
         option_records = tuple(self.bank.by_name.get(name, ()) for name in names)
         mapped_options = [i for i, indexes in enumerate(option_records) if indexes]
@@ -144,6 +162,10 @@ class TeacherIconMatcher:
         inner = max(1, round(nominal * .075))
         query_feature = _feature(icon[inner:-inner, inner:-inner])
         coarse = self._features @ query_feature
+        if self._body_features is not None:
+            coarse[self._body_indexes] = np.maximum(
+                coarse[self._body_indexes], self._body_features @ query_feature,
+            )
         selected = set(np.argsort(coarse)[-min(12, len(coarse)):].tolist())
         for indexes in option_records:
             selected.update(indexes)
@@ -156,7 +178,9 @@ class TeacherIconMatcher:
         scores = {index: self._score(icon, templates[index]) for index in selected}
         ranked = sorted(scores, key=scores.get, reverse=True)
         candidates = tuple((self.bank.records[index].name, round(scores[index] * 100, 2)) for index in ranked[:5])
-        fuzzy = self._fuzzy_option(scores, ranked, names, options, candidates)
+        # With a hidden option, require an exact visible label. Approximate
+        # text could otherwise point to a distractor while the answer is hidden.
+        fuzzy = None if partial else self._fuzzy_option(scores, ranked, names, options, candidates)
         if fuzzy is not None:
             return fuzzy
         if not mapped_options:
@@ -192,7 +216,11 @@ class TeacherIconMatcher:
         if score < .58 or score - runner < .075:
             return reject("图标证据不足或选项之间仍有歧义", score, runner, candidates)
         level = ConfidenceLevel.HIGH if score >= .72 and score - runner >= .10 else ConfidenceLevel.CANDIDATE
-        reason = "图标与选项唯一对应" if level is ConfidenceLevel.HIGH else "候选唯一，图像清晰度不足以达到高可信"
+        reason = (
+            "一个选项未读清，当前图标与可读选项唯一对应"
+            if partial else
+            "图标与选项唯一对应" if level is ConfidenceLevel.HIGH else "候选唯一，图像清晰度不足以达到高可信"
+        )
         return TeacherMatch(
             self.bank.records[index], option, round(score * 100, 2), round(runner * 100, 2), level,
             reason,

@@ -61,14 +61,42 @@
     "confidence_level": "CANDIDATE",
     "option_score": 50.0,
     "option_runner_up_score": 25.0,
-    "options": ["鹰击", "龙卷雨击", "龙腾", "飘渺式"],
-    "ocr_options": ["鷹击", "龙卷雨击", "龙腾", "飘渺式"],
+    "options": [
+      "鹰击",
+      "龙卷雨击",
+      "龙腾",
+      "飘渺式"
+    ],
+    "ocr_options": [
+      "鷹击",
+      "龙卷雨击",
+      "龙腾",
+      "飘渺式"
+    ],
     "files": {
       "icon": "feedback-4-icon.png",
       "option-a": "feedback-4-option-a.png",
       "option-b": "feedback-4-option-b.png",
       "option-c": "feedback-4-option-c.png",
       "option-d": "feedback-4-option-d.png"
+    }
+  },
+  {
+    "sample": 5,
+    "answer": "吃茶去了",
+    "option_index": 1,
+    "options": [
+      "错乱",
+      "吃茶去了",
+      "乘风破浪",
+      "日月乾坤"
+    ],
+    "files": {
+      "icon": "feedback-5-icon.png",
+      "option-a": "feedback-5-option-a.png",
+      "option-b": "feedback-5-option-b.png",
+      "option-c": "feedback-5-option-c.png",
+      "option-d": "feedback-5-option-d.png"
     }
   }
 ]

@@ -394,6 +394,17 @@ class RecognitionCoordinator:
                         observed_layout = layout_signature
                         question_hash = _quiz_stability_signature(frame.bgr, layout)
                         identity = _quiz_cache_identity(frame.bgr, layout)
+                        if (
+                            active_identity is not None
+                            and observed_hash is not None
+                            and active_result_level in {ConfidenceLevel.HIGH, ConfidenceLevel.CANDIDATE}
+                            and _teacher_cursor_continuity(question_hash, observed_hash)
+                        ):
+                            # Preserve only an already resolved, continuously visible
+                            # question. Never authorize a cache hit or initial answer
+                            # from pixels hidden by the game's software cursor.
+                            question_hash = observed_hash
+                            identity = active_identity
                         question_changed = (
                             observed_hash is not None
                             and not _same_question_signature(
@@ -705,7 +716,7 @@ def _same_question_signature(left: str, right: str) -> bool:
             if len(a_parts) != 5 or len(b_parts) != 5:
                 return False
             for index, (a, b) in enumerate(zip(a_parts, b_parts, strict=True)):
-                a, b = bytes.fromhex(a), bytes.fromhex(b)
+                a, b = bytes.fromhex(a.split("~")[0]), bytes.fromhex(b.split("~")[0])
                 if len(a) != len(b):
                     return False
                 changed = sum((x ^ y).bit_count() for x, y in zip(a, b, strict=True))
@@ -833,8 +844,58 @@ def _teacher_signature(frame, layout) -> str:
             text = gray[round(h*.22):round(h*.88), round(w*.14):round(w*.97)]
             # Central dark glyphs survive hover fills; borders and option badges are excluded.
             bits = cv2.resize(text, (128, 32), interpolation=cv2.INTER_AREA) < 110
-        parts.append(np.packbits(bits).tobytes().hex())
+        part = np.packbits(bits).tobytes().hex()
+        if index != 0:
+            # Normal option glyphs and lavender fills have low chroma. The
+            # game's blue/yellow software cursor remains in WGC even with OS
+            # cursor capture disabled. Bound its colored pixels plus outline;
+            # a broad colored cover must never count as a small cursor.
+            color = crop[round(h*.22):round(h*.88), round(w*.14):round(w*.97)]
+            color = cv2.resize(color, (128, 32), interpolation=cv2.INTER_AREA)
+            colorful = color.max(axis=2).astype(np.int16) - color.min(axis=2) > 90
+            ys, xs = np.nonzero(colorful)
+            mask = np.zeros((32, 128), dtype=np.uint8)
+            if len(xs) >= 6 and xs.max()-xs.min() < 32 and ys.max()-ys.min() < 30:
+                mask[max(0,ys.min()-3):min(32,ys.max()+4), max(0,xs.min()-3):min(128,xs.max()+4)] = 1
+            part += "~" + np.packbits(mask).tobytes().hex()
+        parts.append(part)
     return "td:" + metadata + ":" + "|".join(parts)
+
+
+def _teacher_cursor_continuity(current: str, reference: str) -> bool:
+    """Allow one small colored occluder against an unoccluded resolved baseline.
+
+    This is deliberately separate from cache identity and strict question
+    comparison. Icon changes, other option changes and dialog geometry still
+    invalidate the answer immediately.
+    """
+    if not current.startswith("td:") or not reference.startswith("td:"):
+        return False
+    try:
+        _, meta, payload = current.split(":", 2)
+        _, old_meta, old_payload = reference.split(":", 2)
+        parts, old_parts = payload.split("|"), old_payload.split("|")
+        if meta != old_meta or len(parts) != 5 or len(old_parts) != 5:
+            return False
+        # Use the existing strict icon threshold.
+        if not _same_question_signature(
+            "td:"+meta+":"+"|".join([parts[0], *old_parts[1:]]), reference
+        ):
+            return False
+        occluded = 0
+        for part, old_part in zip(parts[1:], old_parts[1:], strict=True):
+            pixels, mask = (bytes.fromhex(value) for value in part.split("~"))
+            old_pixels, old_mask = (bytes.fromhex(value) for value in old_part.split("~"))
+            if len(pixels) != 512 or len(mask) != 512 or len(old_pixels) != 512 or any(old_mask):
+                return False
+            if any(mask):
+                occluded += 1
+            changed = sum(((a ^ b) & ~m).bit_count() for a, b, m in zip(pixels, old_pixels, mask, strict=True))
+            if changed > 8:
+                return False
+        return occluded == 1
+    except (ValueError, TypeError):
+        return False
 
 
 __all__ = ["RecognitionCoordinator"]
