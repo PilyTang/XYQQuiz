@@ -1,5 +1,7 @@
 # XYQQuiz 后续性能与识别速度优化 Checklist
 
+> 本文是 2026-07-26 的历史规划和单机采样，以下“当前”、待办及预计收益不是 0.5.0 的现状。已实现的教师节搜索/模板优化见 [搜索优化记录](2026-09-09-teacher-search-cpu.md)，当前分档、限频和隐藏预览行为见 [低配模式](low-resource-mode.md)。旧单布局 CPU 数字不能代表现在的默认配置；GPU ROI 和模板匹配等未验证计划仍不作为已交付能力。
+
 更新时间：2026-07-26
 
 基线提交：`2a70b31 perf: throttle OCR capture callbacks`
