@@ -44,6 +44,17 @@ def query_for(matcher, name, size=40, record_index=0):
     return query
 
 
+def test_official_icon_rim_matches_native_diagnostic_crop(matcher):
+    path = ROOT / "tests/fixtures/teachers_day/feedback-6-icon.png"
+    query = cv2.imdecode(np.frombuffer(path.read_bytes(),np.uint8),cv2.IMREAD_COLOR)
+    options = ("牛刀小试","乙木仙遁","兵解符","吃茶去了")
+    match = matcher.match(query,options)
+    assert match.option_index == 0 and match.level is ConfidenceLevel.HIGH
+    assert match.score > 90
+    assert match.score-match.runner_up_score >= 10
+    assert matcher.match(query,options[::-1]).option_index == 3
+
+
 @pytest.mark.parametrize("name,options,index", CASES)
 @pytest.mark.parametrize("size", [32, 40, 50])
 def test_official_icons_map_to_current_option_order(matcher, name, options, index, size):

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import shutil
+from dataclasses import replace
 from pathlib import Path
 
 import cv2
@@ -170,9 +171,11 @@ def test_all_supplement_icons_match_after_game_size_rescale(side,border):
     from xyq_quiz.knowledge.teacher_matcher import TeacherIconMatcher
     bank = load_teacher_bank(ROOT / "data/teachers_day")
     matcher = TeacherIconMatcher(bank)
+    extra = load_teacher_bank(ROOT / "data/teachers_day/supplements")
+    supplement_ids = {record.source_id for record in extra.records}
     count = 0
     for record, image in zip(bank.records, bank.images, strict=True):
-        if not record.source_id.startswith("teachers_day:yzz:"):
+        if record.source_id not in supplement_ids:
             continue
         count += 1
         body = image[border:-border,border:-border] if border else image
@@ -182,3 +185,18 @@ def test_all_supplement_icons_match_after_game_size_rescale(side,border):
         assert result.option_index == 1, (record.name,side,border,result.reason)
         assert result.record.name == record.name
     assert count == 18
+
+
+def test_future_supplement_source_uses_same_image_normalization():
+    from xyq_quiz.knowledge.teacher_matcher import TeacherIconMatcher
+    bank = load_teacher_bank(ROOT / "data/teachers_day/supplements")
+    renamed = replace(bank, records=tuple(replace(record,
+        source_id=f"teachers_day:future:{index}", source_url="https://example.test/icon.png")
+        for index,record in enumerate(bank.records)))
+    original = TeacherIconMatcher(bank)
+    future = TeacherIconMatcher(renamed)
+    for index in range(bank.count):
+        old, new = original._image_variants[index], future._image_variants[index]
+        assert len(old) == len(new) >= 2
+        assert all(np.array_equal(a,b) for a,b in zip(old,new,strict=True))
+    assert np.array_equal(original._body_features,future._body_features)

@@ -12,7 +12,7 @@ from xyq_quiz.knowledge.teacher_bank import TeacherBankSnapshot, TeacherSkillRec
 from xyq_quiz.recognition.models import ConfidenceLevel
 
 
-MATCHER_VERSION = "teachers-day-partial-options-border-1"
+MATCHER_VERSION = "teachers-day-partial-options-border-2"
 
 
 def _near_name(left: str, right: str) -> bool:
@@ -60,17 +60,19 @@ class TeacherIconMatcher:
         self._image_variants = []
         self._body_indexes = []
         body_features = []
-        for index, (record, image) in enumerate(zip(bank.records, bank.images, strict=True)):
+        for index, image in enumerate(bank.images):
             variants = [image]
-            if record.source_id.startswith("teachers_day:yzz:"):
-                # Supplemental website icons include a decorative outer frame
-                # absent from the game. Retain both renditions; never rewrite
-                # the verified source assets or lower the acceptance gates.
-                inset = max(1, round(min(image.shape[:2]) * .08))
-                body = image[inset:-inset, inset:-inset]
-                variants.append(body)
-                self._body_indexes.append(index)
-                body_features.append(_feature(body))
+            if min(image.shape[:2]) > 12:
+                # Apply the same thin/decorative-rim variants to every source,
+                # including future supplements. No skill-name or website
+                # allowlist; retain originals for already aligned assets.
+                insets = sorted({max(1, round(min(image.shape[:2]) * fraction))
+                                 for fraction in (.05, .08)})
+                for inset in insets:
+                    body = image[inset:-inset, inset:-inset]
+                    variants.append(body)
+                    self._body_indexes.append(index)
+                    body_features.append(_feature(body))
             self._image_variants.append(tuple(variants))
         self._body_features = np.stack(body_features) if body_features else None
 
@@ -163,9 +165,9 @@ class TeacherIconMatcher:
         query_feature = _feature(icon[inner:-inner, inner:-inner])
         coarse = self._features @ query_feature
         if self._body_features is not None:
-            coarse[self._body_indexes] = np.maximum(
-                coarse[self._body_indexes], self._body_features @ query_feature,
-            )
+            # Several renditions can share one record. Scatter-max retains
+            # the best score instead of overwriting a previous rendition.
+            np.maximum.at(coarse, self._body_indexes, self._body_features @ query_feature)
         selected = set(np.argsort(coarse)[-min(12, len(coarse)):].tolist())
         for indexes in option_records:
             selected.update(indexes)

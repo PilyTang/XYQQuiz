@@ -98,5 +98,23 @@
       "option-c": "feedback-5-option-c.png",
       "option-d": "feedback-5-option-d.png"
     }
+  },
+  {
+    "sample": 6,
+    "answer": "牛刀小试",
+    "option_index": 0,
+    "options": [
+      "牛刀小试",
+      "乙木仙遁",
+      "兵解符",
+      "吃茶去了"
+    ],
+    "files": {
+      "icon": "feedback-6-icon.png",
+      "option-a": "feedback-6-option-a.png",
+      "option-b": "feedback-6-option-b.png",
+      "option-c": "feedback-6-option-c.png",
+      "option-d": "feedback-6-option-d.png"
+    }
   }
 ]

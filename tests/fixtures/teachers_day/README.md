@@ -22,3 +22,8 @@ evidence that the original cropped screenshots contain a complete dialog.
 Case 5 adds the 2026-09-09 吃茶去了 feedback. The source website icon has
 a decorative border absent from the in-game icon. This real-image case must
 match B at HIGH confidence without relaxing any image score threshold.
+
+Case 6 is the 2026-09-09 11:03 UTC diagnostic crop for 牛刀小试. The official
+45px asset includes a thin rim that shifts its required rendered scale beyond
+the nominal template range. Test the original 69px lossless diagnostic crop
+as well as the reconstructed dialog; it must beat the 吃茶去了 distractor.

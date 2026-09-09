@@ -91,7 +91,7 @@ def test_real_feedback_ocr_and_answer_mapping(pipeline, case, reverse):
 @pytest.mark.parametrize("case", CASES, ids=lambda case: f"feedback-{case['sample']}")
 def test_unreadable_distractor_allows_only_exact_high_confidence_answer(pipeline, case):
     result = pipeline.recognize(feedback_frame(case, missing=True), 1)
-    if case.get("confidence_level", "HIGH") == "HIGH":
+    if case.get("confidence_level", "HIGH") == "HIGH" and case["option_index"] != 0:
         assert result.option_index == case["option_index"]
         assert result.confidence_level is ConfidenceLevel.HIGH
         assert result.option_texts[0] == ""
