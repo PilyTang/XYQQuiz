@@ -104,6 +104,13 @@ class CaptureService:
         )
         self._wgc_needs_close = True
 
+    def set_capture_fps(self, fps: int) -> None:
+        """Adjust OCR-only capture cadence without restarting its WGC session."""
+        if fps == self._capture_fps:
+            return
+        self._wgc.set_recognition_fps(fps)
+        self._capture_fps = fps
+
     def start(self) -> None:
         with self._lifecycle_lock:
             with self._lock:
@@ -189,7 +196,6 @@ class CaptureService:
         # skip otherwise valid frames, turning a 30 FPS capture into ~27 FPS at
         # the preview hub.  This does not copy extra frames: frame_id still
         # guards publication, while WGC itself remains capped at preview_fps.
-        frame_poll_interval = 0.5 / self._capture_fps
 
         try:
             while self._generation_is_active(generation):
@@ -251,7 +257,7 @@ class CaptureService:
                             return
                         self._set_status(phase, target)
 
-                self._stop_event.wait(timeout=frame_poll_interval)
+                self._stop_event.wait(timeout=0.5 / self._capture_fps)
         except Exception as exc:
             with self._lifecycle_lock:
                 if self._generation_is_active_locked(generation):

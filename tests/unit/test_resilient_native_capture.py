@@ -29,6 +29,9 @@ class _FakeCaptureService:
         self.stopped = 0
         self.instances.append(self)
 
+    def set_capture_fps(self, fps: int) -> None:
+        self.capture_fps = fps
+
     def start(self) -> None:
         self.started += 1
 
@@ -51,6 +54,20 @@ class _FailingNativeSession:
 
     def stop(self) -> None:
         self.stopped += 1
+
+
+@pytest.mark.parametrize('low,scan,active', [(False,15,15),(True,15,5),(False,3,3)])
+def test_quiz_cadence_returns_to_idle_without_changing_preview(monkeypatch,tmp_path,low,scan,active):
+    monkeypatch.setattr(native_module, 'CaptureService', _FakeCaptureService)
+    config = AppConfig.model_validate({'performance': {'low_resource_mode': low}, 'recognition': {'scan_fps': scan}})
+    service = ResilientNativeCaptureService(config,LatestFrameHub(),LatestVideoHub(),
+        adapter_id=0,helper_path=tmp_path/'helper.exe')
+    assert service._ocr_capture.capture_fps == min(5,scan)
+    service.set_quiz_active(True)
+    assert service._ocr_capture.capture_fps == active
+    service.set_quiz_active(False)
+    assert service._ocr_capture.capture_fps == min(5,scan)
+    assert config.capture.preview_fps == 30
 
 
 @pytest.mark.parametrize('mode',['hidden_then_visible','visible_timeout','stop_hidden'])

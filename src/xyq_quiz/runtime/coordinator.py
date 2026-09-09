@@ -257,6 +257,12 @@ class RecognitionCoordinator:
                 pending = None
                 layout_missing_cleared = True
 
+            set_quiz_active = getattr(self._capture_service, "set_quiz_active", None)
+            if callable(set_quiz_active):
+                set_quiz_active(
+                    observed_layout is not None
+                    or (layout_missing_since is not None and not layout_missing_cleared)
+                )
             capture_status = self._capture_service.status()
             if capture_status.phase is not CapturePhase.CAPTURING:
                 self._publish_capture_phase(capture_status)

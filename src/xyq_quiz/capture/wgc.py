@@ -96,6 +96,12 @@ class WGCCapture:
         self._last_preview_ns = 0
         self._last_recognition_ns = 0
 
+    def set_recognition_fps(self, fps: int) -> None:
+        if not isinstance(fps, int) or isinstance(fps, bool) or fps <= 0:
+            raise ValueError("recognition_fps must be a positive integer")
+        with self._lock:
+            self._recognition_interval_ns = 1_000_000_000 // fps
+
     def start(
         self,
         hwnd: int,

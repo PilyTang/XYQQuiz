@@ -231,6 +231,26 @@ def test_wgc_software_throttle_skips_full_frame_bgr_conversion(
     assert bgr_conversion_count == 2
 
 
+def test_wgc_changes_recognition_cadence_without_restart(fake_factory, monkeypatch):
+    timestamps = iter((1_000_000_000,1_070_000_000,1_140_000_000,1_210_000_000,1_350_000_000))
+    monkeypatch.setattr(wgc_module.time, 'perf_counter_ns', lambda: next(timestamps))
+    capture = WGCCapture(factory=fake_factory, recognition_fps=5)
+    capture.start(123)
+    frame = np.zeros((4,8,4),dtype=np.uint8)
+    fake_factory.session.emit(frame)
+    fake_factory.session.emit(frame)
+    assert capture.latest().frame_id == 1
+    capture.set_recognition_fps(15)
+    fake_factory.session.emit(frame)
+    assert capture.latest().frame_id == 3
+    capture.set_recognition_fps(5)
+    fake_factory.session.emit(frame)
+    assert capture.latest().frame_id == 3
+    fake_factory.session.emit(frame)
+    assert capture.latest().frame_id == 5
+    capture.close()
+
+
 def test_wgc_caps_preview_independently_from_recognition(
     fake_factory: FakeFactory,
     monkeypatch: pytest.MonkeyPatch,

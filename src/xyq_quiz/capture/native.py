@@ -511,11 +511,18 @@ class ResilientNativeCaptureService:
         # separate low-rate WGC session supplies full-resolution OCR frames;
         # it also remains available as the CPU preview fallback if the native
         # renderer fails during this run.
+        self._active_ocr_fps = min(
+            5 if config.performance.low_resource_mode else 15,
+            config.recognition.scan_fps,
+        )
         self._ocr_capture = CaptureService(
             config,
             hub,
-            capture_fps=min(5, config.recognition.scan_fps),
+            # Keep the native hint fast enough for active quizzes. The local
+            # callback gate and publisher cadence start idle and adapt below.
+            capture_fps=self._active_ocr_fps,
         )
+        self._ocr_capture.set_capture_fps(min(5, self._active_ocr_fps))
         self._cpu_fallback: CaptureService | None = None
         self._lock = threading.Lock()
         self._stop = threading.Event()
@@ -619,6 +626,11 @@ class ResilientNativeCaptureService:
             session, layout = self._session, self._preview_layout
         if session is not None:
             self._send_layout(session, layout)
+
+    def set_quiz_active(self, active: bool) -> None:
+        self._ocr_capture.set_capture_fps(
+            self._active_ocr_fps if active else min(5, self._active_ocr_fps)
+        )
 
     def _preview_is_visible(self) -> bool:
         with self._lock:
