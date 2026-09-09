@@ -13,6 +13,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from xyq_quiz.recognition.models import OCRText
+from xyq_quiz.performance.recording import note_ocr_fallback
 
 
 class OCRUnavailable(RuntimeError):
@@ -207,6 +208,7 @@ class RapidOCREngine:
             )
 
     def _record_fallback(self) -> None:
+        note_ocr_fallback()
         with self._diagnostics_lock:
             self._fallback_count += 1
 

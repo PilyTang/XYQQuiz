@@ -285,6 +285,33 @@ def _services(tmp_path: Path, *, updater_error: Exception | None = None) -> Serv
     return ServiceFixture(services, events, pipeline)
 
 
+def test_performance_recording_start_stop_export_and_bad_ack(tmp_path):
+    from zipfile import ZipFile
+    from xyq_quiz.recognition.models import ActivityKind
+    fixture = _services(tmp_path)
+    fixture.services.diagnostic_writer = DiagnosticWriter(tmp_path/'中文 性能记录')
+    with TestClient(create_app(fixture.services)) as client:
+        assert client.post('/api/performance/recording',json={'action':'export'}).status_code==409
+        assert client.post('/api/performance/recording',json={'action':'start'}).json()['recording']['enabled']
+        recorder=fixture.services.runtime.performance_recording
+        recorder.begin(1,ActivityKind.TEACHERS_DAY)
+        assert client.post('/api/performance/recording/ack',json={'stage':'anything'}).status_code==400
+        assert not client.post('/api/performance/recording',json={'action':'stop'}).json()['recording']['enabled']
+        result=client.post('/api/performance/recording',json={'action':'export'}).json()
+        assert result['ok']
+        with ZipFile(result['path']) as archive:
+            assert json.loads(archive.read('report.json'))['status']['questions']==1
+
+
+def test_recording_routes_require_local_authentication(tmp_path):
+    fixture=_services(tmp_path)
+    security=LocalWebSecurity('127.0.0.1',8765,process_token='process-secret')
+    with TestClient(create_app(fixture.services,security),base_url='http://127.0.0.1:8765') as client:
+        for path in ('/api/performance/recording','/api/performance/recording/ack'):
+            assert client.post(path,json={'action':'start'},headers={'Origin':'http://127.0.0.1:8765'}).status_code==403
+    assert not fixture.services.runtime.performance_recording.enabled
+
+
 def test_lifespan_starts_capture_then_coordinator_and_stops_in_required_order(
     tmp_path: Path,
 ) -> None:

@@ -419,10 +419,19 @@ class RecognitionCoordinator:
                             )
                         )
                         if observed_hash is None:
+                            self._store.performance_recording.observe(
+                                frame.captured_at_ns, int(layout_started * 1e9), layout_ms,
+                                (frame.bgr.shape[1], frame.bgr.shape[0]),
+                            )
                             observed_hash = question_hash
                             observed_identity = identity
                             candidate_count = 1
                         elif question_changed:
+                            self._store.performance_recording.observe(
+                                frame.captured_at_ns, int(layout_started * 1e9), layout_ms,
+                                (frame.bgr.shape[1], frame.bgr.shape[0]),
+                                entry_kind='continuous',
+                            )
                             if observed_hash is not None or active_hash is not None:
                                 self._store.clear_question("question_changed")
                             observed_hash = question_hash
@@ -646,6 +655,8 @@ class RecognitionCoordinator:
                     )
                     if callable(recognize_with_layout):
                         future = executor.submit(
+                            self._store.performance_recording.execute,
+                            generation,
                             recognize_with_layout,
                             recognition_frame,
                             generation,
@@ -654,6 +665,8 @@ class RecognitionCoordinator:
                         )
                     else:
                         future = executor.submit(
+                            self._store.performance_recording.execute,
+                            generation,
                             self._pipeline.recognize,
                             recognition_frame,
                             generation,

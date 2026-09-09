@@ -10,6 +10,7 @@ from xyq_quiz.recognition.models import (
 
 def recognize_teacher(frame, generation_id, layout, matcher, read_options, store_crops, layout_ms):
     started = time.perf_counter()
+    ocr_ms = match_ms = 0.
     def crop(rect):
         return frame.bgr[rect.y:rect.y+rect.height, rect.x:rect.x+rect.width]
     def result(**values):
@@ -19,7 +20,7 @@ def recognize_teacher(frame, generation_id, layout, matcher, read_options, store
             official_answer=None, question_score=0., question_runner_up_score=0.,
             option_score=0., option_runner_up_score=0., high_confidence=False,
             option_index=None, overlay_rect=None, activity_kind=ActivityKind.TEACHERS_DAY,
-            timings=RecognitionTimings(layout_ms,0.,0.,layout_ms+(time.perf_counter()-started)*1000),
+            timings=RecognitionTimings(layout_ms,ocr_ms,match_ms,layout_ms+(time.perf_counter()-started)*1000),
             confidence_score=0., bank_generation=matcher.bank.generation_id if matcher else None,
         )
         defaults.update(values)

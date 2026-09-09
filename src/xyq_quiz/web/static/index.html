@@ -43,8 +43,11 @@
           <button id="updateButton" type="button" disabled>更新题库</button>
           <button id="diagnosticsButton" type="button" class="secondary" disabled>保存识别诊断</button>
           <button id="environmentDiagnosticsButton" type="button" class="secondary" disabled>导出环境诊断</button>
+          <button id="performanceRecordingButton" type="button" class="secondary" disabled>开始性能记录</button>
+          <button id="performanceRecordingExportButton" type="button" class="secondary" disabled>导出耗时报告</button>
           <button id="shutdownButton" type="button" class="secondary" disabled>退出程序</button>
         </div>
+        <p id="performanceRecordingStatus" class="panel-help" role="status">性能记录已关闭，仅记录耗时和状态，不含截图与题目文字。退出程序前请导出。</p>
         <details class="local-bank-panel">
           <summary>科举本地补题 <span id="localQuestionCount">0 条</span></summary>
           <p class="panel-help">仅保存在本机 user-data，不会随诊断文件或发布包导出。</p>

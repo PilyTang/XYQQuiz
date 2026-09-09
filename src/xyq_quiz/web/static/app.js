@@ -40,6 +40,37 @@ let videoDecoder = null;
 const videoFrameIds = new Map();
 let confirmationResolver = null;
 let previewPaused = false;
+let performanceRecording = {enabled: false, questions: 0};
+let latestStateVersion = null;
+
+function renderPerformanceRecording(value) {
+  if (!value) return;
+  performanceRecording = value;
+  document.getElementById("performanceRecordingButton").textContent = value.enabled
+    ? "停止性能记录" : value.questions ? "重新开始记录（清空上一轮）" : "开始性能记录";
+  document.getElementById("performanceRecordingStatus").textContent =
+    `${value.enabled ? "正在记录" : "记录已停止"} · ${value.questions} 题 · ${value.attempts || 0} 次识别。仅记录耗时和状态；退出前请导出。${value.stop_reason?.endsWith("_limit") ? "已达到记录上限。" : ""}`;
+}
+
+async function performanceRecordingAction(action) {
+  const button = document.getElementById(action === "export" ? "performanceRecordingExportButton" : "performanceRecordingButton");
+  button.disabled = true;
+  try {
+    const response = await apiFetch("/api/performance/recording", {body: {action}});
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.error || "性能记录操作失败");
+    renderPerformanceRecording(result.recording);
+    if (result.path) document.getElementById("errorMessage").textContent = `耗时报告已保存：${result.path}`;
+  } catch (error) {
+    document.getElementById("errorMessage").textContent = error.message;
+  } finally { button.disabled = false; }
+}
+
+function acknowledgePerformance(trace, stage, started) {
+  void apiFetch("/api/performance/recording/ack", {body: {
+    ...trace, stage, elapsed_ms: performance.now() - started,
+  }}).catch(() => {});
+}
 
 function websocketUrl(path) {
   const scheme = location.protocol === "https:" ? "wss" : "ws";
@@ -320,13 +351,14 @@ async function reportNativeOverlay() {
   if (previewMode !== "native" || !apiToken) return;
   const levels = {NONE: 0, CANDIDATE: 1, HIGH: 2};
   try {
-    await apiFetch("/api/preview/overlay", {
+    const response = await apiFetch("/api/preview/overlay", {
       body: {
         rect: overlay,
         score: overlayConfidenceScore,
         level: levels[overlayConfidenceLevel] || 0,
       },
     });
+    return response.ok;
   } catch (_) {
     // The state WebSocket remains authoritative; a transient overlay update
     // failure must not interrupt recognition or preview rendering.
@@ -449,6 +481,7 @@ async function loadPerformanceStatus({
   const result = await response.json();
   if (!response.ok || !result.ok) throw new Error(result.error || `HTTP ${response.status}`);
   performanceSnapshot = result;
+  renderPerformanceRecording(result.recording);
   renderBackendStatus();
   if (renderDialog) {
     renderPerformanceDialog({preserveSelection: preserveDialogSelection});
@@ -761,11 +794,29 @@ async function initialize() {
 
   reconnectingSocket("/ws/state", (stateSocket) => {
     stateSocket.onmessage = ({data}) => {
+      const received = performance.now();
       const state = JSON.parse(data);
+      latestStateVersion = state.version;
+      const trace = state.performance_trace;
+      if (trace) acknowledgePerformance(trace, "received", received);
       const overlayChanged = updateOverlayState(state);
       renderSidebar(state);
       if (overlayChanged) drawOverlay();
-      if (overlayChanged) void reportNativeOverlay();
+      if (overlayChanged || trace) {
+        const nativeUpdate = reportNativeOverlay();
+        if (trace && !previewPaused && document.visibilityState === "visible") {
+          if (previewMode === "native") {
+            void nativeUpdate.then(ok => {
+              if (ok) acknowledgePerformance(trace, "native_command", received);
+            });
+          } else {
+            requestAnimationFrame(() => {
+              if (latestStateVersion === state.version && !previewPaused && document.visibilityState === "visible")
+                acknowledgePerformance(trace, "canvas_submitted", received);
+            });
+          }
+        }
+      }
     };
   });
 
@@ -996,6 +1047,8 @@ document.getElementById("updateButton").addEventListener("click", ({currentTarge
 }));
 diagnosticsButton.addEventListener("click", () => { void saveRecognitionDiagnostics(); });
 document.getElementById("environmentDiagnosticsButton").addEventListener("click", ({currentTarget}) => runAction(currentTarget, "/api/environment-diagnostics"));
+document.getElementById("performanceRecordingButton").addEventListener("click", () => performanceRecordingAction(performanceRecording.enabled ? "stop" : "start"));
+document.getElementById("performanceRecordingExportButton").addEventListener("click", () => performanceRecordingAction("export"));
 document.getElementById("shutdownButton").addEventListener("click", ({currentTarget}) => runAction(currentTarget, "/api/shutdown"));
 document.getElementById("localQuestionMode").addEventListener("change", updateLocalModeFields);
 document.getElementById("localQuestionForm").addEventListener("submit", saveLocalQuestion);

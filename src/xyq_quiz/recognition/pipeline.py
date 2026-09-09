@@ -12,6 +12,7 @@ import numpy as np
 import cv2
 
 from xyq_quiz.capture.models import CapturedFrame, Rect
+from xyq_quiz.performance.recording import option_call
 from xyq_quiz.knowledge.matcher import QuestionMatcher
 from xyq_quiz.knowledge.models import OptionMatch, QuestionMatch, normalize_text
 from xyq_quiz.recognition.models import (
@@ -365,16 +366,19 @@ class RecognitionPipeline:
                 raise RuntimeError("recognition pipeline is closed")
             futures = tuple(
                 self._executor.submit(
-                    self._recognize_crop,
-                    raw_crop,
-                    OCRRole.OPTION,
-                    fallback_crop,
+                    option_call(
+                        index,
+                        self._recognize_crop,
+                        raw_crop,
+                        OCRRole.OPTION,
+                        fallback_crop,
+                    ),
                 )
-                for raw_crop, fallback_crop in zip(
+                for index, (raw_crop, fallback_crop) in enumerate(zip(
                     raw_crops,
                     fallback_crops,
                     strict=True,
-                )
+                ))
             )
         return tuple(future.result() for future in futures)
 

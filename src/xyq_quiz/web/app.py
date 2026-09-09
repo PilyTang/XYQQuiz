@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import copy
+import math
 from contextlib import asynccontextmanager, suppress
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -390,7 +391,52 @@ def create_app(
                 status_code=503,
                 content={"ok": False, "error": "性能后端服务未配置"},
             )
-        return JSONResponse(content={"ok": True, **controller.payload()})
+        return JSONResponse(content={"ok": True, **controller.payload(),
+                                    "recording": services.runtime.performance_recording.status()})
+
+    @app.post("/api/performance/recording")
+    async def performance_recording(request: Request) -> JSONResponse:
+        try:
+            body = await request.json()
+        except ValueError:
+            return JSONResponse(status_code=400,content={"ok":False,"error":"请求格式错误"})
+        action = body.get('action') if isinstance(body,dict) else None
+        recorder = services.runtime.performance_recording
+        if action == 'start':
+            recorder.start(_recording_backend(services))
+        elif action == 'stop':
+            recorder.stop()
+        elif action == 'export':
+            writer = services.diagnostic_writer
+            if writer is None or not hasattr(writer, 'directory'):
+                return JSONResponse(status_code=503,content={"ok":False,"error":"诊断目录未配置"})
+            try:
+                path = await asyncio.to_thread(recorder.export, writer.directory)
+            except ValueError as error:
+                return JSONResponse(status_code=409,content={"ok":False,"error":str(error)})
+            except OSError:
+                return JSONResponse(status_code=500,content={"ok":False,"error":"报告写入失败，请检查目录权限及磁盘空间"})
+            return JSONResponse(content={"ok":True,"path":str(path),"recording":recorder.status()})
+        else:
+            return JSONResponse(status_code=400,content={"ok":False,"error":"未知记录操作"})
+        return JSONResponse(content={"ok":True,"recording":recorder.status()})
+
+    @app.post("/api/performance/recording/ack")
+    async def performance_recording_ack(request: Request) -> JSONResponse:
+        try:
+            body = await request.json()
+            if not isinstance(body,dict):
+                raise ValueError()
+            session, generation, version = body['session'], body['generation'], body['version']
+            stage, elapsed = body['stage'], body['elapsed_ms']
+            if (not isinstance(session,str) or len(session)!=32 or type(generation) is not int
+                    or type(version) is not int or stage not in {'received','canvas_submitted','native_command'}
+                    or type(elapsed) not in (int,float) or not math.isfinite(elapsed) or not 0 <= elapsed <= 60000):
+                raise ValueError()
+        except (ValueError, KeyError, TypeError):
+            return JSONResponse(status_code=400,content={"ok":False,"error":"无效性能回执"})
+        accepted = services.runtime.performance_recording.acknowledge(session,generation,version,stage,elapsed)
+        return JSONResponse(content={"ok":True,"accepted":accepted})
 
     @app.post("/api/performance/settings")
     async def performance_settings(request: Request) -> JSONResponse:
@@ -1300,7 +1346,20 @@ def _state_payload(
     payload = _runtime_payload(snapshot)
     payload["capture"] = jsonable_encoder(asdict(services.capture.status()))
     payload["question_banks"] = services.bank_status()
+    recorder = getattr(services.runtime, 'performance_recording', None)
+    if recorder is not None and recorder.enabled and snapshot.overlay is not None:
+        trace = recorder.sent(snapshot.generation_id, snapshot.version, _recording_backend(services))
+        if trace is not None:
+            payload['performance_trace'] = trace
     return payload
+
+
+def _recording_backend(services: Services) -> dict:
+    # Deliberate allowlist: no names, settings paths, secrets or model data.
+    value = services.performance.payload() if services.performance is not None else {}
+    return dict(ocr=value.get('ocr',{}).get('effective'),
+                preview=value.get('preview',{}).get('effective'),
+                low_resource_mode=value.get('low_resource_mode'))
 
 
 def _encode_preview_i420(frame: CapturedFrame, preview_width: int) -> bytes:

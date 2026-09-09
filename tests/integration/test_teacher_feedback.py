@@ -88,6 +88,24 @@ def test_real_feedback_ocr_and_answer_mapping(pipeline, case, reverse):
     assert store.snapshot().high_confidence is (level is ConfidenceLevel.HIGH)
 
 
+def test_recording_real_pipeline_captures_four_options_without_answer_text(pipeline):
+    from xyq_quiz.performance.recording import PerformanceRecording
+    recorder=PerformanceRecording()
+    recorder.start()
+    captured=feedback_frame(CASES[0])
+    recorder.observe(captured.captured_at_ns,time.perf_counter_ns(),0,(1024,768))
+    recorder.begin(1,ActivityKind.TEACHERS_DAY)
+    result=recorder.execute(1,pipeline.recognize,captured,1)
+    report=recorder.report()
+    attempt=report['questions'][0]['attempts'][0]
+    assert len(attempt['options'])==4
+    assert attempt['ocr_ms']>0 and attempt['match_ms']>0
+    assert result.official_answer==CASES[0]['answer']
+    serialized=json.dumps(report,ensure_ascii=False)
+    assert result.official_answer not in serialized
+    assert not any(text in serialized for text in result.option_texts)
+
+
 @pytest.mark.parametrize("case", CASES, ids=lambda case: f"feedback-{case['sample']}")
 def test_unreadable_distractor_allows_only_exact_high_confidence_answer(pipeline, case):
     result = pipeline.recognize(feedback_frame(case, missing=True), 1)

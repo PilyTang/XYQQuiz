@@ -435,6 +435,7 @@ def test_changed_hash_invalidates_running_generation_before_old_result() -> None
     _capture, hub, detector, pipeline, store, coordinator = make_coordinator(
         GatedPipeline()
     )
+    store.performance_recording.start()
     coordinator.start()
     try:
         publish_detected(hub, detector, frame(1, 1))
@@ -457,6 +458,12 @@ def test_changed_hash_invalidates_running_generation_before_old_result() -> None
         pipeline.gates[2].set()
         wait_until(lambda: store.snapshot().question_text == "题目-2")
         assert store.snapshot().phase is RuntimePhase.ANSWERED
+        rows = store.performance_recording.report()['questions']
+        assert len(rows)==2
+        assert 'capture_to_answer_ms' not in rows[0]
+        assert rows[1]['capture_to_answer_ms'] >= 0
+        assert rows[1]['entry_kind']=='continuous'
+        assert 'accepted_at_ms' not in rows[0]['attempts'][0]
     finally:
         pipeline.gates[1].set()
         pipeline.gates[2].set()

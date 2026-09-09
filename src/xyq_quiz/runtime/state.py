@@ -5,6 +5,8 @@ from enum import StrEnum
 import threading
 import time
 
+from xyq_quiz.performance.recording import PerformanceRecording
+
 from xyq_quiz.recognition.models import (
     ActivityKind,
     ConfidenceLevel,
@@ -56,6 +58,7 @@ class RuntimeSnapshot:
 
 class RuntimeStore:
     def __init__(self) -> None:
+        self.performance_recording = PerformanceRecording()
         self._condition = threading.Condition()
         self._snapshot = RuntimeSnapshot()
         self._frame_size: tuple[int, int] | None = None
@@ -87,6 +90,7 @@ class RuntimeStore:
     ) -> int:
         with self._condition:
             generation_id = self._snapshot.generation_id + 1
+            self.performance_recording.begin(generation_id, activity_kind)
             self._frame_size = frame_size
             self._publish_locked(
                 replace(
@@ -167,6 +171,7 @@ class RuntimeStore:
                     message=None,
                 )
             )
+            self.performance_recording.complete(generation_id, self._snapshot.version, drawable, confidence_level)
             return True
 
     def clear_question(
