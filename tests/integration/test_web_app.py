@@ -1066,14 +1066,13 @@ def test_static_b_layout_contract(tmp_path: Path) -> None:
     assert "height: 100dvh; min-height: 0;" in css.text
     assert "place-items: start center" in css.text
     assert ".canvas-stack { position: relative; width: 100%; height: 100%;" in css.text
-    assert "object-position: center top" in css.text
+    assert "object-position: center center" in css.text
     assert ".sidebar { min-height: 0; overflow-y: auto;" in css.text
     assert "body { overflow: auto; }" in css.text
     assert ".canvas-stack { height: auto; }" in css.text
     assert ".sidebar { order: 2; overflow: visible; }" in css.text
     assert "overlayCtx.clearRect" in javascript.text
     assert "state.overlay" in javascript.text
-    assert "confidencePresentation" in javascript.text
     assert 'frameCanvas.getContext("2d", {alpha: false})' in javascript.text
     assert "const canvasSizeChanged = (" in javascript.text
     assert "if (canvasSizeChanged) drawOverlay();" in javascript.text
@@ -1082,10 +1081,10 @@ def test_static_b_layout_contract(tmp_path: Path) -> None:
     assert "if (overlayChanged) drawOverlay();" in javascript.text
     assert "const jpeg = new Uint8Array(data, 8);" in javascript.text
     assert "data.slice(8)" not in javascript.text
-    assert "hsl(${hue.toFixed(1)}, 85%, 52%)" in javascript.text
-    assert "overlayCtx.setLineDash" in javascript.text
-    assert "评分 ${Math.round(presentation.score)}/100" in javascript.text
-    assert 'alpha: level === "HIGH" ? 1 : 0.68' in javascript.text
+    assert 'overlayCtx.fillStyle = "#ef4444"' in javascript.text
+    assert 'const dashed = overlayConfidenceLevel === "CANDIDATE"' in javascript.text
+    assert "overlayCtx.fillText" not in javascript.text
+    assert "评分 ${Math.round(presentation.score)}/100" not in javascript.text
     assert 'style.aspectRatio = `${bitmapWidth} / ${bitmapHeight}`' in javascript.text
     assert 'new VideoDecoder({' in javascript.text
     assert 'new EncodedVideoChunk({' in javascript.text

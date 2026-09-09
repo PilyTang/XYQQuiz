@@ -1730,11 +1730,10 @@ private:
             overlay = overlay_;
         }
         if (overlay.level == 0 || overlay.width <= 0.0F || overlay.height <= 0.0F) return;
-        const float normalized_score = (std::clamp)(overlay.score, 0.0F, 100.0F) / 100.0F;
         const float color[4] = {
-            0.13F + normalized_score * 0.81F,
-            0.86F - normalized_score * 0.59F,
-            0.35F - normalized_score * 0.08F,
+            239.0F / 255.0F,
+            68.0F / 255.0F,
+            68.0F / 255.0F,
             1.0F,
         };
         const LONG content_width = destination.right - destination.left;
@@ -1746,17 +1745,32 @@ private:
         const LONG bottom = destination.top
             + static_cast<LONG>((overlay.y + overlay.height) * content_height);
         const LONG thickness = (std::max)(3L, static_cast<LONG>(output_width_ / 400U));
-        const D3D11_RECT rectangles[] = {
-            {left, top, right, (std::min)(bottom, top + thickness)},
-            {left, (std::max)(top, bottom - thickness), right, bottom},
-            {left, top, (std::min)(right, left + thickness), bottom},
-            {(std::max)(left, right - thickness), top, right, bottom},
+        const bool dashed = overlay.level == 1;
+        const LONG dash_length = thickness * 3;
+        const LONG dash_gap = thickness * 2;
+        std::vector<D3D11_RECT> rectangles;
+        const auto horizontal = [&](LONG y0, LONG y1) {
+            if (!dashed) { rectangles.push_back({left, y0, right, y1}); return; }
+            for (LONG x0 = left; x0 < right; x0 += dash_length + dash_gap) {
+                rectangles.push_back({x0, y0, (std::min)(right, x0 + dash_length), y1});
+            }
         };
+        const auto vertical = [&](LONG x0, LONG x1) {
+            if (!dashed) { rectangles.push_back({x0, top, x1, bottom}); return; }
+            for (LONG y0 = top; y0 < bottom; y0 += dash_length + dash_gap) {
+                rectangles.push_back({x0, y0, x1, (std::min)(bottom, y0 + dash_length)});
+            }
+        };
+        horizontal(top, (std::min)(bottom, top + thickness));
+        horizontal((std::max)(top, bottom - thickness), bottom);
+        vertical(left, (std::min)(right, left + thickness));
+        vertical((std::max)(left, right - thickness), right);
+        if (rectangles.empty()) return;
         context1_->ClearView(
             render_target_.Get(),
             color,
-            rectangles,
-            static_cast<UINT>(std::size(rectangles)));
+            rectangles.data(),
+            static_cast<UINT>(rectangles.size()));
     }
 
     void ReportFps() {

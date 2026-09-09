@@ -142,14 +142,10 @@ function renderFrame(frameId, bitmap) {
   const canvasSizeChanged = (
     frameCanvas.width !== bitmapWidth
     || frameCanvas.height !== bitmapHeight
-    || overlayCanvas.width !== bitmapWidth
-    || overlayCanvas.height !== bitmapHeight
   );
   if (canvasSizeChanged) {
     frameCanvas.width = bitmapWidth;
     frameCanvas.height = bitmapHeight;
-    overlayCanvas.width = bitmapWidth;
-    overlayCanvas.height = bitmapHeight;
     canvasStack.style.aspectRatio = `${bitmapWidth} / ${bitmapHeight}`;
   }
   frameCtx.drawImage(bitmap, 0, 0);
@@ -315,6 +311,7 @@ function scheduleNativePreviewLayout() {
   if (nativeLayoutTimer !== null) window.clearTimeout(nativeLayoutTimer);
   nativeLayoutTimer = window.setTimeout(() => {
     nativeLayoutTimer = null;
+    drawOverlay();
     void reportNativePreviewLayout();
   }, 50);
 }
@@ -514,55 +511,60 @@ const nv12FrameDecoder = createLatestFrameDecoder(decodeNV12Frame, renderFrame);
 const bgraFrameDecoder = createLatestFrameDecoder(decodeBGRAFrame, renderFrame);
 
 function drawOverlay() {
-  overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-  if (!overlay) return;
+  // Use display pixels, not the downscaled preview bitmap, so CPU and GPU
+  // outlines retain the same thickness in low-resource mode and at high DPI.
+  const bounds = canvasStack.getBoundingClientRect();
+  const scale = window.devicePixelRatio || 1;
+  const outputWidth = Math.max(1, Math.round(Math.round(bounds.width) * scale));
+  const outputHeight = Math.max(1, Math.round(Math.round(bounds.height) * scale));
+  if (overlayCanvas.width !== outputWidth) overlayCanvas.width = outputWidth;
+  if (overlayCanvas.height !== outputHeight) overlayCanvas.height = outputHeight;
+  overlayCtx.clearRect(0, 0, outputWidth, outputHeight);
+  if (!overlay || overlayConfidenceLevel === "NONE") return;
+  const inputWidth = frameCanvas.width;
+  const inputHeight = frameCanvas.height;
+  if (!inputWidth || !inputHeight) return;
+  let contentWidth = outputWidth;
+  let contentHeight = outputHeight;
+  if (outputWidth * inputHeight <= outputHeight * inputWidth) {
+    contentHeight = Math.floor(inputHeight * outputWidth / inputWidth);
+  } else {
+    contentWidth = Math.floor(inputWidth * outputHeight / inputHeight);
+  }
+  const offsetX = Math.floor((outputWidth - contentWidth) / 2);
+  const offsetY = Math.floor((outputHeight - contentHeight) / 2);
   const [x, y, width, height] = overlay;
-  const presentation = confidencePresentation(
-    overlayConfidenceLevel,
-    overlayConfidenceScore,
-  );
-  const lineWidth = Math.max(3, overlayCanvas.width / 400);
-  const left = x * overlayCanvas.width;
-  const top = y * overlayCanvas.height;
-  const boxWidth = width * overlayCanvas.width;
-  const boxHeight = height * overlayCanvas.height;
-  const label = `${presentation.label} · 评分 ${Math.round(presentation.score)}/100`;
-  const fontSize = Math.max(14, overlayCanvas.width / 90);
-
-  overlayCtx.save();
-  overlayCtx.strokeStyle = presentation.color;
-  overlayCtx.fillStyle = presentation.color;
-  overlayCtx.globalAlpha = presentation.alpha;
-  overlayCtx.lineWidth = presentation.solid ? lineWidth * 1.6 : lineWidth;
-  overlayCtx.setLineDash(
-    presentation.solid ? [] : [lineWidth * 2.5, lineWidth * 1.5],
-  );
-  overlayCtx.strokeRect(
-    left,
-    top,
-    boxWidth,
-    boxHeight,
-  );
-  overlayCtx.setLineDash([]);
-  overlayCtx.globalAlpha = 1;
-  overlayCtx.font = `700 ${fontSize}px "Microsoft YaHei", sans-serif`;
-  const labelPadding = Math.max(5, fontSize * 0.35);
-  const labelWidth = overlayCtx.measureText(label).width + labelPadding * 2;
-  const labelHeight = fontSize + labelPadding * 1.5;
-  const labelLeft = Math.min(
-    Math.max(0, left),
-    Math.max(0, overlayCanvas.width - labelWidth),
-  );
-  const labelTop = Math.max(0, top - labelHeight - lineWidth);
-  overlayCtx.fillStyle = "rgba(2, 6, 23, 0.88)";
-  overlayCtx.fillRect(labelLeft, labelTop, labelWidth, labelHeight);
-  overlayCtx.fillStyle = presentation.color;
-  overlayCtx.fillText(
-    label,
-    labelLeft + labelPadding,
-    labelTop + fontSize + labelPadding * 0.25,
-  );
-  overlayCtx.restore();
+  const left = offsetX + Math.floor(x * contentWidth);
+  const top = offsetY + Math.floor(y * contentHeight);
+  const right = offsetX + Math.floor((x + width) * contentWidth);
+  const bottom = offsetY + Math.floor((y + height) * contentHeight);
+  const thickness = Math.max(3, Math.floor(outputWidth / 400));
+  const dashed = overlayConfidenceLevel === "CANDIDATE";
+  const dashLength = thickness * 3;
+  const dashGap = thickness * 2;
+  overlayCtx.fillStyle = "#ef4444";
+  function horizontal(y0, y1) {
+    if (!dashed) {
+      overlayCtx.fillRect(left, y0, right - left, y1 - y0);
+      return;
+    }
+    for (let x0 = left; x0 < right; x0 += dashLength + dashGap) {
+      overlayCtx.fillRect(x0, y0, Math.min(right, x0 + dashLength) - x0, y1 - y0);
+    }
+  }
+  function vertical(x0, x1) {
+    if (!dashed) {
+      overlayCtx.fillRect(x0, top, x1 - x0, bottom - top);
+      return;
+    }
+    for (let y0 = top; y0 < bottom; y0 += dashLength + dashGap) {
+      overlayCtx.fillRect(x0, y0, x1 - x0, Math.min(bottom, y0 + dashLength) - y0);
+    }
+  }
+  horizontal(top, Math.min(bottom, top + thickness));
+  horizontal(Math.max(top, bottom - thickness), bottom);
+  vertical(left, Math.min(right, left + thickness));
+  vertical(Math.max(left, right - thickness), right);
 }
 
 function normalizeConfidenceLevel(state) {
@@ -581,17 +583,6 @@ function normalizeConfidenceScore(value, level) {
   return 0;
 }
 
-function confidencePresentation(level, score) {
-  const normalizedScore = normalizeConfidenceScore(score, level);
-  const hue = 120 * (1 - normalizedScore / 100);
-  return {
-    score: normalizedScore,
-    color: `hsl(${hue.toFixed(1)}, 85%, 52%)`,
-    label: level === "HIGH" ? "高可信" : "候选",
-    solid: level === "HIGH",
-    alpha: level === "HIGH" ? 1 : 0.68,
-  };
-}
 
 function score(value, runnerUp) {
   return `${Number(value || 0).toFixed(1)} / 次高 ${Number(runnerUp || 0).toFixed(1)}`;
