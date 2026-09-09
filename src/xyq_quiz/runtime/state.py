@@ -5,7 +5,7 @@ from enum import StrEnum
 import threading
 import time
 
-from xyq_quiz.performance.recording import PerformanceRecording
+from xyq_quiz.performance_recording import PerformanceRecording
 
 from xyq_quiz.recognition.models import (
     ActivityKind,

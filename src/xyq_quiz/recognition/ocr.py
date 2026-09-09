@@ -13,7 +13,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from xyq_quiz.recognition.models import OCRText
-from xyq_quiz.performance.recording import note_ocr_fallback
+from xyq_quiz.performance_recording import note_ocr_fallback
 
 
 class OCRUnavailable(RuntimeError):

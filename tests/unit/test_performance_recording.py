@@ -1,14 +1,22 @@
 from concurrent.futures import ThreadPoolExecutor
 import json
+import subprocess
+import sys
 from types import SimpleNamespace
 from zipfile import ZipFile
 
-from xyq_quiz.performance.recording import PerformanceRecording, option_call, note_ocr_fallback
+from xyq_quiz.performance_recording import PerformanceRecording, option_call, note_ocr_fallback
 from xyq_quiz.recognition.models import ActivityKind, ConfidenceLevel, RecognitionTimings
 
 
+def test_fresh_launcher_import_has_no_recording_backend_cycle():
+    completed = subprocess.run([sys.executable,'-c','import xyq_quiz.launcher'],
+                               capture_output=True,text=True,timeout=20)
+    assert completed.returncode == 0, completed.stderr
+
+
 def test_recording_times_threaded_options_and_exports_no_content(tmp_path, monkeypatch):
-    from xyq_quiz.performance import recording as module
+    from xyq_quiz import performance_recording as module
     clock = [1_000_000_000]
     monkeypatch.setattr(module.time,'perf_counter_ns',lambda: clock[0])
     recorder = PerformanceRecording()

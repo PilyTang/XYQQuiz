@@ -1,4 +1,4 @@
-"""Opt-in, bounded, content-free latency recording. All server times use QPC."""
+"""Opt-in latency recording, independent of backend/config import order."""
 from __future__ import annotations
 
 from collections import OrderedDict

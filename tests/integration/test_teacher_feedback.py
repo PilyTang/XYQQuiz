@@ -89,7 +89,7 @@ def test_real_feedback_ocr_and_answer_mapping(pipeline, case, reverse):
 
 
 def test_recording_real_pipeline_captures_four_options_without_answer_text(pipeline):
-    from xyq_quiz.performance.recording import PerformanceRecording
+    from xyq_quiz.performance_recording import PerformanceRecording
     recorder=PerformanceRecording()
     recorder.start()
     captured=feedback_frame(CASES[0])

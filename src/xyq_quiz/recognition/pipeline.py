@@ -12,7 +12,7 @@ import numpy as np
 import cv2
 
 from xyq_quiz.capture.models import CapturedFrame, Rect
-from xyq_quiz.performance.recording import option_call
+from xyq_quiz.performance_recording import option_call
 from xyq_quiz.knowledge.matcher import QuestionMatcher
 from xyq_quiz.knowledge.models import OptionMatch, QuestionMatch, normalize_text
 from xyq_quiz.recognition.models import (
