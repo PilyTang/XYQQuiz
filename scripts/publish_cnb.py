@@ -66,8 +66,11 @@ def publish(package: Path, manifest: dict, token: str) -> None:
 
     def git(root, *args):
         result = subprocess.run(["git", "-C", str(root), *args], env=env,
-                                capture_output=True, text=True, timeout=120)
+                                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120)
         if result.returncode:
+            safe = result.stderr.replace(token, "[redacted]").replace(
+                env["GIT_CONFIG_VALUE_0"].removeprefix("Authorization: Basic "), "[redacted]")
+            print(safe[:2000], flush=True)
             raise RuntimeError(f"Git {args[0]} 失败；请检查仓库内容读写权限（输出已隐藏以保护凭据）")
         return result.stdout.strip()
 
