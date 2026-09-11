@@ -764,6 +764,7 @@ async function bootstrapSession() {
 
 async function initialize() {
   await bootstrapSession();
+  void initializeSoftwareUpdates();
   await reportNativePreviewLayout();
   for (const button of document.querySelectorAll(".actions button")) button.disabled = false;
   document.getElementById("backendSettingsButton").disabled = false;
@@ -1071,6 +1072,53 @@ document.getElementById("backendSettingsForm").addEventListener("submit", (event
 });
 document.getElementById("backendSettingsApply").addEventListener("click", () => {
   void saveBackendSettings("apply");
+});
+
+function renderSoftwareUpdate(value) {
+  document.getElementById("softwareVersion").textContent = `v${value.current_version}${value.available ? " · 有新版" : ""}`;
+  document.getElementById("softwareUpdateEnabled").checked = value.enabled;
+  const status = document.getElementById("softwareUpdateStatus");
+  status.textContent = value.error || (value.available ? `发现新版 ${value.latest.version}` : value.latest ? "当前已是最新版" : "尚未检查");
+  if (value.checked_at) status.textContent += ` · 上次成功检查：${new Date(value.checked_at * 1000).toLocaleString()}`;
+  const download = document.getElementById("softwareUpdateDownload");
+  download.hidden = !value.available;
+  if (value.available) download.href = value.latest.download_url;
+  const notes = document.getElementById("softwareUpdateNotes");
+  notes.hidden = !value.available;
+  notes.textContent = value.available ? `${value.latest.notes}\n\nSHA-256：${value.latest.sha256}\n请解压到新目录运行。` : "";
+}
+
+async function softwareUpdateAction(action, extra = {}) {
+  const button = document.getElementById("softwareUpdateButton");
+  const enabled = document.getElementById("softwareUpdateEnabled");
+  button.disabled = enabled.disabled = true;
+  if (action !== "settings") document.getElementById("softwareUpdateStatus").textContent = "正在检查更新…";
+  try {
+    const response = await apiFetch("/api/software-update", {body: {action, ...extra}});
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "更新检查不可用");
+    renderSoftwareUpdate(result);
+  } catch (error) {
+    if (action === "settings") enabled.checked = !extra.enabled;
+    document.getElementById("softwareUpdateStatus").textContent = error.message;
+  } finally { button.disabled = enabled.disabled = false; }
+}
+
+async function initializeSoftwareUpdates() {
+  try {
+    const response = await apiFetch("/api/software-update", {method: "GET"});
+    if (!response.ok) throw new Error("更新检查不可用");
+    renderSoftwareUpdate(await response.json());
+    await softwareUpdateAction("auto");
+    window.setInterval(() => { void softwareUpdateAction("auto"); }, 3600000);
+  } catch (error) {
+    document.getElementById("softwareUpdateStatus").textContent = error.message;
+  }
+}
+
+document.getElementById("softwareUpdateButton").addEventListener("click", () => { void softwareUpdateAction("check"); });
+document.getElementById("softwareUpdateEnabled").addEventListener("change", (event) => {
+  void softwareUpdateAction("settings", {enabled: event.target.checked});
 });
 
 initialize()

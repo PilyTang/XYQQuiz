@@ -64,6 +64,7 @@ from xyq_quiz.recognition.activity import ActivityLayoutDetector
 from xyq_quiz.recognition.teachers_day_layout import TeacherLayoutDetector
 from xyq_quiz.runtime.paths import initialize_teacher_assets
 from xyq_quiz.performance.controller import PerformanceController
+from xyq_quiz.updates import UpdateChecker
 from xyq_quiz.performance.native_preview import locate_native_preview_helper
 from xyq_quiz.recognition.layout import (
     LayoutProfile,
@@ -586,6 +587,7 @@ def build_services(
         coordinator=coordinator,
         pipeline=pipeline,
         updater=QuestionBankUpdater(config.data_dir),
+        updates=UpdateChecker(paths.user_data_dir / "update-check.json"),
         teacher_updater=TeacherBankUpdater(config.data_dir / "teachers_day"),
         teacher_bank=teacher_bank,
         match_config=config.match,

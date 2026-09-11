@@ -303,6 +303,33 @@ def test_performance_recording_start_stop_export_and_bad_ack(tmp_path):
             assert json.loads(archive.read('report.json'))['status']['questions']==1
 
 
+def test_software_updates_auth_settings_and_manual_check(tmp_path):
+    import httpx
+    from xyq_quiz.updates import UpdateChecker, REPOSITORY
+    fixture = _services(tmp_path)
+    calls = []
+    def handle(request):
+        calls.append(request)
+        return httpx.Response(200, json={"schema_version": 1, "version": "0.9.0",
+            "notes": "新版", "sha256": "a" * 64,
+            "download_url": REPOSITORY + "/-/releases/download/v0.9.0/XYQQuiz-v0.9.0-win10-win11-x64.zip"})
+    fixture.services.updates = UpdateChecker(tmp_path / "update-state", transport=httpx.MockTransport(handle))
+    security = LocalWebSecurity("127.0.0.1", 8765, process_token="update-test-token")
+    headers = {TOKEN_HEADER: "update-test-token", "Origin": "http://127.0.0.1:8765"}
+    with TestClient(create_app(fixture.services, security), base_url="http://127.0.0.1:8765") as client:
+        assert client.get("/api/software-update").status_code == 403
+        assert client.post("/api/software-update", json={"action": "check"}).status_code == 403
+        assert not calls
+        assert client.post("/api/software-update", headers=headers, json={"action": "settings", "enabled": "false"}).status_code == 400
+        result = client.post("/api/software-update", headers=headers, json={"action": "settings", "enabled": False})
+        assert not result.json()["enabled"]
+        client.post("/api/software-update", headers=headers, json={"action": "auto"})
+        assert not calls
+        result = client.post("/api/software-update", headers=headers, json={"action": "check"})
+        assert result.json()["available"]
+        assert len(calls) == 1
+
+
 def test_recording_routes_require_local_authentication(tmp_path):
     fixture=_services(tmp_path)
     security=LocalWebSecurity('127.0.0.1',8765,process_token='process-secret')

@@ -49,6 +49,14 @@
         </div>
         <p id="performanceRecordingStatus" class="panel-help" role="status">性能记录已关闭，仅记录耗时和状态，不含截图与题目文字。退出程序前请导出。</p>
         <details class="local-bank-panel">
+          <summary>软件更新 <span id="softwareVersion"></span></summary>
+          <p id="softwareUpdateStatus" class="panel-help" role="status">尚未检查</p>
+          <label class="checkbox-label"><input id="softwareUpdateEnabled" type="checkbox" disabled> 自动检查更新（每天最多一次）</label>
+          <button id="softwareUpdateButton" type="button" class="secondary" disabled>检查更新</button>
+          <a id="softwareUpdateDownload" href="#" target="_blank" rel="noopener noreferrer" hidden>下载新版（CNB）</a>
+          <pre id="softwareUpdateNotes" class="panel-help" style="white-space:pre-wrap;overflow-wrap:anywhere" hidden></pre>
+        </details>
+        <details class="local-bank-panel">
           <summary>科举本地补题 <span id="localQuestionCount">0 条</span></summary>
           <p class="panel-help">仅保存在本机 user-data，不会随诊断文件或发布包导出。</p>
           <p id="localQuestionError" class="panel-error" role="alert"></p>

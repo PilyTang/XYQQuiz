@@ -25,11 +25,11 @@ XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》答题辅助显示
 - 支持单实例启动、端口冲突提示、题库原子更新和一键退出。
 - 可按需保存识别诊断或不含游戏画面的环境诊断。
 
-当前版本为 `0.5.5`，修正教师节“佛法无边”图标：加入 180° 旋转版本并排除已确认错误的原图，保留补充库增量合并、性能记录、标准模式动态取帧及首次初始化修复，保留硬件自动分档、低配模式和统一框选样式，详见 [0.5.5 更新说明](docs/releases/v0.5.5.md)。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。教师节基础验证范围见 [v0.4 验收记录](docs/v0.4-validation.md)，名称差异与未收录干扰项修复见 [v0.4.1 修复记录](docs/v0.4.1-feedback-fix.md)。
+当前版本为 `0.5.6`，新增 CNB 软件更新检查与国内下载入口；保留教师节图标修正：“佛法无边”图标加入 180° 旋转版本并排除已确认错误的原图，保留补充库增量合并、性能记录、标准模式动态取帧及首次初始化修复，保留硬件自动分档、低配模式和统一框选样式，详见 [0.5.6 更新说明](docs/releases/v0.5.6.md)。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。教师节基础验证范围见 [v0.4 验收记录](docs/v0.4-validation.md)，名称差异与未收录干扰项修复见 [v0.4.1 修复记录](docs/v0.4.1-feedback-fix.md)。
 
 ## 直接使用 Windows 便携版
 
-1. 获取 `XYQQuiz-v0.5.5-win10-win11-x64.zip` 和同名 `.sha256`。
+1. 获取 `XYQQuiz-v0.5.6-win10-win11-x64.zip` 和同名 `.sha256`。
 2. 完整解压到一个新目录，不要直接在压缩包里运行。
 3. 双击 `XYQQuiz.exe`，首次捕获时允许 UAC 管理员权限请求。
 4. 等待默认 `1440×900` 的可缩放桌面窗口打开；游戏题面出现后，答案框会显示在窗口预览中。
@@ -37,7 +37,7 @@ XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》答题辅助显示
 
 第二次双击 EXE 会还原并聚焦已经运行的桌面窗口。若页面提示会话失效，也请重新双击 EXE，不要手工拼接本地 URL。
 
-便携包自带程序、OCR 模型、布局和离线题库，正常启动和识别不需要联网。“更新题库”是唯一会主动访问题库来源的日常功能。
+便携包自带程序、OCR 模型、布局和离线题库，正常启动和识别不需要联网。软件更新检查可关闭；“更新题库”按用户操作访问题库来源。
 
 “更新题库”分别更新科举和教师节，并显示各自结果。教师节更新会先完整下载、校验所有图标再切换版本，失败时保留旧题库。旧配置或自定义数据目录首次运行 v0.4 时会自动补齐缺失的教师节资源；本地补题继续用于科举。
 
@@ -106,26 +106,26 @@ Copy-Item config.example.json config.json
 
 ```powershell
 .venv\Scripts\python.exe -m pip install --require-hashes -r requirements-release.txt
-.\scripts\build-release.ps1 -Version 0.5.5 -Commit working-tree -AllowDevelopmentCommit
+.\scripts\build-release.ps1 -Version 0.5.6 -Commit working-tree -AllowDevelopmentCommit
 ```
 
 正式发布构建必须从干净提交运行，并传入完整 40 位 Git SHA：
 
 ```powershell
-.\scripts\build-release.ps1 -Version 0.5.5 -Commit (git rev-parse HEAD)
+.\scripts\build-release.ps1 -Version 0.5.6 -Commit (git rev-parse HEAD)
 ```
 
 产物位于 `release\`，包括 ZIP 和 SHA-256 文件。构建脚本会审计公开树和最终 ZIP，拒绝打入 `user-data\`、`diagnostics\` 或本地 `questions.json`。GitHub 的 `v*` 标签工作流会先做公开内容审计和完整测试，再使用标签对应的真实提交 SHA 构建并创建 Release。
 
 ## 更新与升级
 
-程序启动不会自动联网。界面中的“更新题库”分别获取网易科举数据和教师节官方图标，完整校验后原子切换；失败时保留当前可用题库。教师节独立补充库不受官方更新覆盖，更新题库不会升级程序。
+默认会后台匿名检查软件新版本，每天最多一次，可在“软件更新”中关闭。软件更新与题库更新相互独立，说明见 [CNB 更新与发布](docs/cnb-updates.md)。界面中的“更新题库”分别获取网易科举数据和教师节官方图标，完整校验后原子切换；失败时保留当前可用题库。教师节独立补充库不受官方更新覆盖，更新题库不会升级程序。
 
 升级程序时请解压到全新目录，再按需复制旧目录中的 `config.json`、`data`、`user-data`、`logs` 和 `diagnostics`。不要把新版 EXE 或 `_internal` 覆盖到旧目录。
 
 ## 已知限制
 
-- Windows 10 1909（18363.657）已收到 `windows_capture.pyd / 0xC0000409` 原生捕获崩溃反馈，0.5.5 尚未修复；目标系统范围不代表所有系统和驱动组合已验收。
+- Windows 10 1909（18363.657）已收到 `windows_capture.pyd / 0xC0000409` 原生捕获崩溃反馈，0.5.6 尚未修复；目标系统范围不代表所有系统和驱动组合已验收。
 - 硬件分档已测试逻辑边界及本机读取，尚未完成多台真实低端机性能验证；线程数、内存和适配器检测不是跑分保证。
 - 游戏 UI、字体、DPI、动画遮挡或极端分辨率变化可能导致识别失败。
 - 题目不在题库、OCR 置信度不足，或正确答案无法和选项唯一匹配时，可能已显示 OCR 题目但不会画框；这是预期的安全降级。

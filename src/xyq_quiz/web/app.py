@@ -47,6 +47,7 @@ from xyq_quiz.knowledge.teacher_matcher import MATCHER_VERSION, TeacherIconMatch
 from xyq_quiz.knowledge.teacher_updater import TeacherBankUpdater
 from xyq_quiz.performance.controller import PerformanceController
 from xyq_quiz.runtime.state import RuntimeSnapshot, RuntimeStore
+from xyq_quiz.updates import UpdateChecker
 from xyq_quiz.web.protocol import (
     encode_bgra_packet,
     encode_i420_packet,
@@ -136,6 +137,7 @@ class Services:
     video_hub: LatestVideoHub | None = None
     teacher_updater: TeacherBankUpdater | None = None
     teacher_bank: TeacherBankSnapshot | None = None
+    updates: UpdateChecker | None = None
     _lifespan_claimed: bool = field(default=False, init=False, repr=False)
     _claim_lock: threading.Lock = field(
         default_factory=threading.Lock,
@@ -330,6 +332,31 @@ def create_app(
     @app.get("/api/health")
     async def health() -> dict[str, object]:
         return {"ok": True, "app_id": APP_ID, "ready": True}
+
+    @app.get("/api/software-update")
+    async def software_update_status() -> JSONResponse:
+        if services.updates is None:
+            return JSONResponse(status_code=503, content={"error": "更新检查不可用"})
+        return JSONResponse(services.updates.snapshot())
+
+    @app.post("/api/software-update")
+    async def software_update(request: Request) -> JSONResponse:
+        if services.updates is None:
+            return JSONResponse(status_code=503, content={"error": "更新检查不可用"})
+        try:
+            body = await request.json()
+            if not isinstance(body, dict):
+                raise ValueError()
+            action = body.get("action")
+            if action == "settings" and type(body.get("enabled")) is bool:
+                return JSONResponse(await services.updates.set_enabled(body["enabled"]))
+            if action in {"check", "auto"}:
+                return JSONResponse(await services.updates.check(manual=action == "check"))
+        except (ValueError, TypeError):
+            return JSONResponse(status_code=400, content={"error": "更新请求格式不正确"})
+        except OSError:
+            return JSONResponse(status_code=500, content={"error": "无法保存更新设置"})
+        return JSONResponse(status_code=400, content={"error": "未知更新操作"})
 
     @app.post("/api/session/bootstrap")
     async def bootstrap_session(request: Request) -> JSONResponse:
