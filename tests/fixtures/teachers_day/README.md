@@ -1,5 +1,9 @@
 # Teachers' Day feedback regression crops
 
+`feedback-8-*` contains only the 2026-09-11 佛法无边 diagnostic icon and option
+crops. It verifies option D with the additional 180-degree template while
+retaining the original template. Full screenshots remain private.
+
 Four user-provided feedback images from 2026-09-02, reduced to only the skill
 icon and four option buttons. These crops contain no character names, chat,
 desktop paths, or account information. Complete screenshots remain outside

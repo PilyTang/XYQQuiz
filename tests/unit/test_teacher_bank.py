@@ -88,10 +88,10 @@ def test_corruption_recovers_previous_valid_generation(tmp_path, broken):
 def test_bundled_bank_and_old_custom_data_directory_seed_offline(tmp_path):
     bundled = ROOT / "data"
     bank = load_teacher_bank(bundled / "teachers_day")
-    assert bank.count == 367 and len(bank.by_name) == 366
+    assert bank.count == 368 and len(bank.by_name) == 366
     (tmp_path / "current.json").write_text('"keep-keju-pointer"')
     initialize_teacher_assets(tmp_path, bundled)
-    assert load_teacher_bank(tmp_path / "teachers_day").count == 367
+    assert load_teacher_bank(tmp_path / "teachers_day").count == 368
     assert (tmp_path / "current.json").read_text() == '"keep-keju-pointer"'
     assert (tmp_path / "layouts/teachers-day.json").is_file()
     pointer = tmp_path / "teachers_day/current.json"
@@ -116,19 +116,19 @@ def test_official_updates_preserve_supplements_and_restart(tmp_path):
     before = {p.relative_to(tmp_path): p.read_bytes() for p in (tmp_path / "supplements").rglob("*") if p.is_file()}
     for _ in range(2):
         updated = updater.publish(rows(), icon)
-        assert updated.count == 33
+        assert updated.count == 34
         assert updated.metadata["official_record_count"] == 2
-        assert updated.metadata["supplement_record_count"] == 31
+        assert updated.metadata["supplement_record_count"] == 32
         assert "吃茶去了" in load_teacher_bank(tmp_path).by_name
         assert all((tmp_path / p).read_bytes() == data for p, data in before.items())
     pointer = (tmp_path / "current.json").read_bytes()
     with pytest.raises(ValueError):
         updater.publish(rows(), lambda row: b"broken")
     assert (tmp_path / "current.json").read_bytes() == pointer
-    assert load_teacher_bank(tmp_path).count == 33
+    assert load_teacher_bank(tmp_path).count == 34
     # A damaged official pointer still recovers a merged snapshot.
     (tmp_path / "current.json").write_text("broken")
-    assert recover_teacher_bank(tmp_path).count == 33
+    assert recover_teacher_bank(tmp_path).count == 34
 
 
 def test_existing_install_gets_supplements_without_replacing_official_bank(tmp_path):
@@ -137,9 +137,9 @@ def test_existing_install_gets_supplements_without_replacing_official_bank(tmp_p
     pointer = (target / "current.json").read_bytes()
     initialize_teacher_assets(tmp_path, ROOT / "data")
     assert (target / "current.json").read_bytes() == pointer
-    assert load_teacher_bank(target).count == old.count + 31
+    assert load_teacher_bank(target).count == old.count + 32
     initialize_teacher_assets(tmp_path, ROOT / "data")
-    assert load_teacher_bank(target).count == old.count + 31
+    assert load_teacher_bank(target).count == old.count + 32
 
 
 def test_supplement_corruption_does_not_publish_official_update(tmp_path):
@@ -163,9 +163,9 @@ def test_existing_18_supplements_upgrade_additively_and_preserve_old_generation(
     (target/'current.json').write_text(json.dumps(dict(schema_version=1,generation_id=old_generation)))
     old=load_teacher_bank(target)
     before={r.source_id:(old.directory/r.image_path).read_bytes() for r in old.records}
-    assert merge_teacher_supplements(source,target)==13
+    assert merge_teacher_supplements(source,target)==14
     current=load_teacher_bank(target)
-    assert current.count==31 and '以和为贵' in current.by_name
+    assert current.count==32 and '以和为贵' in current.by_name
     assert all((old.directory/r.image_path).read_bytes()==before[r.source_id] for r in old.records)
     pointer=(target/'current.json').read_bytes()
     assert merge_teacher_supplements(source,target)==0
@@ -176,9 +176,9 @@ def test_bundled_supplements_keep_custom_records(tmp_path):
     from xyq_quiz.knowledge.teacher_bank import merge_teacher_supplements
     target=tmp_path/'supplements'
     before=TeacherBankUpdater(target,minimum_records=2).publish(rows(),icon)
-    assert merge_teacher_supplements(ROOT/'data/teachers_day/supplements',target)==31
+    assert merge_teacher_supplements(ROOT/'data/teachers_day/supplements',target)==32
     after=load_teacher_bank(target)
-    assert after.count==33
+    assert after.count==34
     assert set(before.records).issubset(set(after.records))
 
 
@@ -190,7 +190,7 @@ def test_official_duplicate_of_supplement_is_merged_once(tmp_path):
     updater.publish(rows(), icon)
     shutil.copytree(ROOT / "data/teachers_day/supplements", tmp_path / "supplements")
     bank = updater.publish([*rows(), added], lambda row: (extra.directory / record.image_path).read_bytes() if row["Id"] == 99 else icon(row))
-    assert bank.count == 33
+    assert bank.count == 34
     assert len(bank.by_name[record.name]) == 1
 
 
@@ -213,7 +213,7 @@ def test_all_supplement_icons_match_after_game_size_rescale(side,border):
         result = matcher.match(query, ("牛刀小试", record.name, "变化咒", "龙腾"))
         assert result.option_index == 1, (record.name,side,border,result.reason)
         assert result.record.name == record.name
-    assert count == 31
+    assert count == 32
 
 
 def test_future_supplement_source_uses_same_image_normalization():
@@ -229,3 +229,18 @@ def test_future_supplement_source_uses_same_image_normalization():
         assert len(old) == len(new) >= 2
         assert all(np.array_equal(a,b) for a,b in zip(old,new,strict=True))
     assert np.array_equal(original._body_features,future._body_features)
+
+
+def test_fofa_rotation_is_a_separate_exact_variant_and_both_match():
+    from xyq_quiz.knowledge.teacher_matcher import TeacherIconMatcher
+    bank=load_teacher_bank(ROOT/'data/teachers_day')
+    indexes=bank.by_name['佛法无边']
+    assert len(indexes)==2
+    original, rotated=(bank.images[i] for i in indexes)
+    assert bank.records[indexes[0]].source_id=='teachers_day:310'
+    assert np.array_equal(rotated,cv2.rotate(original,cv2.ROTATE_180))
+    matcher=TeacherIconMatcher(bank)
+    options=('一气化三清','幽冥鬼眼','唤灵·魂火','佛法无边')
+    for image in (original,rotated):
+        query=cv2.copyMakeBorder(image,3,3,3,3,cv2.BORDER_CONSTANT,value=(160,160,180))
+        assert matcher.match(query,options).option_index==3

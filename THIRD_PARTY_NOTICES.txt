@@ -37,8 +37,12 @@ The bundled generation retains the source URLs, retrieval date, category,
 record identifiers, and SHA-256 for each image. The same third-party rights
 notice above applies to these icons and the three cropped dialog anchors.
 
-The independent Teachers' Day supplement contains 31 records sourced from
+The independent Teachers' Day supplement includes 31 records sourced from
 https://xyq.yzz.cn/focus/202608/1768536.shtml. Original image bytes, per-image
 source URLs and SHA-256 hashes are retained. These third-party game assets
 remain subject to their original rights; the project code license does not
 grant rights to them. See data/teachers_day/supplements/README.md for changes.
+
+A supplemental 180-degree pixel rotation of NetEase's 佛法无边 icon is retained
+with its original source reference and transformation hashes. The official
+original remains unchanged. This variant is also third-party game content.

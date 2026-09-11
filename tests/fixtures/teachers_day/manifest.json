@@ -134,5 +134,23 @@
       "option-c": "feedback-7-option-c.png",
       "option-d": "feedback-7-option-d.png"
     }
+  },
+  {
+    "sample": 8,
+    "answer": "佛法无边",
+    "option_index": 3,
+    "options": [
+      "一气化三清",
+      "幽冥鬼眼",
+      "唤灵·魂火",
+      "佛法无边"
+    ],
+    "files": {
+      "icon": "feedback-8-icon.png",
+      "option-a": "feedback-8-option-a.png",
+      "option-b": "feedback-8-option-b.png",
+      "option-c": "feedback-8-option-c.png",
+      "option-d": "feedback-8-option-d.png"
+    }
   }
 ]

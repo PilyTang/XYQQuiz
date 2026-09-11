@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "generation_id": "20260911-fofa-rot180-32",
+  "source_url": "https://xyq.yzz.cn/focus/202608/1768536.shtml",
+  "updated_at": "2026-09-11",
+  "record_count": 32,
+  "image_count": 32,
+  "records_sha256": "578ad281c01a63ebcd7c0003c83bc2d1bd2ad2f155b0cb43910a3e2764148bec",
+  "derived_images": [
+    {
+      "source_id": "teachers_day:variant:310:rot180",
+      "original_source_id": "teachers_day:310",
+      "original_sha256": "11e47e325fe0b80d5729795472fb9a80731128be16dc4d0bbf81f9300e027970",
+      "transform": "rotate_180_degrees",
+      "sha256": "e9b5bdf89a1ecb4b540580faf453775472ce5f8b4ebbbe76a3582e7a29b475e1"
+    }
+  ]
+}
