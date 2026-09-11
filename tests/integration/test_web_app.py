@@ -612,7 +612,7 @@ def test_both_bank_updates_report_independent_outcomes(tmp_path, failed_bank):
         assert payload["banks"]["keju"]["ok"] is (failed_bank != "keju")
         assert payload["banks"]["teachers_day"]["ok"] is (failed_bank != "teachers_day")
         status = client.get("/api/status").json()
-        assert status["question_banks"]["teachers_day"]["record_count"] == 368
+        assert status["question_banks"]["teachers_day"]["record_count"] == 367
         assert status["question_banks"]["keju"]["available"]
     assert fixture.services.teacher_bank is bank
 

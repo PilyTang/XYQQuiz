@@ -158,6 +158,20 @@ def load_teacher_generation(root: Path, generation_id: str) -> TeacherBankSnapsh
         records.append(record)
     if metadata.get("image_count") != len({record.image_path for record in records}):
         raise ValueError("教师节题库图片数不一致")
+    # Confirmed incorrect source rendition. Match name AND content so an
+    # upstream corrected icon remains eligible, regardless of record ID.
+    rejected = [i for i,r in enumerate(records)
+                if normalize_text(r.name) == normalize_text('佛法无边')
+                and r.image_sha256 == '11e47e325fe0b80d5729795472fb9a80731128be16dc4d0bbf81f9300e027970']
+    if rejected:
+        records = [r for i,r in enumerate(records) if i not in rejected]
+        images = [image for i,image in enumerate(images) if i not in rejected]
+        names = {}
+        for i,r in enumerate(records):
+            names.setdefault(normalize_text(r.name),[]).append(i)
+        metadata = dict(metadata, source_record_count=metadata['record_count'],
+                        excluded_record_count=len(rejected),record_count=len(records),
+                        image_count=len({r.image_path for r in records}))
     return TeacherBankSnapshot(
         generation_id, tuple(records), tuple(images),
         MappingProxyType({name: tuple(indexes) for name, indexes in names.items()}),

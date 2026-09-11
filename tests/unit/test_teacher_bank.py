@@ -88,10 +88,10 @@ def test_corruption_recovers_previous_valid_generation(tmp_path, broken):
 def test_bundled_bank_and_old_custom_data_directory_seed_offline(tmp_path):
     bundled = ROOT / "data"
     bank = load_teacher_bank(bundled / "teachers_day")
-    assert bank.count == 368 and len(bank.by_name) == 366
+    assert bank.count == 367 and len(bank.by_name) == 366
     (tmp_path / "current.json").write_text('"keep-keju-pointer"')
     initialize_teacher_assets(tmp_path, bundled)
-    assert load_teacher_bank(tmp_path / "teachers_day").count == 368
+    assert load_teacher_bank(tmp_path / "teachers_day").count == 367
     assert (tmp_path / "current.json").read_text() == '"keep-keju-pointer"'
     assert (tmp_path / "layouts/teachers-day.json").is_file()
     pointer = tmp_path / "teachers_day/current.json"
@@ -231,16 +231,33 @@ def test_future_supplement_source_uses_same_image_normalization():
     assert np.array_equal(original._body_features,future._body_features)
 
 
-def test_fofa_rotation_is_a_separate_exact_variant_and_both_match():
+def test_only_corrected_fofa_variant_is_eligible():
     from xyq_quiz.knowledge.teacher_matcher import TeacherIconMatcher
     bank=load_teacher_bank(ROOT/'data/teachers_day')
     indexes=bank.by_name['佛法无边']
-    assert len(indexes)==2
-    original, rotated=(bank.images[i] for i in indexes)
-    assert bank.records[indexes[0]].source_id=='teachers_day:310'
+    assert len(indexes)==1
+    rotated=bank.images[indexes[0]]
+    original=cv2.imdecode(np.frombuffer((bank.directory/'icons/11e47e325fe0b80d5729795472fb9a80731128be16dc4d0bbf81f9300e027970.png').read_bytes(),np.uint8),cv2.IMREAD_COLOR)
+    assert bank.records[indexes[0]].source_id=='teachers_day:variant:310:rot180'
     assert np.array_equal(rotated,cv2.rotate(original,cv2.ROTATE_180))
     matcher=TeacherIconMatcher(bank)
     options=('一气化三清','幽冥鬼眼','唤灵·魂火','佛法无边')
-    for image in (original,rotated):
+    for image in (rotated,):
         query=cv2.copyMakeBorder(image,3,3,3,3,cv2.BORDER_CONSTANT,value=(160,160,180))
         assert matcher.match(query,options).option_index==3
+
+
+def test_official_update_cannot_reintroduce_bad_fofa_but_accepts_new_image(tmp_path):
+    bank=load_teacher_bank(ROOT/'data/teachers_day')
+    bad=(bank.directory/'icons/11e47e325fe0b80d5729795472fb9a80731128be16dc4d0bbf81f9300e027970.png').read_bytes()
+    row=dict(Name='佛法无边',Id=9876,TypeName='化生寺',Type='hss',Pic='https://w.163.com/new.png',PicName='new.png')
+    updater=TeacherBankUpdater(tmp_path,minimum_records=2)
+    for _ in range(2):
+        updated=updater.publish([*rows(),row],lambda r:bad if r['Id']==9876 else icon(r))
+        assert '佛法无边' not in updated.by_name
+        assert updated.count==2
+    extra=load_teacher_bank(ROOT/'data/teachers_day/supplements')
+    corrected=extra.records[extra.by_name['佛法无边'][0]]
+    good=(extra.directory/corrected.image_path).read_bytes()
+    updated=updater.publish([*rows(),row],lambda r:good if r['Id']==9876 else icon(r))
+    assert '佛法无边' in updated.by_name
