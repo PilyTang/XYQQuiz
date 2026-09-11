@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>梦幻西游答题助手</title>
-    <link rel="stylesheet" href="/app.css">
+    <link rel="stylesheet" href="/app.css?v=0.5.6-update-prompt">
   </head>
   <body>
     <main class="app-shell">
@@ -151,6 +151,24 @@
         </div>
       </form>
     </dialog>
-    <script src="/app.js" defer></script>
+    <dialog id="softwareUpdateDialog" class="settings-dialog confirmation-dialog" aria-labelledby="softwareUpdateTitle" aria-describedby="softwareUpdateMessage">
+      <form method="dialog">
+        <div class="dialog-title-row">
+          <div>
+            <p class="eyebrow">发现新版本</p>
+            <h2 id="softwareUpdateTitle">软件可以更新了</h2>
+          </div>
+          <button type="submit" class="icon-button" aria-label="关闭更新提示" value="later">×</button>
+        </div>
+        <p id="softwareUpdateMessage" class="dialog-help"></p>
+        <pre id="softwareUpdateDialogNotes" class="update-dialog-notes"></pre>
+        <p class="dialog-help">下载后请解压到新目录运行。稍后也可从右侧“软件更新”中下载。</p>
+        <div class="dialog-actions">
+          <button type="submit" class="secondary" value="later" autofocus>稍后再说</button>
+          <a id="softwareUpdateDialogDownload" class="update-download-button" target="_blank" rel="noopener noreferrer">下载新版</a>
+        </div>
+      </form>
+    </dialog>
+    <script src="/app.js?v=0.5.6-update-prompt" defer></script>
   </body>
 </html>

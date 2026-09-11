@@ -75,6 +75,9 @@ button.compact { padding: 7px 10px; font-size: .76rem; }
 .settings-dialog .panel-error { min-height: 1.2em; margin: 12px 0 0; }
 .confirmation-dialog { width: min(500px, calc(100vw - 32px)); }
 .confirmation-dialog .dialog-actions { grid-template-columns: 1fr 1fr; }
+.update-dialog-notes { max-height: 35vh; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: .85rem; line-height: 1.65; padding: 14px; border-radius: 8px; background: #0b1220; }
+.update-download-button { display: flex; align-items: center; justify-content: center; padding: 10px; border-radius: 8px; background: #22c55e; color: #052e16; font-weight: 700; text-decoration: none; }
+.update-download-button:focus-visible { outline: 2px solid #e5edf8; outline-offset: 3px; }
 @media (max-width: 960px) {
   body { overflow: auto; }
   .app-shell { grid-template-columns: 1fr; height: auto; min-height: 100vh; }

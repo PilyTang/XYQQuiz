@@ -53,7 +53,7 @@ def prepare(package: Path, notes_path: Path) -> dict:
         "sha256": digest, "notes": notes_path.read_text(encoding="utf-8")})
 
 
-def publish(package: Path, manifest: dict, token: str) -> None:
+def publish(package: Path, manifest: dict, token: str, *, replace_existing: bool = False) -> None:
     # No token in URL, command arguments, stored remote config, or console output.
     env = os.environ.copy()
     env.update({"GIT_TERMINAL_PROMPT": "0", "GIT_CONFIG_COUNT": "2",
@@ -109,7 +109,7 @@ def publish(package: Path, manifest: dict, token: str) -> None:
             response.raise_for_status()
             release = response.json()
             release_id = release["id"]
-            if release.get("draft"):
+            if release.get("draft") or replace_existing:
                 for asset in (package, Path(str(package) + ".sha256")):
                     print(f"Uploading {asset.name}...", flush=True)
                     response = client.post(f"{API}/-/releases/{release_id}/asset-upload-url", json={
@@ -129,7 +129,7 @@ def publish(package: Path, manifest: dict, token: str) -> None:
                         raise ValueError("上传确认地址不属于此仓库")
                     client.post(verify_url, params={"ttl": 0}).raise_for_status()
                 client.patch(f"{API}/-/releases/{release_id}", json={
-                    "draft": False, "make_latest": "true"}).raise_for_status()
+                    "draft": False, "make_latest": "true", "body": manifest["notes"]}).raise_for_status()
         # Verify the public package before changing the version-discovery pointer.
         with httpx.Client(follow_redirects=True, timeout=60) as public:
             print("Verifying anonymous package download...", flush=True)
@@ -158,13 +158,15 @@ def main():
     parser.add_argument("--notes", type=Path, required=True)
     parser.add_argument("--token-file", type=Path)
     parser.add_argument("--prepare-only", action="store_true")
+    parser.add_argument("--replace-existing", action="store_true",
+                        help="Explicitly replace same-version release assets; back up the previous package first")
     args = parser.parse_args()
     try:
         manifest = prepare(args.package, args.notes)
         output = args.package.parent / f"latest-{manifest['version']}.json"
         output.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         if not args.prepare_only:
-            publish(args.package, manifest, read_token(args.token_file))
+            publish(args.package, manifest, read_token(args.token_file), replace_existing=args.replace_existing)
         print(f"{'Prepared' if args.prepare_only else 'Published and verified'}: {manifest['version']}")
         print(f"Manifest: {output}")
         return 0

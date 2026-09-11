@@ -1098,6 +1098,7 @@ async function softwareUpdateAction(action, extra = {}) {
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "更新检查不可用");
     renderSoftwareUpdate(result);
+    return result;
   } catch (error) {
     if (action === "settings") enabled.checked = !extra.enabled;
     document.getElementById("softwareUpdateStatus").textContent = error.message;
@@ -1109,12 +1110,38 @@ async function initializeSoftwareUpdates() {
     const response = await apiFetch("/api/software-update", {method: "GET"});
     if (!response.ok) throw new Error("更新检查不可用");
     renderSoftwareUpdate(await response.json());
-    await softwareUpdateAction("auto");
+    const initial = await softwareUpdateAction("auto");
+    if (initial?.enabled && initial.available && !initial.error) {
+      pendingStartupUpdate = initial;
+      showStartupUpdate();
+    }
     window.setInterval(() => { void softwareUpdateAction("auto"); }, 3600000);
   } catch (error) {
     document.getElementById("softwareUpdateStatus").textContent = error.message;
   }
 }
+
+let pendingStartupUpdate = null;
+const softwareUpdateDialog = document.getElementById("softwareUpdateDialog");
+
+function showStartupUpdate() {
+  if (!pendingStartupUpdate || document.hidden || document.querySelector("dialog[open]")) return;
+  const value = pendingStartupUpdate;
+  pendingStartupUpdate = null;
+  document.getElementById("softwareUpdateTitle").textContent = `发现新版 ${value.latest.version}`;
+  document.getElementById("softwareUpdateMessage").textContent = `当前版本 ${value.current_version}，新版本已可下载。`;
+  document.getElementById("softwareUpdateDialogNotes").textContent = value.latest.notes || "此版本暂无更新说明。";
+  document.getElementById("softwareUpdateDialogDownload").href = value.latest.download_url;
+  softwareUpdateDialog.showModal();
+  scheduleNativePreviewLayout();
+}
+
+for (const dialog of document.querySelectorAll("dialog")) {
+  dialog.addEventListener("close", showStartupUpdate);
+}
+document.addEventListener("visibilitychange", showStartupUpdate);
+softwareUpdateDialog.addEventListener("close", scheduleNativePreviewLayout);
+document.getElementById("softwareUpdateDialogDownload").addEventListener("click", () => softwareUpdateDialog.close());
 
 document.getElementById("softwareUpdateButton").addEventListener("click", () => { void softwareUpdateAction("check"); });
 document.getElementById("softwareUpdateEnabled").addEventListener("change", (event) => {
