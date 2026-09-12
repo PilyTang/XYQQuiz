@@ -235,7 +235,7 @@ def test_partial_options_require_strong_separated_image_evidence(matcher,kind):
 
 
 @pytest.mark.parametrize("hidden,confidence", [(0,0.),(0,.5),(1,.5)])
-def test_teacher_pipeline_partial_ocr_uses_only_current_readable_options(matcher,hidden,confidence):
+def test_teacher_pipeline_rejects_weak_answer_or_competing_duplicate(matcher,hidden,confidence):
     from xyq_quiz.capture.models import CapturedFrame, Rect
     from xyq_quiz.recognition.models import DetectedLayout, OCRText
     from xyq_quiz.recognition.teachers_day import recognize_teacher
@@ -251,12 +251,59 @@ def test_teacher_pipeline_partial_ocr_uses_only_current_readable_options(matcher
     recognized = recognize_teacher(CapturedFrame.create(8,0,image),3,layout,matcher,
                                    lambda *_: ocrs,lambda *_: None,0.)
     assert recognized.frame_id == 8 and recognized.generation_id == 3
-    if hidden == 1:
+    if confidence > 0:
         assert recognized.option_index is None and recognized.overlay_rect is None
     else:
         assert recognized.option_index == 1 and recognized.high_confidence
         assert recognized.confidence_score > 70
         assert recognized.overlay_rect == layout.option_rects[1]
+
+
+@pytest.mark.parametrize("mode,reverse,expected", [
+    ("weak-distractor", False, 3),
+    ("weak-distractor", True, 0),
+    ("weak-answer", False, None),
+    ("text-tie", False, None),
+    ("empty-distractor", False, None),
+])
+def test_real_shaqi_icon_ranks_all_labels_before_answer_confidence(matcher, mode, reverse, expected):
+    from xyq_quiz.capture.models import CapturedFrame, Rect
+    from xyq_quiz.recognition.models import DetectedLayout, OCRText
+    from xyq_quiz.recognition.teachers_day import recognize_teacher
+    # Actual icon crop from the reported failure; no full game screenshot.
+    path = ROOT / "tests/fixtures/teachers_day/feedback-9-icon.png"
+    query = cv2.imdecode(np.frombuffer(path.read_bytes(), np.uint8), cv2.IMREAD_COLOR)
+    image = np.full((200, 500, 3), 170, np.uint8)
+    h, w = query.shape[:2]
+    image[:h, :w] = query
+    layout = DetectedLayout(question_rect=Rect(0, 0, w, h), icon_rect=Rect(0, 0, w, h),
+        option_rects=tuple(Rect(i*100, 100, 90, 50) for i in range(4)),
+        anchor_scores=(1.,), activity_kind=ActivityKind.TEACHERS_DAY)
+    texts = ["鹰击", "净世煌火", "狮搏", "煞气决"]
+    confidences = [.75322, .86453, .99756, .96565]
+    if mode == "weak-answer":
+        confidences[0], confidences[3] = .97, .75
+    elif mode == "text-tie":
+        texts[0] = "煞气绝"
+    elif mode == "empty-distractor":
+        texts[0] = ""
+        confidences[0] = 0.
+    ocrs = tuple(OCRText(text, confidence, 0.) for text, confidence in zip(texts, confidences))
+    if reverse:
+        ocrs = ocrs[::-1]
+    result = recognize_teacher(CapturedFrame.create(9, 0, image), 3, layout, matcher,
+        lambda *_: ocrs, lambda *_: None, 0.)
+    assert result.option_index == expected
+    if expected is None:
+        assert result.overlay_rect is None and result.confidence_level is ConfidenceLevel.NONE
+    else:
+        assert result.official_answer == "煞气诀"
+        assert result.confidence_level is ConfidenceLevel.CANDIDATE
+        assert not result.high_confidence
+        assert result.image_score == pytest.approx(96.68, abs=.05)
+        assert result.option_score == pytest.approx(66.67)
+        assert result.option_runner_up_score == 0.
+        assert result.overlay_rect == layout.option_rects[expected]
 
 
 def dialog_canvas(size=(1024,768), scale=1., origin=None):

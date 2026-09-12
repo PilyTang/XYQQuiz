@@ -12,7 +12,7 @@ from xyq_quiz.knowledge.teacher_bank import TeacherBankSnapshot, TeacherSkillRec
 from xyq_quiz.recognition.models import ConfidenceLevel
 
 
-MATCHER_VERSION = "teachers-day-partial-options-border-2"
+MATCHER_VERSION = "teachers-day-option-score-margin-3"
 
 
 def _near_name(left: str, right: str) -> bool:

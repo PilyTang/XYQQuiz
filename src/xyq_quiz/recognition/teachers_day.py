@@ -43,15 +43,17 @@ def recognize_teacher(frame, generation_id, layout, matcher, read_options, store
     if len(ocrs) != 4 or sum(readable) < 3:
         return result(option_texts=texts,confidence_reason="选项文字尚未读清，正在重试")
     match_started=time.perf_counter()
-    if all(readable):
-        matched=matcher.match(icon,texts)
-    else:
-        # Discard unreliable OCR rather than pretending the covered text was
-        # read. Partial matching can only select an exact, readable option
-        # supported by strong image evidence against other bank candidates.
-        visible=tuple(text if clear else "" for text,clear in zip(texts,readable,strict=True))
-        matched=matcher.match(icon,visible,allow_partial=True)
+    # Rank all available labels by the same image/text scores and margins.
+    # A weak distractor still participates in comparisons; it must not turn
+    # off approximate matching for a clearly readable answer elsewhere.
+    matched=matcher.match(icon,texts,allow_partial=True)
     match_ms=(time.perf_counter()-match_started)*1000
+    if matched.option_index is not None and not readable[matched.option_index]:
+        return result(
+            option_texts=texts, confidence_reason="答案选项文字尚未读清，正在重试",
+            image_score=matched.score, image_runner_up_score=matched.runner_up_score,
+            image_candidates=matched.candidates,
+        )
     record=matched.record
     return result(
         option_texts=texts,official_answer=record.name if record else None,
