@@ -25,11 +25,11 @@ XYQQuiz 是一个在 Windows 本机运行的《梦幻西游》答题辅助显示
 - 支持单实例启动、端口冲突提示、题库原子更新和一键退出。
 - 可按需保存识别诊断或不含游戏画面的环境诊断。
 
-当前版本为 `0.5.6`，新增 CNB 软件更新检查与国内下载入口；保留教师节图标修正：“佛法无边”图标加入 180° 旋转版本并排除已确认错误的原图，保留补充库增量合并、性能记录、标准模式动态取帧及首次初始化修复，保留硬件自动分档、低配模式和统一框选样式，详见 [0.5.6 更新说明](docs/releases/v0.5.6.md)。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。教师节基础验证范围见 [v0.4 验收记录](docs/v0.4-validation.md)，名称差异与未收录干扰项修复见 [v0.4.1 修复记录](docs/v0.4.1-feedback-fix.md)。
+当前版本为 `0.5.7`，修复低可信干扰项导致近似答案漏报的问题，四个已有文字选项统一比较相似度与分差；保留 CNB 软件更新检查与国内下载入口；保留教师节图标修正：“佛法无边”图标加入 180° 旋转版本并排除已确认错误的原图，保留补充库增量合并、性能记录、标准模式动态取帧及首次初始化修复，保留硬件自动分档、低配模式和统一框选样式，详见 [0.5.7 更新说明](docs/releases/v0.5.7.md)。Windows 11 x64 已验证；Windows 10 1903 及以上 x64 是目标兼容范围，但尚未完成实机验证。教师节基础验证范围见 [v0.4 验收记录](docs/v0.4-validation.md)，名称差异与未收录干扰项修复见 [v0.4.1 修复记录](docs/v0.4.1-feedback-fix.md)。
 
 ## 直接使用 Windows 便携版
 
-1. 获取 `XYQQuiz-v0.5.6-win10-win11-x64.zip` 和同名 `.sha256`。
+1. 获取 `XYQQuiz-v0.5.7-win10-win11-x64.zip` 和同名 `.sha256`。
 2. 完整解压到一个新目录，不要直接在压缩包里运行。
 3. 双击 `XYQQuiz.exe`，首次捕获时允许 UAC 管理员权限请求。
 4. 等待默认 `1440×900` 的可缩放桌面窗口打开；游戏题面出现后，答案框会显示在窗口预览中。
@@ -106,13 +106,13 @@ Copy-Item config.example.json config.json
 
 ```powershell
 .venv\Scripts\python.exe -m pip install --require-hashes -r requirements-release.txt
-.\scripts\build-release.ps1 -Version 0.5.6 -Commit working-tree -AllowDevelopmentCommit
+.\scripts\build-release.ps1 -Version 0.5.7 -Commit working-tree -AllowDevelopmentCommit
 ```
 
 正式发布构建必须从干净提交运行，并传入完整 40 位 Git SHA：
 
 ```powershell
-.\scripts\build-release.ps1 -Version 0.5.6 -Commit (git rev-parse HEAD)
+.\scripts\build-release.ps1 -Version 0.5.7 -Commit (git rev-parse HEAD)
 ```
 
 产物位于 `release\`，包括 ZIP 和 SHA-256 文件。构建脚本会审计公开树和最终 ZIP，拒绝打入 `user-data\`、`diagnostics\` 或本地 `questions.json`。GitHub 的 `v*` 标签工作流会先做公开内容审计和完整测试，再使用标签对应的真实提交 SHA 构建并创建 Release。
@@ -125,7 +125,7 @@ Copy-Item config.example.json config.json
 
 ## 已知限制
 
-- Windows 10 1909（18363.657）已收到 `windows_capture.pyd / 0xC0000409` 原生捕获崩溃反馈，0.5.6 尚未修复；目标系统范围不代表所有系统和驱动组合已验收。
+- Windows 10 1909（18363.657）已收到 `windows_capture.pyd / 0xC0000409` 原生捕获崩溃反馈，0.5.7 尚未修复；目标系统范围不代表所有系统和驱动组合已验收。
 - 硬件分档已测试逻辑边界及本机读取，尚未完成多台真实低端机性能验证；线程数、内存和适配器检测不是跑分保证。
 - 游戏 UI、字体、DPI、动画遮挡或极端分辨率变化可能导致识别失败。
 - 题目不在题库、OCR 置信度不足，或正确答案无法和选项唯一匹配时，可能已显示 OCR 题目但不会画框；这是预期的安全降级。

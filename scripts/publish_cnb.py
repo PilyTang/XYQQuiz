@@ -129,7 +129,8 @@ def publish(package: Path, manifest: dict, token: str, *, replace_existing: bool
                         raise ValueError("上传确认地址不属于此仓库")
                     client.post(verify_url, params={"ttl": 0}).raise_for_status()
                 client.patch(f"{API}/-/releases/{release_id}", json={
-                    "draft": False, "make_latest": "true", "body": manifest["notes"]}).raise_for_status()
+                    "draft": False, "prerelease": False, "make_latest": "true",
+                    "name": "XYQQuiz " + manifest["version"], "body": manifest["notes"]}).raise_for_status()
         # Verify the public package before changing the version-discovery pointer.
         with httpx.Client(follow_redirects=True, timeout=60) as public:
             print("Verifying anonymous package download...", flush=True)
