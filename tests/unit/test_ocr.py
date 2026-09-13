@@ -312,6 +312,36 @@ def test_segmented_rec_only_uses_public_rapidocr_flags_and_joins_in_order() -> N
     ]
 
 
+@pytest.mark.parametrize("via_fallback", [False, True])
+def test_complete_detection_restores_persistent_engine_mode(via_fallback: bool) -> None:
+    class StatefulRapidOCR:
+        def __init__(self) -> None:
+            self.flags = {"use_det": True, "use_cls": True, "use_rec": True}
+
+        def __call__(self, image: np.ndarray, **kwargs: object) -> SimpleNamespace:
+            self.flags.update(kwargs)
+            if self.flags["use_det"]:
+                return SimpleNamespace(
+                    txts=("完整题目",), scores=(0.99,), elapse=0.01
+                )
+            return SimpleNamespace(txts=("乱码",), scores=(0.2,), elapse=0.001)
+
+    backend = StatefulRapidOCR()
+    engine = RapidOCREngine(engine_factory=lambda: backend)
+    image = _canvas()
+    _draw_text(image, "question", (40, 48))
+    if via_fallback:
+        result = engine.recognize_region(image, OCRRole.QUESTION, fallback_image=image)
+        assert engine.diagnostics_snapshot().fallback_count == 1
+    else:
+        engine._recognize_line(image)
+        assert backend.flags["use_det"] is False
+        result = engine.recognize(image)
+
+    assert result.text == "完整题目"
+    assert backend.flags == {"use_det": True, "use_cls": True, "use_rec": True}
+
+
 def test_question_rec_only_ignores_zero_confidence_empty_decorative_line() -> None:
     calls = 0
 
@@ -354,7 +384,7 @@ def test_segmented_rec_only_safely_falls_back_to_complete_detection(failure: str
     class FakeRapidOCR:
         def __call__(self, image: np.ndarray, **kwargs: object) -> SimpleNamespace:
             calls.append((image.shape, kwargs))
-            if kwargs:
+            if kwargs.get("use_det") is False:
                 if failure == "unsupported":
                     raise TypeError("unexpected keyword argument use_det")
                 if failure == "error":
@@ -378,7 +408,7 @@ def test_segmented_rec_only_safely_falls_back_to_complete_detection(failure: str
 
     assert result.text == "完整检测"
     assert result.confidence == pytest.approx(0.95)
-    assert calls[-1] == (fallback.shape, {})
+    assert calls[-1] == (fallback.shape, {"use_det": True, "use_cls": True, "use_rec": True})
     diagnostics = engine.diagnostics_snapshot()
     assert diagnostics.fallback_count == 1
     assert diagnostics.line_count_distribution == {1: 1}
@@ -388,7 +418,7 @@ def test_segmented_rec_only_safely_falls_back_to_complete_detection(failure: str
 def test_rec_only_invalid_score_always_falls_back(score: float) -> None:
     class FakeRapidOCR:
         def __call__(self, _image: np.ndarray, **kwargs: object) -> SimpleNamespace:
-            if kwargs:
+            if kwargs.get("use_det") is False:
                 return SimpleNamespace(txts=("快路",), scores=(score,), elapse=0.001)
             return SimpleNamespace(txts=("完整检测",), scores=(0.9,), elapse=0.010)
 
@@ -421,7 +451,7 @@ def test_rec_only_malformed_output_always_falls_back(
 ) -> None:
     class FakeRapidOCR:
         def __call__(self, _image: np.ndarray, **kwargs: object) -> SimpleNamespace:
-            if kwargs:
+            if kwargs.get("use_det") is False:
                 return SimpleNamespace(txts=texts, scores=scores, elapse=0.001)
             return SimpleNamespace(txts=("完整检测",), scores=(0.9,), elapse=0.010)
 
@@ -439,7 +469,7 @@ def test_rec_only_malformed_output_always_falls_back(
 def test_numpy_boolean_score_always_falls_back(score: np.bool_) -> None:
     class FakeRapidOCR:
         def __call__(self, _image: np.ndarray, **kwargs: object) -> SimpleNamespace:
-            if kwargs:
+            if kwargs.get("use_det") is False:
                 return SimpleNamespace(txts=("快路",), scores=(score,), elapse=0.001)
             return SimpleNamespace(txts=("完整检测",), scores=(0.9,), elapse=0.010)
 
@@ -481,7 +511,7 @@ def test_dense_banner_forces_complete_detection_before_fake_rec_only() -> None:
     )
 
     assert result.text == "完整题面"
-    assert calls == [{}]
+    assert calls == [{"use_det": True, "use_cls": True, "use_rec": True}]
     diagnostics = engine.diagnostics_snapshot()
     assert diagnostics.rec_only_success_count == 0
     assert diagnostics.fallback_count == 1
@@ -502,7 +532,7 @@ def test_unreliable_segmentation_falls_back_before_any_rec_only_call() -> None:
     result = engine.recognize_region(image, OCRRole.QUESTION, fallback_image=image)
 
     assert result.text == "完整检测"
-    assert calls == [{}]
+    assert calls == [{"use_det": True, "use_cls": True, "use_rec": True}]
     assert engine.diagnostics_snapshot().fallback_count == 1
 
 
@@ -519,7 +549,7 @@ def test_diagnostics_snapshot_does_not_expose_mutable_internal_state() -> None:
 def test_segmentation_failure_falls_back_without_persisting_line_images() -> None:
     class FakeRapidOCR:
         def __call__(self, image: np.ndarray, **kwargs: object) -> SimpleNamespace:
-            assert kwargs == {}
+            assert kwargs == {"use_det": True, "use_cls": True, "use_rec": True}
             return SimpleNamespace(txts=("fallback",), scores=(0.9,), elapse=0.001)
 
     engine = RapidOCREngine(engine_factory=FakeRapidOCR)

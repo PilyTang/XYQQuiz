@@ -34,7 +34,10 @@ def test_rapidocr_recognizes_generated_high_contrast_chinese_text() -> None:
     assert result.elapsed_ms > 0
 
 
-def test_dense_banner_with_small_question_uses_real_complete_detection() -> None:
+@pytest.mark.parametrize("after_rec_only", [False, True])
+def test_dense_banner_with_small_question_uses_real_complete_detection(
+    after_rec_only: bool,
+) -> None:
     font_path = Path(r"C:\Windows\Fonts\msyh.ttc")
     canvas = Image.new("RGB", (800, 300), "white")
     draw = ImageDraw.Draw(canvas)
@@ -55,6 +58,10 @@ def test_dense_banner_with_small_question_uses_real_complete_detection() -> None
     engine = RapidOCREngine()
 
     try:
+        if after_rec_only:
+            # Prime the same engine with a real recognition-only call.
+            line = bgr[190:240, 70:230].copy()
+            assert "真正小题" in engine._recognize_line(line).text
         result = engine.recognize_region(
             bgr,
             OCRRole.QUESTION,
@@ -73,7 +80,7 @@ def test_rapidocr_adapter_is_lazy_and_orders_lines_by_position() -> None:
     calls = 0
 
     class FakeRapidOCR:
-        def __call__(self, _image: np.ndarray) -> SimpleNamespace:
+        def __call__(self, _image: np.ndarray, **kwargs: object) -> SimpleNamespace:
             return SimpleNamespace(
                 boxes=np.array(
                     [
@@ -106,7 +113,7 @@ def test_rapidocr_adapter_is_lazy_and_orders_lines_by_position() -> None:
 
 def test_rapidocr_adapter_returns_empty_text_for_empty_output() -> None:
     class EmptyRapidOCR:
-        def __call__(self, _image: np.ndarray) -> SimpleNamespace:
+        def __call__(self, _image: np.ndarray, **kwargs: object) -> SimpleNamespace:
             return SimpleNamespace(boxes=None, txts=None, scores=None, elapse=0)
 
     result = RapidOCREngine(engine_factory=EmptyRapidOCR).recognize(
@@ -142,7 +149,7 @@ def test_rapidocr_uses_one_engine_per_worker_without_result_pollution() -> None:
             self._active_lock = threading.Lock()
             self._result_marker = ""
 
-        def __call__(self, image: np.ndarray) -> SimpleNamespace:
+        def __call__(self, image: np.ndarray, **kwargs: object) -> SimpleNamespace:
             marker = str(int(image[0, 0, 0]))
             with self._active_lock:
                 if self._active:
@@ -187,7 +194,7 @@ def test_rapidocr_reuses_the_engine_owned_by_the_current_thread() -> None:
         def __init__(self, instance_id: int) -> None:
             self.instance_id = instance_id
 
-        def __call__(self, _image: np.ndarray) -> SimpleNamespace:
+        def __call__(self, _image: np.ndarray, **kwargs: object) -> SimpleNamespace:
             return SimpleNamespace(
                 boxes=None,
                 txts=(str(self.instance_id),),

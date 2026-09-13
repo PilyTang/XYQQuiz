@@ -105,7 +105,10 @@ class RapidOCREngine:
         self._line_count_distribution: dict[int, int] = {}
 
     def recognize(self, image: NDArray[np.uint8]) -> OCRText:
-        output = self._get_engine()(image)
+        # RapidOCR retains flags across calls; restore detection after rec-only use.
+        output = self._get_engine()(
+            image, use_det=True, use_cls=True, use_rec=True
+        )
         return _parse_detection_output(output)
 
     def recognize_region(

@@ -14,10 +14,12 @@
 
 ## 维护者发布
 
+仅在用户明确要求正式发布更新时执行完整的 [正式发布流程](release-process.md)。普通修复、测试和本地打包不自动上传或更新线上 `latest.json`。本节是 CNB 操作细节，不构成发布授权。
+
 先完成测试、构建和冻结包自检，再运行：
 
 ```powershell
-.venv\Scripts\python.exe scripts\publish_cnb.py --package release\XYQQuiz-v0.5.6-win10-win11-x64.zip --notes docs\releases\v0.5.6.md --token-file C:\private\cnb-token.txt
+.venv\Scripts\python.exe scripts\publish_cnb.py --package release\XYQQuiz-v0.5.8-win10-win11-x64.zip --notes docs\releases\v0.5.8.md --token-file C:\private\cnb-token.txt
 ```
 
 令牌文件保存在仓库之外；需要此 CNB 仓库的内容读写和 Release 读写权限。也可通过环境变量 `CNB_TOKEN` 提供，不把值放在命令行或提交到 Git。`--prepare-only` 仅校验本地 ZIP、生成版本清单，不联网、不要求令牌。
