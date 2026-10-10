@@ -12,6 +12,8 @@ jobs:
   release:
     runs-on: windows-2022
     timeout-minutes: 60
+    env:
+      PYTHONUNBUFFERED: "1"
     steps:
       - name: Check out tagged source
         uses: actions/checkout@v7
@@ -55,7 +57,7 @@ jobs:
             throw "Tag $env:GITHUB_REF_NAME does not match application version $Version"
           }
           python scripts/check_public_tree.py
-          python -m pytest -q
+          python -c "import cv2, pytest; cv2.setNumThreads(1); print('OpenCV test threads:', cv2.getNumThreads(), flush=True); raise SystemExit(pytest.main(['-vv', '-o', 'addopts=', '--durations=10']))"
 
       - name: Build portable package
         shell: pwsh
