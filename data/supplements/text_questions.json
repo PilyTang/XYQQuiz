@@ -1,0 +1,3482 @@
+[
+  {
+    "source_id": "tools:yuanxiao:8cac5c2b1077b78dffda",
+    "question": "中国古代的“上元节”指的是哪个节日",
+    "answer": "元宵节",
+    "normalized_question": "中国古代的上元节指的是哪个节日"
+  },
+  {
+    "source_id": "tools:yuanxiao:23e8f3042fe85051878c",
+    "question": "中国传统节日中秋节是指哪一天",
+    "answer": "农历八月十五",
+    "normalized_question": "中国传统节日中秋节是指哪一天"
+  },
+  {
+    "source_id": "tools:yuanxiao:a5447e1eb3f3495ba8eb",
+    "question": "中国民间的“重阳节”是指哪一天",
+    "answer": "农历九月初九",
+    "normalized_question": "中国民间的重阳节是指哪一天"
+  },
+  {
+    "source_id": "tools:yuanxiao:128b46f226744dd9cfe0",
+    "question": "梦幻西游里能够提高防御的宝石是",
+    "answer": "月亮石",
+    "normalized_question": "梦幻西游里能够提高防御的宝石是"
+  },
+  {
+    "source_id": "tools:yuanxiao:b79f3723ff112b887975",
+    "question": "梦幻西游里能够提高躲避力的宝石是",
+    "answer": "神秘石",
+    "normalized_question": "梦幻西游里能够提高躲避力的宝石是"
+  },
+  {
+    "source_id": "tools:yuanxiao:519e76d6829defa8b811",
+    "question": "梦幻西游里查看宠物界面的快捷键是",
+    "answer": "Alt+P",
+    "normalized_question": "梦幻西游里查看宠物界面的快捷键是"
+  },
+  {
+    "source_id": "tools:yuanxiao:a6e43fb22e05419b3e25",
+    "question": "梦幻西游里阴曹地府的森罗殿有几个NPC",
+    "answer": "11个",
+    "normalized_question": "梦幻西游里阴曹地府的森罗殿有几个npc"
+  },
+  {
+    "source_id": "tools:yuanxiao:e5e690a3df2c2462e014",
+    "question": "梦幻西游里麒麟山的太岁府有几个NPC",
+    "answer": "3",
+    "normalized_question": "梦幻西游里麒麟山的太岁府有几个npc"
+  },
+  {
+    "source_id": "tools:yuanxiao:22b124e3b0884650aff6",
+    "question": "梦幻西游里能提高活力上限的辅助技能是",
+    "answer": "养生之道",
+    "normalized_question": "梦幻西游里能提高活力上限的辅助技能是"
+  },
+  {
+    "source_id": "tools:yuanxiao:4918e03f6e3fcdfd277e",
+    "question": "梦幻西游里能提高体力上限的辅助技能是",
+    "answer": "健身术",
+    "normalized_question": "梦幻西游里能提高体力上限的辅助技能是"
+  },
+  {
+    "source_id": "tools:yuanxiao:5a403ef7e9166ac85f92",
+    "question": "梦幻西游里乾坤盘对抗赛活动于每周星期几举行",
+    "answer": "星期三",
+    "normalized_question": "梦幻西游里乾坤盘对抗赛活动于每周星期几举行"
+  },
+  {
+    "source_id": "tools:yuanxiao:926c6a01758ec09f65cd",
+    "question": "梦幻西游里130级的武器和装备可以开运多少个孔数",
+    "answer": "5个",
+    "normalized_question": "梦幻西游里130级的武器和装备可以开运多少个孔数"
+  },
+  {
+    "source_id": "tools:yuanxiao:32b9a61b92422a5522bc",
+    "question": "梦幻西游里不允许摆摊的地方是",
+    "answer": "宝象国",
+    "normalized_question": "梦幻西游里不允许摆摊的地方是"
+  },
+  {
+    "source_id": "tools:yuanxiao:46b13838f12ee50827ed",
+    "question": "梦幻西游里哪个NPC处可以存储获得的普通藏宝图",
+    "answer": "宝石商人",
+    "normalized_question": "梦幻西游里哪个npc处可以存储获得的普通藏宝图"
+  },
+  {
+    "source_id": "tools:yuanxiao:c6fcb9cfb865cc72e7e1",
+    "question": "梦幻西游里至少达到多少级后才能结婚",
+    "answer": "30",
+    "normalized_question": "梦幻西游里至少达到多少级后才能结婚"
+  },
+  {
+    "source_id": "tools:yuanxiao:c0732daf85a28e53977f",
+    "question": "古代“重阳节”里有饮酒的习俗，所饮的酒是",
+    "answer": "菊花酒",
+    "normalized_question": "古代重阳节里有饮酒的习俗所饮的酒是"
+  },
+  {
+    "source_id": "tools:yuanxiao:0fa940dd8e6d6d78240b",
+    "question": "元宵节赏灯的习俗始于什么时期",
+    "answer": "东汉",
+    "normalized_question": "元宵节赏灯的习俗始于什么时期"
+  },
+  {
+    "source_id": "tools:yuanxiao:d9c6035d8484667518b2",
+    "question": "我国古代所说的“醍醐”是一种",
+    "answer": "美酒",
+    "normalized_question": "我国古代所说的醍醐是一种"
+  },
+  {
+    "source_id": "tools:yuanxiao:92bf9aa9bb006c775cb0",
+    "question": "胭脂是古代女子常用的化妆品，一般用来装扮",
+    "answer": "腮部",
+    "normalized_question": "胭脂是古代女子常用的化妆品一般用来装扮"
+  },
+  {
+    "source_id": "tools:yuanxiao:91427474b1e348365a0f",
+    "question": "被称为“花中四君子”的是",
+    "answer": "梅、兰、竹、菊",
+    "normalized_question": "被称为花中四君子的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:d38aa34fa8eb5fb65116",
+    "question": "梦幻西游里要兑换仙玉可以找以下哪个NPC",
+    "answer": "桃源仙子",
+    "normalized_question": "梦幻西游里要兑换仙玉可以找以下哪个npc"
+  },
+  {
+    "source_id": "tools:yuanxiao:2b6f5feab43e81a0a916",
+    "question": "五岳之说自古就有，其中南岳是指",
+    "answer": "衡山",
+    "normalized_question": "五岳之说自古就有其中南岳是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:fb5f99f3a681f612e8f4",
+    "question": "中国古代人们所说的“元旦”是指哪一天",
+    "answer": "春节",
+    "normalized_question": "中国古代人们所说的元旦是指哪一天"
+  },
+  {
+    "source_id": "tools:yuanxiao:442d5047ed10892f11bb",
+    "question": "“众星拱月”是哪种坐骑的装饰",
+    "answer": "凌霄飞剑",
+    "normalized_question": "众星拱月是哪种坐骑的装饰"
+  },
+  {
+    "source_id": "tools:yuanxiao:38d15da5ee2a27b769ec",
+    "question": "古人泡茶注重用水，以下被视为上等茶水的是",
+    "answer": "山泉水",
+    "normalized_question": "古人泡茶注重用水以下被视为上等茶水的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:22babdf3ad7d9f6c6648",
+    "question": "我国古代酿酒的主要原料是",
+    "answer": "粮食",
+    "normalized_question": "我国古代酿酒的主要原料是"
+  },
+  {
+    "source_id": "tools:yuanxiao:c5cb2e23246519d9e875",
+    "question": "下列具有消肿止痛，凉肝定惊作用的一味中草药是",
+    "answer": "重楼",
+    "normalized_question": "下列具有消肿止痛凉肝定惊作用的一味中草药是"
+  },
+  {
+    "source_id": "tools:yuanxiao:21f8dfe8beb80a1cd942",
+    "question": "下列哪种草药能够治疗呕吐泻痢",
+    "answer": "黄连",
+    "normalized_question": "下列哪种草药能够治疗呕吐泻痢"
+  },
+  {
+    "source_id": "tools:yuanxiao:2662d85f27955c1362ae",
+    "question": "中草药里“甘草”的入药部分实际是植物的",
+    "answer": "根",
+    "normalized_question": "中草药里甘草的入药部分实际是植物的"
+  },
+  {
+    "source_id": "tools:yuanxiao:e6797371bb463be38ce1",
+    "question": "古代所称的“杏林高手”是指",
+    "answer": "医术高明之人",
+    "normalized_question": "古代所称的杏林高手是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:e0d2b8e175a58ff747cc",
+    "question": "梦幻西游里熔炼技巧可以产出以下哪种材料",
+    "answer": "钨金",
+    "normalized_question": "梦幻西游里熔炼技巧可以产出以下哪种材料"
+  },
+  {
+    "source_id": "tools:yuanxiao:1e04716b099c887fd036",
+    "question": "喜好饮酒，自称“酒中仙”的著名诗人是",
+    "answer": "李白",
+    "normalized_question": "喜好饮酒自称酒中仙的著名诗人是"
+  },
+  {
+    "source_id": "tools:yuanxiao:f66233ec1b2fe792ae42",
+    "question": "“煮酒论英雄”的典故发生时间最接近哪个时期",
+    "answer": "三国时期",
+    "normalized_question": "煮酒论英雄的典故发生时间最接近哪个时期"
+  },
+  {
+    "source_id": "tools:yuanxiao:c5d558c4296d244daa7c",
+    "question": "下面哪一种不属于装备特效",
+    "answer": "吸血",
+    "normalized_question": "下面哪一种不属于装备特效"
+  },
+  {
+    "source_id": "tools:yuanxiao:e9c0e031b97fa88a24eb",
+    "question": "“交杯酒”一般出现在哪种场合",
+    "answer": "结婚喜宴",
+    "normalized_question": "交杯酒一般出现在哪种场合"
+  },
+  {
+    "source_id": "tools:yuanxiao:ea09fe7ae93a5cf14f2f",
+    "question": "正月十五元宵节又称为“上元节”，那么“中元节”是指哪一天",
+    "answer": "七月十五",
+    "normalized_question": "正月十五元宵节又称为上元节那么中元节是指哪一天"
+  },
+  {
+    "source_id": "tools:yuanxiao:bc9a09cd1766b163f3f7",
+    "question": "古代被称为建筑业的鼻祖的是",
+    "answer": "鲁班",
+    "normalized_question": "古代被称为建筑业的鼻祖的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:fb87b9286ea42c8f4d7f",
+    "question": "以下哪个是古代著名“唐三彩”工艺中的基本色彩之一",
+    "answer": "白色",
+    "normalized_question": "以下哪个是古代著名唐三彩工艺中的基本色彩之一"
+  },
+  {
+    "source_id": "tools:yuanxiao:896ee73b17f48993ac2c",
+    "question": "被称为“玉石之王”的是哪种工艺原料",
+    "answer": "翡翠",
+    "normalized_question": "被称为玉石之王的是哪种工艺原料"
+  },
+  {
+    "source_id": "tools:yuanxiao:57c9871e9770b833501c",
+    "question": "正月十五元宵节又称为“上元节”，那么“下元节”是指哪一天",
+    "answer": "十月十五",
+    "normalized_question": "正月十五元宵节又称为上元节那么下元节是指哪一天"
+  },
+  {
+    "source_id": "tools:yuanxiao:41d1650e393f6581887d",
+    "question": "我国古代以产醋闻名的是哪个省",
+    "answer": "山西",
+    "normalized_question": "我国古代以产醋闻名的是哪个省"
+  },
+  {
+    "source_id": "tools:yuanxiao:852fe701281420ca6624",
+    "question": "梦幻西游里召唤兽仓库每间能存放最多几只召唤兽",
+    "answer": "10只",
+    "normalized_question": "梦幻西游里召唤兽仓库每间能存放最多几只召唤兽"
+  },
+  {
+    "source_id": "tools:yuanxiao:ed67fdeef23cb2081baa",
+    "question": "古诗名句“采菊东篱下”的下句是",
+    "answer": "悠然见南山",
+    "normalized_question": "古诗名句采菊东篱下的下句是"
+  },
+  {
+    "source_id": "tools:yuanxiao:2dea04bfa0dcfe916993",
+    "question": "古诗名句“郎骑竹马来”的下句是",
+    "answer": "绕床弄青梅",
+    "normalized_question": "古诗名句郎骑竹马来的下句是"
+  },
+  {
+    "source_id": "tools:yuanxiao:b0b2c8e361a64d425929",
+    "question": "“山城”是我国哪座城市的雅号",
+    "answer": "重庆",
+    "normalized_question": "山城是我国哪座城市的雅号"
+  },
+  {
+    "source_id": "tools:yuanxiao:238711c2ab3c3dd53fd5",
+    "question": "下列哪座山是我国四大佛教名山之一",
+    "answer": "峨眉山",
+    "normalized_question": "下列哪座山是我国四大佛教名山之一"
+  },
+  {
+    "source_id": "tools:yuanxiao:77b3762870d84cce22ad",
+    "question": "春秋时期“卧薪尝胆”最终灭掉吴国的是",
+    "answer": "越王勾践",
+    "normalized_question": "春秋时期卧薪尝胆最终灭掉吴国的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:4844d0e62667f68916ff",
+    "question": "三国时期“割须弃袍”的是",
+    "answer": "曹操",
+    "normalized_question": "三国时期割须弃袍的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:2de8cd8cf3a88815e54a",
+    "question": "秦始皇统一全国后，规定国家通用的货币是哪一种",
+    "answer": "圆形方孔钱",
+    "normalized_question": "秦始皇统一全国后规定国家通用的货币是哪一种"
+  },
+  {
+    "source_id": "tools:yuanxiao:e357c69d8ce51d9a640b",
+    "question": "中国古代最早的货币是由什么材料制成的",
+    "answer": "贝壳",
+    "normalized_question": "中国古代最早的货币是由什么材料制成的"
+  },
+  {
+    "source_id": "tools:yuanxiao:8ede5071d9a6e3381fa9",
+    "question": "古代战场上常见以马牵引的战车，这类战车均为",
+    "answer": "两轮车",
+    "normalized_question": "古代战场上常见以马牵引的战车这类战车均为"
+  },
+  {
+    "source_id": "tools:yuanxiao:3c3c43795eb9cc858c6f",
+    "question": "在梦幻西游里，哪项属性的点数分配对“灵力”的影响最大",
+    "answer": "魔力",
+    "normalized_question": "在梦幻西游里哪项属性的点数分配对灵力的影响最大"
+  },
+  {
+    "source_id": "tools:yuanxiao:831af05936e3db050613",
+    "question": "五岳中被称为“北岳”的是",
+    "answer": "恒山",
+    "normalized_question": "五岳中被称为北岳的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:7ba39022553794956606",
+    "question": "我国最大的佛像是下列哪一座",
+    "answer": "乐山大佛",
+    "normalized_question": "我国最大的佛像是下列哪一座"
+  },
+  {
+    "source_id": "tools:yuanxiao:3ebc43d3c3ebdf7960fb",
+    "question": "道教名山武当山位于哪个省",
+    "answer": "湖北省",
+    "normalized_question": "道教名山武当山位于哪个省"
+  },
+  {
+    "source_id": "tools:yuanxiao:b62b3402101b9244007c",
+    "question": "牌坊是我国古代传统建筑，梦幻西游里的“安定坊”位于哪里",
+    "answer": "建邺城",
+    "normalized_question": "牌坊是我国古代传统建筑梦幻西游里的安定坊位于哪里"
+  },
+  {
+    "source_id": "tools:yuanxiao:2b76f21e8a4b7b636b84",
+    "question": "被称为“天下第一关”的是",
+    "answer": "山海关",
+    "normalized_question": "被称为天下第一关的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:1ae224966e130818adc0",
+    "question": "“五禽戏”起源于汉代，它属于",
+    "answer": "强身健体的功法",
+    "normalized_question": "五禽戏起源于汉代它属于"
+  },
+  {
+    "source_id": "tools:yuanxiao:78f410f529840e923773",
+    "question": "古代发明的“云梯”按用途来讲属于",
+    "answer": "攻城器械",
+    "normalized_question": "古代发明的云梯按用途来讲属于"
+  },
+  {
+    "source_id": "tools:yuanxiao:0fc048dc004dc577d442",
+    "question": "战国时期的兵器大多用哪种材料制成",
+    "answer": "青铜",
+    "normalized_question": "战国时期的兵器大多用哪种材料制成"
+  },
+  {
+    "source_id": "tools:yuanxiao:d225ac0f5b8e73d97802",
+    "question": "项羽“破釜沉舟”战胜秦军是在哪次战役",
+    "answer": "巨鹿之战",
+    "normalized_question": "项羽破釜沉舟战胜秦军是在哪次战役"
+  },
+  {
+    "source_id": "tools:yuanxiao:9dde08eeb1b1ecac9c46",
+    "question": "在梦幻西游里，包括普通阵法在内，一共有多少种阵法",
+    "answer": "11种",
+    "normalized_question": "在梦幻西游里包括普通阵法在内一共有多少种阵法"
+  },
+  {
+    "source_id": "tools:yuanxiao:2c70c40b99470afa49da",
+    "question": "梦幻西游长安城皇宫之下的门是什么门",
+    "answer": "玄武门",
+    "normalized_question": "梦幻西游长安城皇宫之下的门是什么门"
+  },
+  {
+    "source_id": "tools:yuanxiao:1221d0bee528d429854c",
+    "question": "梦幻西游里修炼果可以增加多少点修炼经验",
+    "answer": "150点",
+    "normalized_question": "梦幻西游里修炼果可以增加多少点修炼经验"
+  },
+  {
+    "source_id": "tools:yuanxiao:54c6ca6b1ecd6c965e8d",
+    "question": "下列哪个是用人物动作“休息”所要求的基本等级",
+    "answer": "40",
+    "normalized_question": "下列哪个是用人物动作休息所要求的基本等级"
+  },
+  {
+    "source_id": "tools:yuanxiao:35a2227e8eee0cdd4dc4",
+    "question": "下列药品中，哪种是3级药品",
+    "answer": "蛇蝎美人",
+    "normalized_question": "下列药品中哪种是3级药品"
+  },
+  {
+    "source_id": "tools:yuanxiao:7e180b701437f51b3faf",
+    "question": "烹饪技巧主要学习途径是找谁学",
+    "answer": "帮派",
+    "normalized_question": "烹饪技巧主要学习途径是找谁学"
+  },
+  {
+    "source_id": "tools:yuanxiao:94aae9290b6ee02a252d",
+    "question": "“烟雨剑法”这个技能是属于下面那个门派的法术",
+    "answer": "五庄观",
+    "normalized_question": "烟雨剑法这个技能是属于下面那个门派的法术"
+  },
+  {
+    "source_id": "tools:yuanxiao:4e4ba0fdbb549b6bad0b",
+    "question": "“踏山裂石”这个技能是属于下面那个门派的法术",
+    "answer": "魔王寨",
+    "normalized_question": "踏山裂石这个技能是属于下面那个门派的法术"
+  },
+  {
+    "source_id": "tools:yuanxiao:32d352f467cbadd904f1",
+    "question": "身背硬壳袍，摇头又晃脑，手执圣旨到，浪随口中来",
+    "answer": "龟丞相",
+    "normalized_question": "身背硬壳袍摇头又晃脑手执圣旨到浪随口中来"
+  },
+  {
+    "source_id": "tools:yuanxiao:93087f6af5319be9820e",
+    "question": "八只脚，抬面鼓，两把剪刀鼓前舞，生来横行又霸道，嘴里常把泡沫吐",
+    "answer": "蟹将",
+    "normalized_question": "八只脚抬面鼓两把剪刀鼓前舞生来横行又霸道嘴里常把泡沫吐"
+  },
+  {
+    "source_id": "tools:yuanxiao:4cafb267e8a7af1c3e6b",
+    "question": "小小诸葛亮，独坐中军帐，摆下八卦阵，专捉飞来将",
+    "answer": "蜘蛛精",
+    "normalized_question": "小小诸葛亮独坐中军帐摆下八卦阵专捉飞来将"
+  },
+  {
+    "source_id": "tools:yuanxiao:aefbe961251e72f745ad",
+    "question": "身穿黄底黑纹袍，呼啸一声百兽慌，虽然没率兵和将，威风凛凛山大王",
+    "answer": "老虎",
+    "normalized_question": "身穿黄底黑纹袍呼啸一声百兽慌虽然没率兵和将威风凛凛山大王"
+  },
+  {
+    "source_id": "tools:yuanxiao:abe641268763e5ced533",
+    "question": "一对小小船，载客各五员，无水走天下，有水不开船",
+    "answer": "布鞋",
+    "normalized_question": "一对小小船载客各五员无水走天下有水不开船"
+  },
+  {
+    "source_id": "tools:yuanxiao:a9906747675a9e12c003",
+    "question": "一个每天都特别啰嗦的人，一年中哪一个月说话最少",
+    "answer": "2月",
+    "normalized_question": "一个每天都特别啰嗦的人一年中哪一个月说话最少"
+  },
+  {
+    "source_id": "tools:yuanxiao:8afa1e0e0ec283879247",
+    "question": "12生肖中哪一种是现实生活里不存在的",
+    "answer": "龙",
+    "normalized_question": "12生肖中哪一种是现实生活里不存在的"
+  },
+  {
+    "source_id": "tools:yuanxiao:a04e2f29eb59cb08f697",
+    "question": "有一头头朝北的牛，它向右转原地转三圈，然后向后转原地转三圈，接着再往右转，这时候它的尾巴朝哪",
+    "answer": "朝下",
+    "normalized_question": "有一头头朝北的牛它向右转原地转三圈然后向后转原地转三圈接着再往右转这时候它的尾巴朝哪"
+  },
+  {
+    "source_id": "tools:yuanxiao:ffba4c5efefce230f0c4",
+    "question": "长安城里的殷丞相与金山寺的玄奘是什么关系",
+    "answer": "外公",
+    "normalized_question": "长安城里的殷丞相与金山寺的玄奘是什么关系"
+  },
+  {
+    "source_id": "tools:yuanxiao:6ebc85ea405d5152de2b",
+    "question": "下列僧人中哪位是金山寺的",
+    "answer": "法明长老",
+    "normalized_question": "下列僧人中哪位是金山寺的"
+  },
+  {
+    "source_id": "tools:yuanxiao:dacba46a3fff44b64a3c",
+    "question": "什么东西天气越热，它爬的越高",
+    "answer": "温度计",
+    "normalized_question": "什么东西天气越热它爬的越高"
+  },
+  {
+    "source_id": "tools:yuanxiao:3e5d4f7f4c9e174abdb0",
+    "question": "齐天大圣当年是被佛祖压在哪座山下",
+    "answer": "五行山",
+    "normalized_question": "齐天大圣当年是被佛祖压在哪座山下"
+  },
+  {
+    "source_id": "tools:yuanxiao:bf500a04745ccdcdb5d3",
+    "question": "丝绸之路的开辟可以追溯到哪个朝代",
+    "answer": "西汉",
+    "normalized_question": "丝绸之路的开辟可以追溯到哪个朝代"
+  },
+  {
+    "source_id": "tools:yuanxiao:3cefebf48196595a0616",
+    "question": "农夫有17只羊，除了9只以外都病死了，农夫还剩几只羊？",
+    "answer": "9只",
+    "normalized_question": "农夫有17只羊除了9只以外都病死了农夫还剩几只羊"
+  },
+  {
+    "source_id": "tools:yuanxiao:9de93f09157d7ba8bdd0",
+    "question": "下列人选中哪位不属十殿阎王",
+    "answer": "镇南王",
+    "normalized_question": "下列人选中哪位不属十殿阎王"
+  },
+  {
+    "source_id": "tools:yuanxiao:31f799f760a2c4881166",
+    "question": "下列人选哪位不在傲来国",
+    "answer": "蝴蝶女",
+    "normalized_question": "下列人选哪位不在傲来国"
+  },
+  {
+    "source_id": "tools:yuanxiao:950a982b83df1422d547",
+    "question": "下列NPC哪位在普陀山",
+    "answer": "龙女宝宝",
+    "normalized_question": "下列npc哪位在普陀山"
+  },
+  {
+    "source_id": "tools:yuanxiao:6f249492c9859a6490c2",
+    "question": "多少点友好度才能将在线好友的名字显示为绿色",
+    "answer": "10点",
+    "normalized_question": "多少点友好度才能将在线好友的名字显示为绿色"
+  },
+  {
+    "source_id": "tools:yuanxiao:76ae2f7e8b0c22488281",
+    "question": "下列物品哪样是地府弟子无法鉴定的",
+    "answer": "衣服",
+    "normalized_question": "下列物品哪样是地府弟子无法鉴定的"
+  },
+  {
+    "source_id": "tools:yuanxiao:f3a635680e208008526d",
+    "question": "“大夫”在我国古代指",
+    "answer": "官职",
+    "normalized_question": "大夫在我国古代指"
+  },
+  {
+    "source_id": "tools:yuanxiao:8344c723ff2c09eca0e7",
+    "question": "扁鹊的本名是",
+    "answer": "秦越人",
+    "normalized_question": "扁鹊的本名是"
+  },
+  {
+    "source_id": "tools:yuanxiao:b6e09af5c4ae87082aab",
+    "question": "王母娘娘最好的蟠桃是几千年一熟",
+    "answer": "九千年",
+    "normalized_question": "王母娘娘最好的蟠桃是几千年一熟"
+  },
+  {
+    "source_id": "tools:yuanxiao:5f39c144be9e2494a02e",
+    "question": "在大唐国境教你技能的黑山老妖，找你索要什么动物",
+    "answer": "大蝙蝠",
+    "normalized_question": "在大唐国境教你技能的黑山老妖找你索要什么动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:d9a9abd0208e405cdd23",
+    "question": "大唐境外的白衣人，他是谁的弟子",
+    "answer": "菩提祖师",
+    "normalized_question": "大唐境外的白衣人他是谁的弟子"
+  },
+  {
+    "source_id": "tools:yuanxiao:7dff7cc6bcbfafae4ddc",
+    "question": "五庄观掌门镇元大仙，他的诨号是",
+    "answer": "与世同君",
+    "normalized_question": "五庄观掌门镇元大仙他的诨号是"
+  },
+  {
+    "source_id": "tools:yuanxiao:f03447bfafa2717ec368",
+    "question": "“石头城”是对我国哪一座城市的美称",
+    "answer": "南京",
+    "normalized_question": "石头城是对我国哪一座城市的美称"
+  },
+  {
+    "source_id": "tools:yuanxiao:25cf8664b99c73951198",
+    "question": "《道德经》是谁写的",
+    "answer": "太上老君",
+    "normalized_question": "道德经是谁写的"
+  },
+  {
+    "source_id": "tools:yuanxiao:341df3eac3a8576818ad",
+    "question": "国子监祭酒相当于现在的什么职位",
+    "answer": "大学校长",
+    "normalized_question": "国子监祭酒相当于现在的什么职位"
+  },
+  {
+    "source_id": "tools:yuanxiao:b8af2df982c9730d3bfc",
+    "question": "东海龙王叫什么名字",
+    "answer": "敖广",
+    "normalized_question": "东海龙王叫什么名字"
+  },
+  {
+    "source_id": "tools:yuanxiao:4681d4ee6b5924acc8eb",
+    "question": "哪吒是李靖的第几个儿子",
+    "answer": "第三个",
+    "normalized_question": "哪吒是李靖的第几个儿子"
+  },
+  {
+    "source_id": "tools:yuanxiao:9391ca38b35a72662cef",
+    "question": "唐太宗的年号是什么",
+    "answer": "贞观",
+    "normalized_question": "唐太宗的年号是什么"
+  },
+  {
+    "source_id": "tools:yuanxiao:1efc5cf8bcf1dddbe45d",
+    "question": "狮驼岭的三大王原形是什么",
+    "answer": "大鹏",
+    "normalized_question": "狮驼岭的三大王原形是什么"
+  },
+  {
+    "source_id": "tools:yuanxiao:219d245378355b79a46c",
+    "question": "房玄龄，玄龄是他的表字，他的名是",
+    "answer": "乔",
+    "normalized_question": "房玄龄玄龄是他的表字他的名是"
+  },
+  {
+    "source_id": "tools:yuanxiao:e557084ecd96ef6511f2",
+    "question": "地藏王是谁的弟子",
+    "answer": "佛祖",
+    "normalized_question": "地藏王是谁的弟子"
+  },
+  {
+    "source_id": "tools:yuanxiao:c2e49ffc91cd0e9466a9",
+    "question": "“琴棋书画”中的“棋”指什么棋",
+    "answer": "围棋",
+    "normalized_question": "琴棋书画中的棋指什么棋"
+  },
+  {
+    "source_id": "tools:yuanxiao:29b37a6027e2efe50136",
+    "question": "唐三藏的真名叫什么",
+    "answer": "陈玄奘",
+    "normalized_question": "唐三藏的真名叫什么"
+  },
+  {
+    "source_id": "tools:yuanxiao:f90154ec5dcb7c00e89c",
+    "question": "“泼水节”是以下哪个少数民族的传统节日",
+    "answer": "傣族",
+    "normalized_question": "泼水节是以下哪个少数民族的传统节日"
+  },
+  {
+    "source_id": "tools:yuanxiao:5ae1ada8de1f3ac3ecde",
+    "question": "谁是孙悟空的师父",
+    "answer": "菩提祖师",
+    "normalized_question": "谁是孙悟空的师父"
+  },
+  {
+    "source_id": "tools:yuanxiao:7b9525f6a2b29657fee7",
+    "question": "曼陀罗花在中医上有什么功效",
+    "answer": "麻醉",
+    "normalized_question": "曼陀罗花在中医上有什么功效"
+  },
+  {
+    "source_id": "tools:yuanxiao:c928bd542ef3f84d31fa",
+    "question": "“紫薇之术”中的“紫薇”，它的含义是什么",
+    "answer": "中书省",
+    "normalized_question": "紫薇之术中的紫薇它的含义是什么"
+  },
+  {
+    "source_id": "tools:yuanxiao:816c96b5503c7020ce12",
+    "question": "白玉龙冠是多少级的帽子",
+    "answer": "90",
+    "normalized_question": "白玉龙冠是多少级的帽子"
+  },
+  {
+    "source_id": "tools:yuanxiao:bff03182c8e63e57e7b7",
+    "question": "灵台方寸，斜月三星的谜底是",
+    "answer": "心",
+    "normalized_question": "灵台方寸斜月三星的谜底是"
+  },
+  {
+    "source_id": "tools:yuanxiao:e74627a6590d61be2406",
+    "question": "“逐鹿中原”是什么时代群雄纷争的史实",
+    "answer": "秦末",
+    "normalized_question": "逐鹿中原是什么时代群雄纷争的史实"
+  },
+  {
+    "source_id": "tools:yuanxiao:27441331035f83b1d3f4",
+    "question": "使用飞行符不能到达的地方是",
+    "answer": "波月洞",
+    "normalized_question": "使用飞行符不能到达的地方是"
+  },
+  {
+    "source_id": "tools:yuanxiao:cf1cae4fd3db603cb476",
+    "question": "钟馗是怎么死的",
+    "answer": "自己撞死",
+    "normalized_question": "钟馗是怎么死的"
+  },
+  {
+    "source_id": "tools:yuanxiao:e0e2b838c5abb258840e",
+    "question": "“霸王别姬”的故事最早见于",
+    "answer": "史记",
+    "normalized_question": "霸王别姬的故事最早见于"
+  },
+  {
+    "source_id": "tools:yuanxiao:8ebbe051334537cb92a2",
+    "question": "以下哪种法术不能恢复气血上限",
+    "answer": "推气过宫",
+    "normalized_question": "以下哪种法术不能恢复气血上限"
+  },
+  {
+    "source_id": "tools:yuanxiao:253a25487a06884c3da0",
+    "question": "以下哪种怪物不会出现在大雁塔",
+    "answer": "蜘蛛精",
+    "normalized_question": "以下哪种怪物不会出现在大雁塔"
+  },
+  {
+    "source_id": "tools:yuanxiao:c1af4dd670b05a174f13",
+    "question": "以下最难见到的怪物是",
+    "answer": "曼珠沙华",
+    "normalized_question": "以下最难见到的怪物是"
+  },
+  {
+    "source_id": "tools:yuanxiao:bda166acec1792305f97",
+    "question": "黄河壶口瀑布位于陕西与哪个省之间？",
+    "answer": "山西",
+    "normalized_question": "黄河壶口瀑布位于陕西与哪个省之间"
+  },
+  {
+    "source_id": "tools:yuanxiao:d7583800a78c8f0307e0",
+    "question": "孙悟空的原形是",
+    "answer": "通灵石猴",
+    "normalized_question": "孙悟空的原形是"
+  },
+  {
+    "source_id": "tools:yuanxiao:4cdeee34eefe57dd8eb5",
+    "question": "唐三藏去西天取什么经文",
+    "answer": "大乘佛法",
+    "normalized_question": "唐三藏去西天取什么经文"
+  },
+  {
+    "source_id": "tools:yuanxiao:3d396358b822dc9dfef6",
+    "question": "古语“待字”中，“字”的意思是指",
+    "answer": "出嫁",
+    "normalized_question": "古语待字中字的意思是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:a4e97a8ddf615edcbdaa",
+    "question": "唐太宗的时候与房玄龄齐名的名相是",
+    "answer": "杜如晦",
+    "normalized_question": "唐太宗的时候与房玄龄齐名的名相是"
+  },
+  {
+    "source_id": "tools:yuanxiao:e084dc34d4b3533dcf79",
+    "question": "以下技能不能用来复活的是",
+    "answer": "佛光普照",
+    "normalized_question": "以下技能不能用来复活的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:f53926ef8e945d02b590",
+    "question": "观音姐姐的家在哪",
+    "answer": "潮音洞",
+    "normalized_question": "观音姐姐的家在哪"
+  },
+  {
+    "source_id": "tools:yuanxiao:0221143396b3962102be",
+    "question": "观音姐姐的家所在的山叫什么",
+    "answer": "落伽山",
+    "normalized_question": "观音姐姐的家所在的山叫什么"
+  },
+  {
+    "source_id": "tools:yuanxiao:28cad172e27e345846b4",
+    "question": "以下武器不属于枪的是",
+    "answer": "肃魂",
+    "normalized_question": "以下武器不属于枪的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:106afbed2d0395f91509",
+    "question": "以下武器不属于鞭的是",
+    "answer": "冷月",
+    "normalized_question": "以下武器不属于鞭的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:d0369400b0db40953e0c",
+    "question": "“天上有只牛在飞，一定是我在地上吹”是哪位游戏NPC最引以为荣的对白",
+    "answer": "吹牛王",
+    "normalized_question": "天上有只牛在飞一定是我在地上吹是哪位游戏npc最引以为荣的对白"
+  },
+  {
+    "source_id": "tools:yuanxiao:dfc32cbb3bbcde042cda",
+    "question": "中国最大的湖泊是",
+    "answer": "青海湖",
+    "normalized_question": "中国最大的湖泊是"
+  },
+  {
+    "source_id": "tools:yuanxiao:b740c4689bdbb190e4de",
+    "question": "每个门派的回师门技能达到多少级时可以保证100%成功率",
+    "answer": "80级",
+    "normalized_question": "每个门派的回师门技能达到多少级时可以保证100成功率"
+  },
+  {
+    "source_id": "tools:yuanxiao:49ed5aad8deeaf6cccbd",
+    "question": "下列哪类召唤兽不在北俱芦洲出现过",
+    "answer": "黑山老妖",
+    "normalized_question": "下列哪类召唤兽不在北俱芦洲出现过"
+  },
+  {
+    "source_id": "tools:yuanxiao:94eeefc1d1746e27c54a",
+    "question": "下列哪类召唤兽不在盘丝岭出现过",
+    "answer": "兔子怪",
+    "normalized_question": "下列哪类召唤兽不在盘丝岭出现过"
+  },
+  {
+    "source_id": "tools:yuanxiao:9402d20bc8d783ce20f4",
+    "question": "古代小说常用“沉鱼落雁，闭月羞花”形容女性之美，其中“闭月”是指",
+    "answer": "貂蝉",
+    "normalized_question": "古代小说常用沉鱼落雁闭月羞花形容女性之美其中闭月是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:b7314fc53a5263f80abe",
+    "question": "以下哪种变异召唤兽的颜色不同于其他3类",
+    "answer": "变异大海龟",
+    "normalized_question": "以下哪种变异召唤兽的颜色不同于其他3类"
+  },
+  {
+    "source_id": "tools:yuanxiao:6eccfd54b96e92a378a3",
+    "question": "哪类阵型效果为大幅度增加防御效果",
+    "answer": "地载阵",
+    "normalized_question": "哪类阵型效果为大幅度增加防御效果"
+  },
+  {
+    "source_id": "tools:yuanxiao:035d8107ef0087b0da6c",
+    "question": "大雁塔几层没有超级巫医",
+    "answer": "4",
+    "normalized_question": "大雁塔几层没有超级巫医"
+  },
+  {
+    "source_id": "tools:yuanxiao:95980844ac6bc05b43ae",
+    "question": "“神庭穴”位于人体哪个部分？",
+    "answer": "头部",
+    "normalized_question": "神庭穴位于人体哪个部分"
+  },
+  {
+    "source_id": "tools:yuanxiao:d02f0b6f4e288a54144a",
+    "question": "盘丝岭女妖的造型是",
+    "answer": "芙蓉仙子",
+    "normalized_question": "盘丝岭女妖的造型是"
+  },
+  {
+    "source_id": "tools:yuanxiao:7f3afd6fdb715f70a8ed",
+    "question": "梦幻西游里五庄观的乾坤殿中共有几支蜡烛",
+    "answer": "10",
+    "normalized_question": "梦幻西游里五庄观的乾坤殿中共有几支蜡烛"
+  },
+  {
+    "source_id": "tools:yuanxiao:4058e58654864f310746",
+    "question": "下列哪种召唤兽为25级才可携带",
+    "answer": "小龙女",
+    "normalized_question": "下列哪种召唤兽为25级才可携带"
+  },
+  {
+    "source_id": "tools:yuanxiao:09ddf409629603810671",
+    "question": "下列哪种召唤兽为45级才可携带",
+    "answer": "雷鸟人",
+    "normalized_question": "下列哪种召唤兽为45级才可携带"
+  },
+  {
+    "source_id": "tools:yuanxiao:8ca992c331ac5583f32b",
+    "question": "下列哪种召唤兽为105级才可携带",
+    "answer": "鬼将",
+    "normalized_question": "下列哪种召唤兽为105级才可携带"
+  },
+  {
+    "source_id": "tools:yuanxiao:a08f676ba736854feaf8",
+    "question": "可在战斗中使用回师门法术的为",
+    "answer": "方寸山",
+    "normalized_question": "可在战斗中使用回师门法术的为"
+  },
+  {
+    "source_id": "tools:yuanxiao:157cec0ba7724326d499",
+    "question": "传送至小西天的NPC名字为",
+    "answer": "灵山接引僧",
+    "normalized_question": "传送至小西天的npc名字为"
+  },
+  {
+    "source_id": "tools:yuanxiao:e3517e198a8db5a4825b",
+    "question": "召唤兽“牛头”使用的武器是",
+    "answer": "扇子",
+    "normalized_question": "召唤兽牛头使用的武器是"
+  },
+  {
+    "source_id": "tools:yuanxiao:f80159df2680317f83f7",
+    "question": "召唤兽“骷髅怪”一共使用几把武器",
+    "answer": "4",
+    "normalized_question": "召唤兽骷髅怪一共使用几把武器"
+  },
+  {
+    "source_id": "tools:yuanxiao:92acffaa70dc1bd03203",
+    "question": "“汗流浃背”的典故出自西汉周勃，他“汗流浃背”的原因是",
+    "answer": "回答不出皇帝的问题",
+    "normalized_question": "汗流浃背的典故出自西汉周勃他汗流浃背的原因是"
+  },
+  {
+    "source_id": "tools:yuanxiao:370f6b3ab542f5dfcaaa",
+    "question": "哪里是去月宫的必经之路",
+    "answer": "天宫",
+    "normalized_question": "哪里是去月宫的必经之路"
+  },
+  {
+    "source_id": "tools:yuanxiao:1b114910235c647f24f4",
+    "question": "梦幻西游场景宝象国中共有几座大象造型的雕像",
+    "answer": "4",
+    "normalized_question": "梦幻西游场景宝象国中共有几座大象造型的雕像"
+  },
+  {
+    "source_id": "tools:yuanxiao:61c43603a6ef991df6c8",
+    "question": "“书中自有颜如玉，书中自有黄金屋。”这句话是谁说的",
+    "answer": "宋真宗",
+    "normalized_question": "书中自有颜如玉书中自有黄金屋这句话是谁说的"
+  },
+  {
+    "source_id": "tools:yuanxiao:a067cf868f72005089ca",
+    "question": "“春种一粒粟”中的粟指",
+    "answer": "谷子",
+    "normalized_question": "春种一粒粟中的粟指"
+  },
+  {
+    "source_id": "tools:yuanxiao:bd93e6cb2e58685df68f",
+    "question": "经由宝象国不能到达的场景是",
+    "answer": "普陀山",
+    "normalized_question": "经由宝象国不能到达的场景是"
+  },
+  {
+    "source_id": "tools:yuanxiao:40476c388dd1c71e3b1b",
+    "question": "梦幻西游NPC太白金星位于哪个场景",
+    "answer": "长寿村",
+    "normalized_question": "梦幻西游npc太白金星位于哪个场景"
+  },
+  {
+    "source_id": "tools:yuanxiao:f45968ca99ba7d321583",
+    "question": "下列哪个场景是通往波月洞的必经之路",
+    "answer": "碗子山",
+    "normalized_question": "下列哪个场景是通往波月洞的必经之路"
+  },
+  {
+    "source_id": "tools:yuanxiao:ddea65b1d7c0735578d4",
+    "question": "“以人为镜，可以知得失。”这句话是唐太宗称赞谁的",
+    "answer": "魏征",
+    "normalized_question": "以人为镜可以知得失这句话是唐太宗称赞谁的"
+  },
+  {
+    "source_id": "tools:yuanxiao:59a3e489fa1c49e01ad6",
+    "question": "大唐国境杂货店里有一匾额，上书四个什么字",
+    "answer": "价廉物美",
+    "normalized_question": "大唐国境杂货店里有一匾额上书四个什么字"
+  },
+  {
+    "source_id": "tools:yuanxiao:45483bfe378f3eec114f",
+    "question": "著名旅游景点“雨花台”位于哪个城市？",
+    "answer": "南京",
+    "normalized_question": "著名旅游景点雨花台位于哪个城市"
+  },
+  {
+    "source_id": "tools:yuanxiao:c0695e7c3eeead7c5a99",
+    "question": "魏武青虹中的魏武是指的",
+    "answer": "曹操",
+    "normalized_question": "魏武青虹中的魏武是指的"
+  },
+  {
+    "source_id": "tools:yuanxiao:dfc81dd0819b5ea11f75",
+    "question": "失去街亭而被诸葛亮处斩的大将是",
+    "answer": "马谡",
+    "normalized_question": "失去街亭而被诸葛亮处斩的大将是"
+  },
+  {
+    "source_id": "tools:yuanxiao:b2cce61c81670d34bad1",
+    "question": "李靖的表字是",
+    "answer": "药师",
+    "normalized_question": "李靖的表字是"
+  },
+  {
+    "source_id": "tools:yuanxiao:1a4887052dfd9b1c2595",
+    "question": "长安就是今天的西安，她是唐朝的",
+    "answer": "首都",
+    "normalized_question": "长安就是今天的西安她是唐朝的"
+  },
+  {
+    "source_id": "tools:yuanxiao:ebe8bbb406ef309f3f65",
+    "question": "唐高祖是哪个皇帝的庙号？",
+    "answer": "李渊",
+    "normalized_question": "唐高祖是哪个皇帝的庙号"
+  },
+  {
+    "source_id": "tools:yuanxiao:6d8ffac264ec9b68037b",
+    "question": "李渊是从那里起兵的",
+    "answer": "太原",
+    "normalized_question": "李渊是从那里起兵的"
+  },
+  {
+    "source_id": "tools:yuanxiao:22090335cf610aeab68d",
+    "question": "“司空见惯”中的“司空”是指",
+    "answer": "官职",
+    "normalized_question": "司空见惯中的司空是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:698a4415eda5ad4894f6",
+    "question": "唐太宗时候没有名列云烟阁的大将是",
+    "answer": "郭子仪",
+    "normalized_question": "唐太宗时候没有名列云烟阁的大将是"
+  },
+  {
+    "source_id": "tools:yuanxiao:844cf0b69257234b9428",
+    "question": "程咬金被封为",
+    "answer": "卢公",
+    "normalized_question": "程咬金被封为"
+  },
+  {
+    "source_id": "tools:yuanxiao:ee47f0788dc6555767df",
+    "question": "白帝在历史上是指",
+    "answer": "公孙述",
+    "normalized_question": "白帝在历史上是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:8b37362d505c6843a3cf",
+    "question": "汉光武帝叫什么",
+    "answer": "刘秀",
+    "normalized_question": "汉光武帝叫什么"
+  },
+  {
+    "source_id": "tools:yuanxiao:313079f7f08454b39244",
+    "question": "汉武帝叫什么",
+    "answer": "刘彻",
+    "normalized_question": "汉武帝叫什么"
+  },
+  {
+    "source_id": "tools:yuanxiao:cb31225b5f6d4ad0ffc2",
+    "question": "马革裹尸的典故出于",
+    "answer": "马援",
+    "normalized_question": "马革裹尸的典故出于"
+  },
+  {
+    "source_id": "tools:yuanxiao:f35ca53101b7b8f2216b",
+    "question": "爱毛反裘的含义是指",
+    "answer": "比喻不重视根本，轻重倒置。",
+    "normalized_question": "爱毛反裘的含义是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:d1b2e86e06dfca0614dc",
+    "question": "百二关河是指",
+    "answer": "山河险固",
+    "normalized_question": "百二关河是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:b3ef9cdb23c03de25ae6",
+    "question": "抱关击柝的含义是",
+    "answer": "职位低下",
+    "normalized_question": "抱关击柝的含义是"
+  },
+  {
+    "source_id": "tools:yuanxiao:5b22adfc910c80a785d1",
+    "question": "不待蓍龟的含义是",
+    "answer": "事情无疑难，很清楚",
+    "normalized_question": "不待蓍龟的含义是"
+  },
+  {
+    "source_id": "tools:yuanxiao:8e30350a533266897145",
+    "question": "蚍蜉撼树的含义是",
+    "answer": "自不量力",
+    "normalized_question": "蚍蜉撼树的含义是"
+  },
+  {
+    "source_id": "tools:yuanxiao:f536111ecc34c18947c3",
+    "question": "古代四大美女之一的杨贵妃名",
+    "answer": "玉环",
+    "normalized_question": "古代四大美女之一的杨贵妃名"
+  },
+  {
+    "source_id": "tools:yuanxiao:7f2eec40df4ba2e241d9",
+    "question": "中国古代唯一的女皇帝的国号为",
+    "answer": "周",
+    "normalized_question": "中国古代唯一的女皇帝的国号为"
+  },
+  {
+    "source_id": "tools:yuanxiao:722722cdc73db9fa033c",
+    "question": "阿鼻地狱中的阿鼻是指",
+    "answer": "痛苦无有间断",
+    "normalized_question": "阿鼻地狱中的阿鼻是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:591e2e9bfd15ff2d09a8",
+    "question": "《庄子》是我国道家学派著作，它又名",
+    "answer": "《南华经》",
+    "normalized_question": "庄子是我国道家学派著作它又名"
+  },
+  {
+    "source_id": "tools:yuanxiao:3506be7e6417d738c014",
+    "question": "祭祀中的太牢之礼是最隆重的，太牢是指",
+    "answer": "牛、羊、豕",
+    "normalized_question": "祭祀中的太牢之礼是最隆重的太牢是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:40614cf2c4e3103797cf",
+    "question": "社稷的原意是指",
+    "answer": "土神和谷神",
+    "normalized_question": "社稷的原意是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:260ab159e8e398886a5b",
+    "question": "古代爵位中，比侯大的爵位是",
+    "answer": "王",
+    "normalized_question": "古代爵位中比侯大的爵位是"
+  },
+  {
+    "source_id": "tools:yuanxiao:75df2da0a984712d6366",
+    "question": "中国古代有所谓的九锡之礼，下面哪位受过此礼",
+    "answer": "曹操",
+    "normalized_question": "中国古代有所谓的九锡之礼下面哪位受过此礼"
+  },
+  {
+    "source_id": "tools:yuanxiao:39ba6bf9e8227b727ff1",
+    "question": "《道德经》全文大约",
+    "answer": "五千字",
+    "normalized_question": "道德经全文大约"
+  },
+  {
+    "source_id": "tools:yuanxiao:bc607e90f77019839c1b",
+    "question": "以下哪个词语不能用于自称",
+    "answer": "乃",
+    "normalized_question": "以下哪个词语不能用于自称"
+  },
+  {
+    "source_id": "tools:yuanxiao:371b6625dee624083da6",
+    "question": "以下哪个词语可以用于对别人的尊称",
+    "answer": "足下",
+    "normalized_question": "以下哪个词语可以用于对别人的尊称"
+  },
+  {
+    "source_id": "tools:yuanxiao:0497905c1862f1381a56",
+    "question": "罗浮山乃道教名山，它位于",
+    "answer": "广东省",
+    "normalized_question": "罗浮山乃道教名山它位于"
+  },
+  {
+    "source_id": "tools:yuanxiao:23af60af4b4b8b4edd2b",
+    "question": "著名道教人物葛洪著有",
+    "answer": "《抱朴子》",
+    "normalized_question": "著名道教人物葛洪著有"
+  },
+  {
+    "source_id": "tools:yuanxiao:9bccdbcef0b2d4c8b6a4",
+    "question": "道教中的一支全真派兴盛于",
+    "answer": "元朝",
+    "normalized_question": "道教中的一支全真派兴盛于"
+  },
+  {
+    "source_id": "tools:yuanxiao:2476f6fd017ddd1a8ffe",
+    "question": "女子待字闺中是什么意思",
+    "answer": "还未出嫁",
+    "normalized_question": "女子待字闺中是什么意思"
+  },
+  {
+    "source_id": "tools:yuanxiao:75040e161f5e5da2e51e",
+    "question": "汉字“卅”表示",
+    "answer": "三十",
+    "normalized_question": "汉字卅表示"
+  },
+  {
+    "source_id": "tools:yuanxiao:b88f5fbff559e56f14ac",
+    "question": "男子的弱冠之年是指",
+    "answer": "二十岁",
+    "normalized_question": "男子的弱冠之年是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:eb8630110eff53dfc041",
+    "question": "被称为荷月的月份是",
+    "answer": "六月",
+    "normalized_question": "被称为荷月的月份是"
+  },
+  {
+    "source_id": "tools:yuanxiao:9057affebda5a6468bcb",
+    "question": "以下不属于佛教流派的是",
+    "answer": "内丹派",
+    "normalized_question": "以下不属于佛教流派的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:41fdb9998008ad13c1bf",
+    "question": "称呼别人的表字，合适的情况是",
+    "answer": "平辈之间的昵称",
+    "normalized_question": "称呼别人的表字合适的情况是"
+  },
+  {
+    "source_id": "tools:yuanxiao:a4bbc75f0a0d7caf4502",
+    "question": "中国象棋布局中“反攻马”又被称为",
+    "answer": "半壁河山",
+    "normalized_question": "中国象棋布局中反攻马又被称为"
+  },
+  {
+    "source_id": "tools:yuanxiao:fd1760309451a6d2f4a7",
+    "question": "中国象棋中两马互为根，互相保护的布局被称为",
+    "answer": "连环马",
+    "normalized_question": "中国象棋中两马互为根互相保护的布局被称为"
+  },
+  {
+    "source_id": "tools:yuanxiao:905d0e0a4449028b24f3",
+    "question": "唐人有诗云：“城头击鼓传花枝，席上搏拳握松子”中“搏拳”的含义是",
+    "answer": "划拳",
+    "normalized_question": "唐人有诗云城头击鼓传花枝席上搏拳握松子中搏拳的含义是"
+  },
+  {
+    "source_id": "tools:yuanxiao:84ec4922b198c6e10e6b",
+    "question": "丝竹是指",
+    "answer": "琴与箫",
+    "normalized_question": "丝竹是指"
+  },
+  {
+    "source_id": "tools:yuanxiao:0e2763f070a85f71082b",
+    "question": "以下属于二胡名曲的是",
+    "answer": "《二泉映月》",
+    "normalized_question": "以下属于二胡名曲的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:7e7f4898d692af3c3365",
+    "question": "高胡是民族乐器的一种，主要流传于",
+    "answer": "广东地区",
+    "normalized_question": "高胡是民族乐器的一种主要流传于"
+  },
+  {
+    "source_id": "tools:yuanxiao:3d43c52fe08666b02860",
+    "question": "“无边落木萧萧下”的平仄为",
+    "answer": "平平仄仄平平仄",
+    "normalized_question": "无边落木萧萧下的平仄为"
+  },
+  {
+    "source_id": "tools:yuanxiao:bfe939e1ebfa7721a1a2",
+    "question": "中国面积最大的省份是",
+    "answer": "新疆",
+    "normalized_question": "中国面积最大的省份是"
+  },
+  {
+    "source_id": "tools:yuanxiao:7eb1401c554020fe76e6",
+    "question": "宋词名句“天不老，情难绝，心似双丝网，中有千千结。”的作者是",
+    "answer": "张先",
+    "normalized_question": "宋词名句天不老情难绝心似双丝网中有千千结的作者是"
+  },
+  {
+    "source_id": "tools:yuanxiao:e3842369c7f8ae409310",
+    "question": "“前度刘郎今又来”中的刘郎是指的",
+    "answer": "刘禹锡",
+    "normalized_question": "前度刘郎今又来中的刘郎是指的"
+  },
+  {
+    "source_id": "tools:yuanxiao:3445e86204fc7dd7bc60",
+    "question": "“鞠躬尽瘁，死而后已”这句话是谁说的",
+    "answer": "诸葛亮",
+    "normalized_question": "鞠躬尽瘁死而后已这句话是谁说的"
+  },
+  {
+    "source_id": "tools:yuanxiao:26c09ab70f7b09f9757b",
+    "question": "“一去二三里，烟村四五家。亭台六七座，八九十枝花。”属于",
+    "answer": "数字诗",
+    "normalized_question": "一去二三里烟村四五家亭台六七座八九十枝花属于"
+  },
+  {
+    "source_id": "tools:yuanxiao:a44d9250b1fc6433b381",
+    "question": "“轻于鸿毛”中的鸿毛是哪种动物的毛？",
+    "answer": "大雁",
+    "normalized_question": "轻于鸿毛中的鸿毛是哪种动物的毛"
+  },
+  {
+    "source_id": "tools:yuanxiao:d8bfc6277bf61871b677",
+    "question": "“忽如一夜春风来，千树万树梨花开”是哪位诗人的名句",
+    "answer": "岑参",
+    "normalized_question": "忽如一夜春风来千树万树梨花开是哪位诗人的名句"
+  },
+  {
+    "source_id": "tools:yuanxiao:ef3416bb4156059cf223",
+    "question": "“问君西游何时还”是出于李白的那一首诗",
+    "answer": "《蜀道难》",
+    "normalized_question": "问君西游何时还是出于李白的那一首诗"
+  },
+  {
+    "source_id": "tools:yuanxiao:66fd399c272dddb41ca1",
+    "question": "“对潇潇暮雨洒江天，一番洗清秋。”的作者是",
+    "answer": "柳永",
+    "normalized_question": "对潇潇暮雨洒江天一番洗清秋的作者是"
+  },
+  {
+    "source_id": "tools:yuanxiao:c6f3fdfe39dbbe743368",
+    "question": "“青山遮不住，毕竟东流去。”的词牌是",
+    "answer": "《鹧鸪天》:0,《菩萨蛮》",
+    "normalized_question": "青山遮不住毕竟东流去的词牌是"
+  },
+  {
+    "source_id": "tools:yuanxiao:ae5d7b0377a6f34ddb3d",
+    "question": "景泰蓝是什么地方的特种工艺？",
+    "answer": "北京",
+    "normalized_question": "景泰蓝是什么地方的特种工艺"
+  },
+  {
+    "source_id": "tools:yuanxiao:26f05c28fb5fb5a2ff64",
+    "question": "“夕阳无限好，只是近黄昏。”的作者是",
+    "answer": "李商隐",
+    "normalized_question": "夕阳无限好只是近黄昏的作者是"
+  },
+  {
+    "source_id": "tools:yuanxiao:8795ea1023a82daf6e8e",
+    "question": "陶渊明号",
+    "answer": "五柳先生",
+    "normalized_question": "陶渊明号"
+  },
+  {
+    "source_id": "tools:yuanxiao:b853a7570a651e993534",
+    "question": "与“劝君更尽一杯酒”对仗的是",
+    "answer": "与尔同销万古愁",
+    "normalized_question": "与劝君更尽一杯酒对仗的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:57752113ae2dd75e58f8",
+    "question": "宋词是一种",
+    "answer": "诗",
+    "normalized_question": "宋词是一种"
+  },
+  {
+    "source_id": "tools:yuanxiao:b237a9c290fc82abf0c6",
+    "question": "“日啖荔枝三百颗，不辞长做岭南人。”是哪位诗人的名句",
+    "answer": "苏轼",
+    "normalized_question": "日啖荔枝三百颗不辞长做岭南人是哪位诗人的名句"
+  },
+  {
+    "source_id": "tools:yuanxiao:77d43dbf9c5d3d4961a4",
+    "question": "召唤兽“吸血鬼”站立状态时，哪条腿在前",
+    "answer": "左腿",
+    "normalized_question": "召唤兽吸血鬼站立状态时哪条腿在前"
+  },
+  {
+    "source_id": "tools:yuanxiao:497cfdd9f235e26cc31d",
+    "question": "龙井茶的产地是",
+    "answer": "杭州",
+    "normalized_question": "龙井茶的产地是"
+  },
+  {
+    "source_id": "tools:yuanxiao:f78471516ca97eec68a4",
+    "question": "女儿红是哪里的特产",
+    "answer": "绍兴",
+    "normalized_question": "女儿红是哪里的特产"
+  },
+  {
+    "source_id": "tools:yuanxiao:ae1a6fd3fcaa626be1c2",
+    "question": "加饭酒之所以被这样命名，是因为",
+    "answer": "酿造中添加糯米饭",
+    "normalized_question": "加饭酒之所以被这样命名是因为"
+  },
+  {
+    "source_id": "tools:yuanxiao:d8fe421de0bc022f8a00",
+    "question": "酿酒业传说的祖师爷是",
+    "answer": "杜康",
+    "normalized_question": "酿酒业传说的祖师爷是"
+  },
+  {
+    "source_id": "tools:yuanxiao:5f29a6667c0f7e238fec",
+    "question": "历史上“乐不思蜀”的是哪位皇帝？",
+    "answer": "刘禅",
+    "normalized_question": "历史上乐不思蜀的是哪位皇帝"
+  },
+  {
+    "source_id": "tools:yuanxiao:ecfe49f213f989a81edf",
+    "question": "罗汉果的主要功效是",
+    "answer": "清肺润肠",
+    "normalized_question": "罗汉果的主要功效是"
+  },
+  {
+    "source_id": "tools:yuanxiao:bf3bf06da9e82bfa47df",
+    "question": "虎骨酒的原料主要是",
+    "answer": "虎骨",
+    "normalized_question": "虎骨酒的原料主要是"
+  },
+  {
+    "source_id": "tools:yuanxiao:7c6b71a323ccfe8f53b1",
+    "question": "传说茶是以下哪位发现的？",
+    "answer": "神农",
+    "normalized_question": "传说茶是以下哪位发现的"
+  },
+  {
+    "source_id": "tools:yuanxiao:b183852ac7ece17a2962",
+    "question": "唐代王之涣诗曰“欲穷千里目，更上一层楼。”他这里说的楼是",
+    "answer": "鹳雀楼",
+    "normalized_question": "唐代王之涣诗曰欲穷千里目更上一层楼他这里说的楼是"
+  },
+  {
+    "source_id": "tools:yuanxiao:d21625557055ee49b11a",
+    "question": "云南名茶普洱茶属于",
+    "answer": "黑茶",
+    "normalized_question": "云南名茶普洱茶属于"
+  },
+  {
+    "source_id": "tools:yuanxiao:1a37447f624ad2d38671",
+    "question": "小时像逗号，在水中玩耍。长大跳得高，捉虫是冠军（打一动物名）",
+    "answer": "巨蛙",
+    "normalized_question": "小时像逗号在水中玩耍长大跳得高捉虫是冠军打一动物名"
+  },
+  {
+    "source_id": "tools:yuanxiao:3e46d91a7035b15e2240",
+    "question": "左手五个，右手五个。拿去十个，还剩十个（打一日常用品）",
+    "answer": "手套",
+    "normalized_question": "左手五个右手五个拿去十个还剩十个打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:091eb1a46043725b33e2",
+    "question": "口比肚子大，给啥就吃啥。它吃为了你，你吃端着它（打一日常用品）",
+    "answer": "碗",
+    "normalized_question": "口比肚子大给啥就吃啥它吃为了你你吃端着它打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:edd5799e0a2fcf41613f",
+    "question": "挥动钳子一双，玩弄尖刀八把，一生霸道横行，总爱胡抓乱爬。（打一动物）",
+    "answer": "蟹将",
+    "normalized_question": "挥动钳子一双玩弄尖刀八把一生霸道横行总爱胡抓乱爬打一动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:be71a3f66776b0725e8d",
+    "question": "不是点心不是糖,软软凉凉肚里藏,不能吃来不能喝,每天也要尝一尝（打一日常用品）",
+    "answer": "牙膏",
+    "normalized_question": "不是点心不是糖软软凉凉肚里藏不能吃来不能喝每天也要尝一尝打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:db9d236f5c0d7d08f5d2",
+    "question": "身子轻如燕，飞在天地间，不怕相隔远，也能把话传（打一动物名）",
+    "answer": "信鸽",
+    "normalized_question": "身子轻如燕飞在天地间不怕相隔远也能把话传打一动物名"
+  },
+  {
+    "source_id": "tools:yuanxiao:4a499e8426440e83f206",
+    "question": "无脚也无手，身穿鸡皮皱。（打一动物名）",
+    "answer": "海毛虫",
+    "normalized_question": "无脚也无手身穿鸡皮皱打一动物名"
+  },
+  {
+    "source_id": "tools:yuanxiao:1870ce20992a7dbb7321",
+    "question": "脚像细牛脚，身像大狗重。行象后生子，须象老大人（打一动物名）",
+    "answer": "羊",
+    "normalized_question": "脚像细牛脚身像大狗重行象后生子须象老大人打一动物名"
+  },
+  {
+    "source_id": "tools:yuanxiao:d2612eae125e97b4e206",
+    "question": "一只雀，飞上桌，捏尾巴，跳下河（打日常用品）",
+    "answer": "汤匙",
+    "normalized_question": "一只雀飞上桌捏尾巴跳下河打日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:a3f76cddd7d57e1fff0a",
+    "question": "屋里一座亭，亭中有个人，天天荡秋千，不荡就有病（打一日常用品）",
+    "answer": "钟摆",
+    "normalized_question": "屋里一座亭亭中有个人天天荡秋千不荡就有病打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:72e170b7ea023ae46207",
+    "question": "猛将百余人，无事不出城。出城就放火，引火自烧身（打一日常用品）",
+    "answer": "火柴",
+    "normalized_question": "猛将百余人无事不出城出城就放火引火自烧身打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:7282d206325be666756c",
+    "question": "一只八宝袋，样样都能装。能装棉和纱，能装铁和钢（打一日常用品）",
+    "answer": "针线包",
+    "normalized_question": "一只八宝袋样样都能装能装棉和纱能装铁和钢打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:1322d8c785a2d637ce2b",
+    "question": "楼台接楼台，一层一层接起来，上面冒白气，下面水开花（打一日常用品）",
+    "answer": "蒸笼",
+    "normalized_question": "楼台接楼台一层一层接起来上面冒白气下面水开花打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:c5976adc3c1ad02a4e8c",
+    "question": "鼻子朝天，嘴巴朝地。敲它一锤，惊天动地（打一日常用品）",
+    "answer": "大钟",
+    "normalized_question": "鼻子朝天嘴巴朝地敲它一锤惊天动地打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:a4ee8e6616fe92bd2e0e",
+    "question": "薄薄一张口，能啃硬骨头。吃肉不喝汤，吃瓜不嚼豆（打一日常用品）",
+    "answer": "菜刀",
+    "normalized_question": "薄薄一张口能啃硬骨头吃肉不喝汤吃瓜不嚼豆打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:9ac2cb23abc7d3ac6361",
+    "question": "金钩吊银圈，姐妹隔座山。若要来相会，需到天色晚（打一日常用品）",
+    "answer": "耳环",
+    "normalized_question": "金钩吊银圈姐妹隔座山若要来相会需到天色晚打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:3259ba83fb02809d3fd6",
+    "question": "带着平顶帽，身穿圆筒袄，虽然一只眼，暗中逞英豪（打一日常用品）",
+    "answer": "手电筒",
+    "normalized_question": "带着平顶帽身穿圆筒袄虽然一只眼暗中逞英豪打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:d1d58e8db5098d5b2cd2",
+    "question": "脸儿亮光光，坐在桌子上，妹妹跑过来，请它照个相。（打一日用品）",
+    "answer": "镜子",
+    "normalized_question": "脸儿亮光光坐在桌子上妹妹跑过来请它照个相打一日用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:356df9efb759f94541e3",
+    "question": "前面来只船，舵手在上边，来时下小雨，走后路已干（打一日常用品）",
+    "answer": "熨斗",
+    "normalized_question": "前面来只船舵手在上边来时下小雨走后路已干打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:a5985e472b828b627119",
+    "question": "有面无口，有脚无手。听人讲话，陪人吃酒（打一日常用品）",
+    "answer": "桌子",
+    "normalized_question": "有面无口有脚无手听人讲话陪人吃酒打一日常用品"
+  },
+  {
+    "source_id": "tools:yuanxiao:af4cc6465cc3119b8b82",
+    "question": "顶破天（打一字）",
+    "answer": "夫",
+    "normalized_question": "顶破天打一字"
+  },
+  {
+    "source_id": "tools:yuanxiao:e9259fcdd127dad6dbcd",
+    "question": "一条小小虫，自己做灯笼，躲在灯笼里，变个飞仙女。(猜昆虫)",
+    "answer": "蚕",
+    "normalized_question": "一条小小虫自己做灯笼躲在灯笼里变个飞仙女猜昆虫"
+  },
+  {
+    "source_id": "tools:yuanxiao:da8e1d3564c2db36bcec",
+    "question": "头戴红顶帽，身穿白布袄，走路像摇船，说话像驴叫。（猜动物）",
+    "answer": "鹅",
+    "normalized_question": "头戴红顶帽身穿白布袄走路像摇船说话像驴叫猜动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:352ba0da940ecac9d7c7",
+    "question": "白天草里住，晚上空中游，金光闪闪动，见尾不见头。(猜昆虫)",
+    "answer": "萤火虫",
+    "normalized_question": "白天草里住晚上空中游金光闪闪动见尾不见头猜昆虫"
+  },
+  {
+    "source_id": "tools:yuanxiao:32d8cfa49c444ac076c4",
+    "question": "悟空使用的兵器是：",
+    "answer": "金箍棒",
+    "normalized_question": "悟空使用的兵器是"
+  },
+  {
+    "source_id": "tools:yuanxiao:c9a4b31b0ac34df99de6",
+    "question": "晚来日沉星点稀。(字谜)",
+    "answer": "兔",
+    "normalized_question": "晚来日沉星点稀字谜"
+  },
+  {
+    "source_id": "tools:yuanxiao:d7db7f1cef9683033b46",
+    "question": "坐也是卧，立也是卧，行也是卧，卧也是卧。（猜动物）",
+    "answer": "蛇",
+    "normalized_question": "坐也是卧立也是卧行也是卧卧也是卧猜动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:45a2a747e9b8956eebc5",
+    "question": "坐也是行，立也是行，行也是行，卧也是行。（猜动物）",
+    "answer": "鱼",
+    "normalized_question": "坐也是行立也是行行也是行卧也是行猜动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:1948dd3dfc1e67aa9182",
+    "question": "坐也是立，立也是立，行也是立，卧也是立。（猜动物）",
+    "answer": "马",
+    "normalized_question": "坐也是立立也是立行也是立卧也是立猜动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:08f8fc7f6862fdcb01b8",
+    "question": "坐也是坐，立也是坐，行也是坐，卧也是坐。（猜动物）",
+    "answer": "青蛙",
+    "normalized_question": "坐也是坐立也是坐行也是坐卧也是坐猜动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:bf39ea8d4550ecf40b58",
+    "question": "圆圆像个瓜，人们爱玩他，没有到手抢他，抢到手丢他。(猜运动器材)",
+    "answer": "篮球",
+    "normalized_question": "圆圆像个瓜人们爱玩他没有到手抢他抢到手丢他猜运动器材"
+  },
+  {
+    "source_id": "tools:yuanxiao:36c3fe2ad95c602ac874",
+    "question": "有风不动无风动，不动无风动有风。（猜一物）",
+    "answer": "扇子",
+    "normalized_question": "有风不动无风动不动无风动有风猜一物"
+  },
+  {
+    "source_id": "tools:yuanxiao:e125eedc7b48a619f80f",
+    "question": "一条怪牛，两条圆腿，骑他肚上，抓他双角。（猜交通工具）",
+    "answer": "自行车",
+    "normalized_question": "一条怪牛两条圆腿骑他肚上抓他双角猜交通工具"
+  },
+  {
+    "source_id": "tools:yuanxiao:545cdf0ec6974a5abc95",
+    "question": "黄金布，包银条，中间弯弯两头翘（猜水果）",
+    "answer": "香蕉",
+    "normalized_question": "黄金布包银条中间弯弯两头翘猜水果"
+  },
+  {
+    "source_id": "tools:yuanxiao:31654b83f10abc7e78f7",
+    "question": "盲人摸象（猜一成语）",
+    "answer": "不识大体",
+    "normalized_question": "盲人摸象猜一成语"
+  },
+  {
+    "source_id": "tools:yuanxiao:5c7d406e9f9107101700",
+    "question": "半耕半读（猜一字）",
+    "answer": "讲",
+    "normalized_question": "半耕半读猜一字"
+  },
+  {
+    "source_id": "tools:yuanxiao:63166cd31f3978be3e1d",
+    "question": "身上滑腻腻，喜欢钻河底。张嘴吐泡泡，可以测天气(打一动物)",
+    "answer": "泥鳅",
+    "normalized_question": "身上滑腻腻喜欢钻河底张嘴吐泡泡可以测天气打一动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:ba759e6ac32f76350ad3",
+    "question": "娘子娘子，身似盒子。麒麟剪刀，八个钗子。(打一动物)",
+    "answer": "蟹将",
+    "normalized_question": "娘子娘子身似盒子麒麟剪刀八个钗子打一动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:ea06366e5e093f9fd3d9",
+    "question": "两眼外秃大嘴巴，有个尾巴比身大，青草假山来相伴，绽放朵朵大红花。（打一动物名）",
+    "answer": "金鱼",
+    "normalized_question": "两眼外秃大嘴巴有个尾巴比身大青草假山来相伴绽放朵朵大红花打一动物名"
+  },
+  {
+    "source_id": "tools:yuanxiao:048ce5c9e3b6d036b893",
+    "question": "一把刀，顺水漂，有眼睛，没眉毛。（打一动物名)",
+    "answer": "鱼",
+    "normalized_question": "一把刀顺水漂有眼睛没眉毛打一动物名"
+  },
+  {
+    "source_id": "tools:yuanxiao:77396c4c146ea5ab04c8",
+    "question": "下列翰墨之道得到的书籍中，哪种无法交易和给与他人",
+    "answer": "拓本",
+    "normalized_question": "下列翰墨之道得到的书籍中哪种无法交易和给与他人"
+  },
+  {
+    "source_id": "tools:yuanxiao:92c9cb976328e32526d3",
+    "question": "翰墨之道中，每天抄写和传阅的书籍上限是",
+    "answer": "10本",
+    "normalized_question": "翰墨之道中每天抄写和传阅的书籍上限是"
+  },
+  {
+    "source_id": "tools:yuanxiao:bff61cfa4409d013ef4d",
+    "question": "钓鱼大赛的举办时间是",
+    "answer": "每周四",
+    "normalized_question": "钓鱼大赛的举办时间是"
+  },
+  {
+    "source_id": "tools:yuanxiao:dc1ab488ce6b143ef668",
+    "question": "天下美食活动在每周一、周三的什么时间开放",
+    "answer": "19:00",
+    "normalized_question": "天下美食活动在每周一周三的什么时间开放"
+  },
+  {
+    "source_id": "tools:yuanxiao:96fd2006c8fefcf4d919",
+    "question": "下列道具中，可以和召唤兽进行“炼化”功能的是",
+    "answer": "炼妖石",
+    "normalized_question": "下列道具中可以和召唤兽进行炼化功能的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:fe8307aa783aeb3723bd",
+    "question": "可为人物装备恢复一定的耐久度的道具是",
+    "answer": "珍珠",
+    "normalized_question": "可为人物装备恢复一定的耐久度的道具是"
+  },
+  {
+    "source_id": "tools:yuanxiao:381901e9d422999d9e7c",
+    "question": "未领取的回梦丹可以找下列哪个NPC领取",
+    "answer": "宝石商人",
+    "normalized_question": "未领取的回梦丹可以找下列哪个npc领取"
+  },
+  {
+    "source_id": "tools:yuanxiao:8e811e79323276377a92",
+    "question": "金属性的如意丹能洗掉召唤兽的1点什么属性",
+    "answer": "力量",
+    "normalized_question": "金属性的如意丹能洗掉召唤兽的1点什么属性"
+  },
+  {
+    "source_id": "tools:yuanxiao:1d7622c20e43ac404ec2",
+    "question": "木属性的如意丹能洗掉召唤兽的1点什么属性",
+    "answer": "体质",
+    "normalized_question": "木属性的如意丹能洗掉召唤兽的1点什么属性"
+  },
+  {
+    "source_id": "tools:yuanxiao:1f9405295d2bfacd7fd4",
+    "question": "一颗2级月亮石能为装备提高多少点防御值",
+    "answer": "12",
+    "normalized_question": "一颗2级月亮石能为装备提高多少点防御值"
+  },
+  {
+    "source_id": "tools:yuanxiao:676764c670e01b3f0a35",
+    "question": "朱紫皇宫中共有几个NPC",
+    "answer": "2",
+    "normalized_question": "朱紫皇宫中共有几个npc"
+  },
+  {
+    "source_id": "tools:yuanxiao:5d018e92dee46fd71717",
+    "question": "距离朱紫国最近的门派是",
+    "answer": "狮驼岭",
+    "normalized_question": "距离朱紫国最近的门派是"
+  },
+  {
+    "source_id": "tools:yuanxiao:863a4942e390255f6881",
+    "question": "距离长寿村最近的门派是",
+    "answer": "方寸山",
+    "normalized_question": "距离长寿村最近的门派是"
+  },
+  {
+    "source_id": "tools:yuanxiao:e6ac622bec072c09065b",
+    "question": "距离傲来国最近的门派是",
+    "answer": "女儿村",
+    "normalized_question": "距离傲来国最近的门派是"
+  },
+  {
+    "source_id": "tools:yuanxiao:03f263290019357a964e",
+    "question": "胡姬琵琶行副本的准入等级是",
+    "answer": "50级",
+    "normalized_question": "胡姬琵琶行副本的准入等级是"
+  },
+  {
+    "source_id": "tools:yuanxiao:ae8df8cfddab3d1d2934",
+    "question": "大闹天宫副本的准入等级是",
+    "answer": "100级",
+    "normalized_question": "大闹天宫副本的准入等级是"
+  },
+  {
+    "source_id": "tools:yuanxiao:d096d2a7abd743c0fe88",
+    "question": "梦幻西游里，召唤兽“狸”的出现场景是",
+    "answer": "江南野外",
+    "normalized_question": "梦幻西游里召唤兽狸的出现场景是"
+  },
+  {
+    "source_id": "tools:yuanxiao:af9baf767efdf830ad23",
+    "question": "梦幻西游里，召唤兽“修罗傀儡妖”的出现场景是",
+    "answer": "比丘国",
+    "normalized_question": "梦幻西游里召唤兽修罗傀儡妖的出现场景是"
+  },
+  {
+    "source_id": "tools:yuanxiao:1fb14add6e966c80f8c1",
+    "question": "梦幻西游的下列家具中，属于二级家具的是",
+    "answer": "桦木靠背椅",
+    "normalized_question": "梦幻西游的下列家具中属于二级家具的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:f27b537f4040114acfc6",
+    "question": "梦幻西游的下列家具中，属于三级家具的是",
+    "answer": "紫檀雕花椅",
+    "normalized_question": "梦幻西游的下列家具中属于三级家具的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:36c7e9bc9b960b090fd4",
+    "question": "梦幻西游的下列烹饪中，能够为召唤兽增加寿命的是",
+    "answer": "桂花丸",
+    "normalized_question": "梦幻西游的下列烹饪中能够为召唤兽增加寿命的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:0e58077b06faa2b3777f",
+    "question": "梦幻西游的下列烹饪中，属于优化烹饪，制作时需要食谱的是",
+    "answer": "百岁香",
+    "normalized_question": "梦幻西游的下列烹饪中属于优化烹饪制作时需要食谱的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:2bdfc380402e6d49846b",
+    "question": "梦幻西游的下列药品中，能够在战斗中将倒地玩家复活的是",
+    "answer": "九转回魂丹",
+    "normalized_question": "梦幻西游的下列药品中能够在战斗中将倒地玩家复活的是"
+  },
+  {
+    "source_id": "tools:yuanxiao:18a53d3781510b05013e",
+    "question": "梦幻西游里，徒弟至少要达到多少级才能出师",
+    "answer": "50",
+    "normalized_question": "梦幻西游里徒弟至少要达到多少级才能出师"
+  },
+  {
+    "source_id": "tools:yuanxiao:f3283bc106577ceebe7f",
+    "question": "梦幻西游中，特级法宝的最高境界是多少层",
+    "answer": "15",
+    "normalized_question": "梦幻西游中特级法宝的最高境界是多少层"
+  },
+  {
+    "source_id": "tools:yuanxiao:d1a4518d24b533145f17",
+    "question": "梦幻西游中，下列哪项行为需要耗费体力",
+    "answer": "打造武器",
+    "normalized_question": "梦幻西游中下列哪项行为需要耗费体力"
+  },
+  {
+    "source_id": "tools:yuanxiao:56389281cafe52086f82",
+    "question": "梦幻西游中，装备的星石翻转需要耗费多少点体力",
+    "answer": "100",
+    "normalized_question": "梦幻西游中装备的星石翻转需要耗费多少点体力"
+  },
+  {
+    "source_id": "tools:yuanxiao:bacf768b8881a074accb",
+    "question": "梦幻西游中，使用飞行符需要耗费多少点气血值",
+    "answer": "5",
+    "normalized_question": "梦幻西游中使用飞行符需要耗费多少点气血值"
+  },
+  {
+    "source_id": "tools:yuanxiao:64fa8a33ddd67eb4b1c4",
+    "question": "//梦幻西游中，NPC“仓库管理员”一共有多少个",
+    "answer": "9,7:0,6:0,8:0",
+    "normalized_question": "梦幻西游中npc仓库管理员一共有多少个"
+  },
+  {
+    "source_id": "tools:yuanxiao:d7d487afb0d2088ee1d0",
+    "question": "梦幻西游中，下列哪个属性对灵力没有影响",
+    "answer": "敏捷",
+    "normalized_question": "梦幻西游中下列哪个属性对灵力没有影响"
+  },
+  {
+    "source_id": "tools:yuanxiao:fed82a3584598047c236",
+    "question": "梦幻西游中，潜能果的食用上限是",
+    "answer": "200个",
+    "normalized_question": "梦幻西游中潜能果的食用上限是"
+  },
+  {
+    "source_id": "tools:yuanxiao:769edbefe38457f3c78a",
+    "question": "传说三过家门而不入的领袖是",
+    "answer": "大禹",
+    "normalized_question": "传说三过家门而不入的领袖是"
+  },
+  {
+    "source_id": "tools:yuanxiao:0aed177c61ed3136c200",
+    "question": "指南车的发明者是",
+    "answer": "黄帝",
+    "normalized_question": "指南车的发明者是"
+  },
+  {
+    "source_id": "tools:yuanxiao:0b4e61e48eef9d98f543",
+    "question": "精卫填海的传说中，精卫本是谁的女儿",
+    "answer": "炎帝",
+    "normalized_question": "精卫填海的传说中精卫本是谁的女儿"
+  },
+  {
+    "source_id": "tools:yuanxiao:6e843619d9b2c574198d",
+    "question": "中国神话传说中，是哪位神用五色石头补的天",
+    "answer": "女娲",
+    "normalized_question": "中国神话传说中是哪位神用五色石头补的天"
+  },
+  {
+    "source_id": "tools:yuanxiao:69ead94b1bcbe0fc662f",
+    "question": "木神句芒是谁的后裔",
+    "answer": "少昊",
+    "normalized_question": "木神句芒是谁的后裔"
+  },
+  {
+    "source_id": "tools:yuanxiao:36bd411f6a18d3f9bd6a",
+    "question": "《封神演义》中，哪位历史上著名的贤臣用直的鱼钩钓鱼",
+    "answer": "姜太公",
+    "normalized_question": "封神演义中哪位历史上著名的贤臣用直的鱼钩钓鱼"
+  },
+  {
+    "source_id": "tools:yuanxiao:c82b9894c3f283458e96",
+    "question": "春秋时，晋文公曾与众臣在外流亡多少年",
+    "answer": "19年",
+    "normalized_question": "春秋时晋文公曾与众臣在外流亡多少年"
+  },
+  {
+    "source_id": "tools:yuanxiao:9948c92c77c7728631a3",
+    "question": "春秋第一射手养由基是哪个国家的大将",
+    "answer": "楚",
+    "normalized_question": "春秋第一射手养由基是哪个国家的大将"
+  },
+  {
+    "source_id": "tools:yuanxiao:1654c1fb6bb4a9d884c6",
+    "question": "战国七雄中，最早灭亡的是哪个国家",
+    "answer": "韩",
+    "normalized_question": "战国七雄中最早灭亡的是哪个国家"
+  },
+  {
+    "source_id": "tools:yuanxiao:ab8dc20c238670513d7c",
+    "question": "纸上谈兵的赵括，是哪位名将的儿子",
+    "answer": "赵奢",
+    "normalized_question": "纸上谈兵的赵括是哪位名将的儿子"
+  },
+  {
+    "source_id": "tools:yuanxiao:787dbe2ed2ed94f14848",
+    "question": "唐朝诗人李白被尊为",
+    "answer": "诗仙",
+    "normalized_question": "唐朝诗人李白被尊为"
+  },
+  {
+    "source_id": "tools:yuanxiao:88acc96291aa970b4a93",
+    "question": "哪位皇帝采纳了“废黜百家，独尊儒术”的建议",
+    "answer": "汉武帝",
+    "normalized_question": "哪位皇帝采纳了废黜百家独尊儒术的建议"
+  },
+  {
+    "source_id": "tools:yuanxiao:dffc8b5352d794e7838e",
+    "question": "“一字千金”的典故是由谁而来的",
+    "answer": "吕不韦",
+    "normalized_question": "一字千金的典故是由谁而来的"
+  },
+  {
+    "source_id": "tools:yuanxiao:f91897d41d34a45b3f5b",
+    "question": "“不以规矩，不能成方圆”出自古代哪位儒家思想家之口",
+    "answer": "孟子",
+    "normalized_question": "不以规矩不能成方圆出自古代哪位儒家思想家之口"
+  },
+  {
+    "source_id": "tools:yuanxiao:636b23a6c8f9ff4a9865",
+    "question": "曾试图刺杀秦始皇的荆轲，是从哪个国家出使而来",
+    "answer": "燕",
+    "normalized_question": "曾试图刺杀秦始皇的荆轲是从哪个国家出使而来"
+  },
+  {
+    "source_id": "tools:yuanxiao:82050aea2c15f2dfbdc8",
+    "question": "荆轲刺秦王出发时所歌“风萧萧兮易水寒”下一句是",
+    "answer": "壮士一去兮不复返",
+    "normalized_question": "荆轲刺秦王出发时所歌风萧萧兮易水寒下一句是"
+  },
+  {
+    "source_id": "tools:yuanxiao:3da6c4e6c0a646708dff",
+    "question": "战国时期，苏秦、张仪、孙膑、庞涓和毛遂等人的老师是",
+    "answer": "鬼谷子",
+    "normalized_question": "战国时期苏秦张仪孙膑庞涓和毛遂等人的老师是"
+  },
+  {
+    "source_id": "tools:yuanxiao:49b1476423866e28fd95",
+    "question": "历史上焚书坑儒的是中国哪位皇帝",
+    "answer": "秦始皇",
+    "normalized_question": "历史上焚书坑儒的是中国哪位皇帝"
+  },
+  {
+    "source_id": "tools:yuanxiao:d451fc14fcb6e0d62d46",
+    "question": "“指鹿为马”来源于秦朝的哪位奸臣",
+    "answer": "赵高",
+    "normalized_question": "指鹿为马来源于秦朝的哪位奸臣"
+  },
+  {
+    "source_id": "tools:yuanxiao:2fe330b74359831ef724",
+    "question": "“请君入瓮”来源于唐朝的哪位酷吏",
+    "answer": "来俊臣",
+    "normalized_question": "请君入瓮来源于唐朝的哪位酷吏"
+  },
+  {
+    "source_id": "tools:yuanxiao:6096ab78e34a69eaa909",
+    "question": "“草木皆兵”出自哪场著名的战争",
+    "answer": "淝水之战",
+    "normalized_question": "草木皆兵出自哪场著名的战争"
+  },
+  {
+    "source_id": "tools:yuanxiao:4060891513ea8e356bf7",
+    "question": "《三国演义》中，青龙偃月刀是哪位大将所用的专属兵器",
+    "answer": "关羽",
+    "normalized_question": "三国演义中青龙偃月刀是哪位大将所用的专属兵器"
+  },
+  {
+    "source_id": "tools:yuanxiao:ce5bdf7273576d3990de",
+    "question": "阿瞒是三国时期哪位枭雄的小名",
+    "answer": "曹操",
+    "normalized_question": "阿瞒是三国时期哪位枭雄的小名"
+  },
+  {
+    "source_id": "tools:yuanxiao:ac0f42500369d691b55d",
+    "question": "曹操的字是",
+    "answer": "孟德",
+    "normalized_question": "曹操的字是"
+  },
+  {
+    "source_id": "tools:yuanxiao:28ef6bc8f8cfa419f19f",
+    "question": "曹操挟天子以令诸侯，挟持的是哪位皇帝",
+    "answer": "汉献帝",
+    "normalized_question": "曹操挟天子以令诸侯挟持的是哪位皇帝"
+  },
+  {
+    "source_id": "tools:yuanxiao:e669391dccf6e45aa7f3",
+    "question": "三国时期著名的以少胜多的战役官渡之战，胜利者是",
+    "answer": "曹操",
+    "normalized_question": "三国时期著名的以少胜多的战役官渡之战胜利者是"
+  },
+  {
+    "source_id": "tools:yuanxiao:1072ad60744236e1fdaa",
+    "question": "成语“才高八斗”的典故指的是曹操的哪个儿子？",
+    "answer": "曹植",
+    "normalized_question": "成语才高八斗的典故指的是曹操的哪个儿子"
+  },
+  {
+    "source_id": "tools:yuanxiao:0d35825015d65ba69426",
+    "question": "“老骥伏枥，志在千里；烈士暮年，壮心不已”出自曹操的",
+    "answer": "《龟虽寿》",
+    "normalized_question": "老骥伏枥志在千里烈士暮年壮心不已出自曹操的"
+  },
+  {
+    "source_id": "tools:yuanxiao:8f2512b9fdc2f634167a",
+    "question": "“笼天地于形内，挫万物于笔端”出自哪位文学家",
+    "answer": "陆机",
+    "normalized_question": "笼天地于形内挫万物于笔端出自哪位文学家"
+  },
+  {
+    "source_id": "tools:yuanxiao:73cada20057e6e267bf9",
+    "question": "初唐四杰是王勃、杨炯、卢照邻和",
+    "answer": "骆宾王",
+    "normalized_question": "初唐四杰是王勃杨炯卢照邻和"
+  },
+  {
+    "source_id": "tools:yuanxiao:6058384030a265a250fb",
+    "question": "唐僧师徒西天取经，西天指的是现在哪个国家",
+    "answer": "印度",
+    "normalized_question": "唐僧师徒西天取经西天指的是现在哪个国家"
+  },
+  {
+    "source_id": "tools:yuanxiao:705686a6967dfdc147fb",
+    "question": "唐朝的哪位大诗人不畏权贵，让高力士为其脱靴",
+    "answer": "李白",
+    "normalized_question": "唐朝的哪位大诗人不畏权贵让高力士为其脱靴"
+  },
+  {
+    "source_id": "tools:yuanxiao:a2a2b7e1dedea931d94c",
+    "question": "“桃花潭水深千尺，不及汪伦送我情”中，“我”是哪位诗人",
+    "answer": "李白",
+    "normalized_question": "桃花潭水深千尺不及汪伦送我情中我是哪位诗人"
+  },
+  {
+    "source_id": "tools:yuanxiao:0eb02b1ad5d6953bfe30",
+    "question": "刻舟求剑这个故事出自哪部古籍",
+    "answer": "《吕氏春秋》",
+    "normalized_question": "刻舟求剑这个故事出自哪部古籍"
+  },
+  {
+    "source_id": "tools:yuanxiao:c809f48e316517b50a47",
+    "question": "“我以我血荐轩辕”是哪位伟大革命家的誓言",
+    "answer": "鲁迅",
+    "normalized_question": "我以我血荐轩辕是哪位伟大革命家的誓言"
+  },
+  {
+    "source_id": "tools:yuanxiao:3805e2618a8ddd929455",
+    "question": "“己所不欲”下一句是",
+    "answer": "勿施于人",
+    "normalized_question": "己所不欲下一句是"
+  },
+  {
+    "source_id": "tools:yuanxiao:2d431c5bb230fa318dea",
+    "question": "成语“前事不忘”的后半句是",
+    "answer": "后事之师",
+    "normalized_question": "成语前事不忘的后半句是"
+  },
+  {
+    "source_id": "tools:yuanxiao:ef0967efc91c0ce13005",
+    "question": "“应怜屐齿印苍苔，小叩柴扉久不开。”这两句诗中哪个字是错别字",
+    "answer": "叩",
+    "normalized_question": "应怜屐齿印苍苔小叩柴扉久不开这两句诗中哪个字是错别字"
+  },
+  {
+    "source_id": "tools:yuanxiao:1cacbaeb97c0880a61dc",
+    "question": "“无边落木潇潇下，不尽长江滚滚来。”这两句诗中的错别字是",
+    "answer": "潇",
+    "normalized_question": "无边落木潇潇下不尽长江滚滚来这两句诗中的错别字是"
+  },
+  {
+    "source_id": "tools:yuanxiao:31cf94635640b99eedc7",
+    "question": "中国的成语至少由几个汉字组成",
+    "answer": "3",
+    "normalized_question": "中国的成语至少由几个汉字组成"
+  },
+  {
+    "source_id": "tools:yuanxiao:28fe8f3ed028b008452b",
+    "question": "我国四大家鱼是青鱼、鲢鱼、鳙鱼和",
+    "answer": "草鱼",
+    "normalized_question": "我国四大家鱼是青鱼鲢鱼鳙鱼和"
+  },
+  {
+    "source_id": "tools:yuanxiao:55b5772b0d43c173f1e7",
+    "question": "成语“举案齐眉”描述的是什么关系",
+    "answer": "夫妻",
+    "normalized_question": "成语举案齐眉描述的是什么关系"
+  },
+  {
+    "source_id": "tools:yuanxiao:a7f11d298ac3a02799d5",
+    "question": "我国首位升空的女航天员刘洋所在的机组是",
+    "answer": "神舟九号",
+    "normalized_question": "我国首位升空的女航天员刘洋所在的机组是"
+  },
+  {
+    "source_id": "tools:yuanxiao:44ac5925b247dea2d449",
+    "question": "成语“乌合之众”中的“乌”指的是什么动物",
+    "answer": "乌鸦",
+    "normalized_question": "成语乌合之众中的乌指的是什么动物"
+  },
+  {
+    "source_id": "tools:yuanxiao:e55447b6e3a82412e9d6",
+    "question": "“人固有一死，或重于泰山，或轻于鸿毛”是哪位史学家说的",
+    "answer": "司马迁",
+    "normalized_question": "人固有一死或重于泰山或轻于鸿毛是哪位史学家说的"
+  },
+  {
+    "source_id": "tools:yuanxiao:17d26180bdf71c8904cd",
+    "question": "唐太宗时期以直言敢谏著称，去世后被唐太宗感叹“失去一面镜子”的一代贤臣是",
+    "answer": "魏征",
+    "normalized_question": "唐太宗时期以直言敢谏著称去世后被唐太宗感叹失去一面镜子的一代贤臣是"
+  },
+  {
+    "source_id": "tools:yuanxiao:c9a2575131fb056f4ddc",
+    "question": "铁观音茶的原发源地在中国哪个省份",
+    "answer": "福建",
+    "normalized_question": "铁观音茶的原发源地在中国哪个省份"
+  },
+  {
+    "source_id": "tools:yuanxiao:cbcb84e5a0ba87fb751e",
+    "question": "被称为五岳之尊的山是哪座山",
+    "answer": "泰山",
+    "normalized_question": "被称为五岳之尊的山是哪座山"
+  },
+  {
+    "source_id": "tools:yuanxiao:74b39ff97115c3121934",
+    "question": "我国农历有多少个节气",
+    "answer": "24",
+    "normalized_question": "我国农历有多少个节气"
+  },
+  {
+    "source_id": "tools:yuanxiao:aead9f3595d3294d1fd8",
+    "question": "清朝的扬州八怪中，以画竹子闻名的是哪一位",
+    "answer": "郑板桥",
+    "normalized_question": "清朝的扬州八怪中以画竹子闻名的是哪一位"
+  },
+  {
+    "source_id": "tools:yuanxiao:271dd6f9891bd3c3c56e",
+    "question": "变脸是我国哪个表演戏剧的绝活",
+    "answer": "川剧",
+    "normalized_question": "变脸是我国哪个表演戏剧的绝活"
+  },
+  {
+    "source_id": "tools:yuanxiao:dc26511a40f3b225c469",
+    "question": "安徽省著名景点“黄山四绝”指的是奇松，温泉，怪石和什么景色",
+    "answer": "云海",
+    "normalized_question": "安徽省著名景点黄山四绝指的是奇松温泉怪石和什么景色"
+  },
+  {
+    "source_id": "tools:yuanxiao:ca6d20b528b8c038148b",
+    "question": "五粮液酒原产于哪个省",
+    "answer": "四川",
+    "normalized_question": "五粮液酒原产于哪个省"
+  },
+  {
+    "source_id": "tools:yuanxiao:6f45dd1bec67a91d3bee",
+    "question": "手无寸铁，猜一字",
+    "answer": "控",
+    "normalized_question": "手无寸铁猜一字"
+  },
+  {
+    "source_id": "tools:yuanxiao:9cd599ad31c53ff5f5c9",
+    "question": "一口吃掉牛尾巴，猜一字",
+    "answer": "告",
+    "normalized_question": "一口吃掉牛尾巴猜一字"
+  },
+  {
+    "source_id": "tools:yuanxiao:ace1a2211df91e206ad9",
+    "question": "十月十日，猜一字",
+    "answer": "朝",
+    "normalized_question": "十月十日猜一字"
+  },
+  {
+    "source_id": "tools:yuanxiao:3f8f49349b25e42ed48c",
+    "question": "池里不见水，地上不见泥，猜一字",
+    "answer": "也",
+    "normalized_question": "池里不见水地上不见泥猜一字"
+  },
+  {
+    "source_id": "tools:yuanxiao:cafc3680544e4bc68627",
+    "question": "部位相反，猜一字",
+    "answer": "陪",
+    "normalized_question": "部位相反猜一字"
+  },
+  {
+    "source_id": "tools:yuanxiao:29db7bd5ca00b3e71a62",
+    "question": "武大郎设宴，猜一成语",
+    "answer": "高朋满座",
+    "normalized_question": "武大郎设宴猜一成语"
+  },
+  {
+    "source_id": "tools:yuanxiao:c70f16b6b85306e52f2b",
+    "question": "火，猜一成语",
+    "answer": "灭顶之灾",
+    "normalized_question": "火猜一成语"
+  },
+  {
+    "source_id": "tools:yuanxiao:054dc06efa86dcc41f01",
+    "question": "导游，猜一成语",
+    "answer": "引人入胜",
+    "normalized_question": "导游猜一成语"
+  },
+  {
+    "source_id": "tools:yuanxiao:422b43329f38e44cf0ce",
+    "question": "七仙女嫁出去一个，猜一成语",
+    "answer": "六神无主",
+    "normalized_question": "七仙女嫁出去一个猜一成语"
+  },
+  {
+    "source_id": "tools:yuanxiao:c249554352f986584f1c",
+    "question": "田，猜一成语",
+    "answer": "挖空心思",
+    "normalized_question": "田猜一成语"
+  },
+  {
+    "source_id": "tools:yuanxiao:9e22ad1b4364f7e0c494",
+    "question": "急，猜一成语",
+    "answer": "争先恐后",
+    "normalized_question": "急猜一成语"
+  },
+  {
+    "source_id": "tools:yuanxiao:947ba64767e5fce659d9",
+    "question": "亚，猜一成语",
+    "answer": "有口难言",
+    "normalized_question": "亚猜一成语"
+  },
+  {
+    "source_id": "tools:yuanxiao:dfbc0a045065cef672e7",
+    "question": "举重比赛，猜一成语",
+    "answer": "斤斤计较",
+    "normalized_question": "举重比赛猜一成语"
+  },
+  {
+    "source_id": "tools:yuanxiao:6e3aff3f53c84cca27a4",
+    "question": "去须弥东界的必经之路是",
+    "answer": "丝绸之路",
+    "normalized_question": "去须弥东界的必经之路是"
+  },
+  {
+    "source_id": "tools:yuanxiao:1037130b58c1fcb2b62a",
+    "question": "梦幻西游里，召唤兽“毗舍童子”的出现场景是",
+    "answer": "须弥东界",
+    "normalized_question": "梦幻西游里召唤兽毗舍童子的出现场景是"
+  },
+  {
+    "source_id": "tools:yuanxiao:15d2d442977ff6556143",
+    "question": "距离江州最近的门派是？",
+    "answer": "凌波城",
+    "normalized_question": "距离江州最近的门派是"
+  },
+  {
+    "source_id": "tools:yuanxiao:a7f2493f2d5f4e09a1c0",
+    "question": "经由大唐国境不能到达的门派场景是",
+    "answer": "神木林",
+    "normalized_question": "经由大唐国境不能到达的门派场景是"
+  },
+  {
+    "source_id": "tools:yuanxiao:49c5f65cdc62580a64e6",
+    "question": "无底洞NPC红莲的造型是",
+    "answer": "修罗傀儡妖",
+    "normalized_question": "无底洞npc红莲的造型是"
+  },
+  {
+    "source_id": "tools:keju:dcdb1b62e9c370c1c25b",
+    "question": "原铸于3号神树树枝端部的青铜器是？",
+    "answer": "铜人首鸟身像",
+    "normalized_question": "原铸于3号神树树枝端部的青铜器是"
+  },
+  {
+    "source_id": "tools:keju:60fe70031f9ed3c02607",
+    "question": "“身上饰菱形云纹，两侧腹部各有一排鳞甲。头顶及背脊上有镂空的刀形羽翅。”----此段文字描述的青铜器是？",
+    "answer": "青铜蛇",
+    "normalized_question": "身上饰菱形云纹两侧腹部各有一排鳞甲头顶及背脊上有镂空的刀形羽翅此段文字描述的青铜器是"
+  },
+  {
+    "source_id": "tools:keju:0f7edf7dbc3c3705dac6",
+    "question": "“菱形，直边，作斜坡形。中部眼球呈圆形，凸起，周围下凹，左右眼球处各起棱脊。”----此段文字描述的青铜器是？",
+    "answer": "青铜眼形器",
+    "normalized_question": "菱形直边作斜坡形中部眼球呈圆形凸起周围下凹左右眼球处各起棱脊此段文字描述的青铜器是"
+  },
+  {
+    "source_id": "tools:keju:15b9bccf241c9baf71e8",
+    "question": "以下哪种是三星堆最具特色的陶器之一？",
+    "answer": "鸟头把勺",
+    "normalized_question": "以下哪种是三星堆最具特色的陶器之一"
+  },
+  {
+    "source_id": "tools:keju:3b06b7fb331fa6f6f2f0",
+    "question": "三星堆的青铜立人像的头上梳着的发型，被称为什么？",
+    "answer": "笄发",
+    "normalized_question": "三星堆的青铜立人像的头上梳着的发型被称为什么"
+  },
+  {
+    "source_id": "tools:keju:7c326dc01bf370c94ce2",
+    "question": "文物青铜大神树在出土时残损情况严重，但最后进行拼接复合后，还原了神树的形象。整个修复周期长达将近几年？",
+    "answer": "10年",
+    "normalized_question": "文物青铜大神树在出土时残损情况严重但最后进行拼接复合后还原了神树的形象整个修复周期长达将近几年"
+  },
+  {
+    "source_id": "tools:keju:c1e1d28c412721282c7e",
+    "question": "戴冠纵目面具额头上的额饰高多少厘米？",
+    "answer": "68厘米",
+    "normalized_question": "戴冠纵目面具额头上的额饰高多少厘米"
+  },
+  {
+    "source_id": "tools:keju:acca7d9d3361ed25d266",
+    "question": "金杖采用的雕刻技艺是？",
+    "answer": "錾刻",
+    "normalized_question": "金杖采用的雕刻技艺是"
+  },
+  {
+    "source_id": "tools:keju:7709c0a281bbc186fa45",
+    "question": "证实了古蜀文明存在的是？",
+    "answer": "三星堆文化",
+    "normalized_question": "证实了古蜀文明存在的是"
+  },
+  {
+    "source_id": "tools:keju:d49644aad43c025e397c",
+    "question": "下列属于三星堆青铜文化作品的是？",
+    "answer": "青铜人面具",
+    "normalized_question": "下列属于三星堆青铜文化作品的是"
+  },
+  {
+    "source_id": "tools:keju:aca8625f6bb76d486fa0",
+    "question": "此物原件面部上宽下窄，刀眉栗眼，蒜头鼻。其造型简洁明快，线条分明，面容朴实敦厚。此物的原件名为？",
+    "answer": "青铜人面具",
+    "normalized_question": "此物原件面部上宽下窄刀眉栗眼蒜头鼻其造型简洁明快线条分明面容朴实敦厚此物的原件名为"
+  },
+  {
+    "source_id": "tools:keju:c6632efe9bd658a8f8ed",
+    "question": "广汉三星堆出土的青铜器属于古代的",
+    "answer": "蜀文化",
+    "normalized_question": "广汉三星堆出土的青铜器属于古代的"
+  },
+  {
+    "source_id": "tools:keju:dfcca090cdfd337843b1",
+    "question": "青铜纵目面具眉尖上挑，双眼斜长，眼球呈柱状向前纵凸；双耳向两侧充分展开；鹰钩鼻，鼻翼呈牛鼻状向上内卷；阔而深，口缝深长上扬，作神秘微笑状。大众认为这可能是古文献记载中的哪个形象？",
+    "answer": "蚕丛",
+    "normalized_question": "青铜纵目面具眉尖上挑双眼斜长眼球呈柱状向前纵凸双耳向两侧充分展开鹰钩鼻鼻翼呈牛鼻状向上内卷阔而深口缝深长上扬作神秘微笑状大众认为这可能是古文献记载中的哪个形象"
+  },
+  {
+    "source_id": "tools:keju:09e09f214ba4f9f92d44",
+    "question": "青铜太阳轮多用于什么情景？",
+    "answer": "祭祀",
+    "normalized_question": "青铜太阳轮多用于什么情景"
+  },
+  {
+    "source_id": "tools:keju:85d1693339298906ed49",
+    "question": "青铜大立人像在世界上的青铜人雕像当中有着什么地位？",
+    "answer": "体量最大",
+    "normalized_question": "青铜大立人像在世界上的青铜人雕像当中有着什么地位"
+  },
+  {
+    "source_id": "tools:keju:79a672e5e0790134f33a",
+    "question": "制作陶三足炊器的原材料是什么？",
+    "answer": "陶土",
+    "normalized_question": "制作陶三足炊器的原材料是什么"
+  },
+  {
+    "source_id": "tools:keju:69cac9f17adf6b7ef726",
+    "question": "三星堆出土的文物主要分五类，哪一种不属于三星堆文物的类型？",
+    "answer": "铁器",
+    "normalized_question": "三星堆出土的文物主要分五类哪一种不属于三星堆文物的类型"
+  },
+  {
+    "source_id": "tools:keju:c671d6dd60710176fd12",
+    "question": "金面罩作为三星堆出土文物的标志之一，它在古蜀主要代表了什么含义？",
+    "answer": "地位权威",
+    "normalized_question": "金面罩作为三星堆出土文物的标志之一它在古蜀主要代表了什么含义"
+  },
+  {
+    "source_id": "tools:keju:454d0ed1e8c6d59a2e6c",
+    "question": "据古文献记载，古蜀文明当中用于展现权利象征的文物是什么？",
+    "answer": "金杖",
+    "normalized_question": "据古文献记载古蜀文明当中用于展现权利象征的文物是什么"
+  },
+  {
+    "source_id": "tools:keju:31ac01eefa947a40af71",
+    "question": "三星堆文物当中，最高的文物是什么？",
+    "answer": "青铜神树",
+    "normalized_question": "三星堆文物当中最高的文物是什么"
+  },
+  {
+    "source_id": "tools:keju:9cf7971b5cb751a2fe99",
+    "question": "三星堆古遗址诞生于哪条河流地带？",
+    "answer": "鸭子河",
+    "normalized_question": "三星堆古遗址诞生于哪条河流地带"
+  },
+  {
+    "source_id": "tools:keju:e55917e96493205eea90",
+    "question": "三星堆的青铜器铸造方法十分精妙，其中青铜太阳轮分别采用了嵌铸法以及？",
+    "answer": "铆铸法",
+    "normalized_question": "三星堆的青铜器铸造方法十分精妙其中青铜太阳轮分别采用了嵌铸法以及"
+  },
+  {
+    "source_id": "tools:keju:33bf298b1f9bf646218a",
+    "question": "被誉为“千里眼”、“顺风耳”的文物为？",
+    "answer": "青铜纵目面具",
+    "normalized_question": "被誉为千里眼顺风耳的文物为"
+  },
+  {
+    "source_id": "tools:keju:f837f9a51661c376cdf1",
+    "question": "铜人首鸟身像原本铸于哪件文物上？",
+    "answer": "3号铜神树",
+    "normalized_question": "铜人首鸟身像原本铸于哪件文物上"
+  },
+  {
+    "source_id": "tools:keju:42b58a379479dd8828cc",
+    "question": "铜人首鸟身像在古蜀文明当中代表了什么含义？",
+    "answer": "主神",
+    "normalized_question": "铜人首鸟身像在古蜀文明当中代表了什么含义"
+  },
+  {
+    "source_id": "tools:keju:5856ac70c059e7cfc0f7",
+    "question": "三星堆全部的鸟类造型文物中，形体最大的一件文物是？",
+    "answer": "青铜大鸟头",
+    "normalized_question": "三星堆全部的鸟类造型文物中形体最大的一件文物是"
+  },
+  {
+    "source_id": "tools:keju:1ca8ecab05e2f72231f6",
+    "question": "文物青铜立人像的衣上纹饰繁复精丽，有多种纹路进行搭配。其中不包含哪种纹路？",
+    "answer": "鱼纹",
+    "normalized_question": "文物青铜立人像的衣上纹饰繁复精丽有多种纹路进行搭配其中不包含哪种纹路"
+  },
+  {
+    "source_id": "tools:keju:e7d604831a93895d83a7",
+    "question": "玉璋是三星堆玉器当中最有代表性的文物，其最主要的用途是？",
+    "answer": "祭祀",
+    "normalized_question": "玉璋是三星堆玉器当中最有代表性的文物其最主要的用途是"
+  },
+  {
+    "source_id": "tools:keju:34dbfac827b0c4651c6f",
+    "question": "文物祭山图玉璋的璋身有着精美且复杂的图案，其中的图案共有几幅？",
+    "answer": "2幅",
+    "normalized_question": "文物祭山图玉璋的璋身有着精美且复杂的图案其中的图案共有几幅"
+  },
+  {
+    "source_id": "tools:keju:2a3f9b0fb950f2a38c70",
+    "question": "文物祭山图玉璋的璋身有着精美且复杂的图案，其中的图案共有2幅，每幅图案由多少组构成？",
+    "answer": "5组",
+    "normalized_question": "文物祭山图玉璋的璋身有着精美且复杂的图案其中的图案共有2幅每幅图案由多少组构成"
+  },
+  {
+    "source_id": "tools:keju:2e0808c7e7a1150ac415",
+    "question": "现已面世的三星堆文物当中，不存在哪种兽类藏品？",
+    "answer": "牛",
+    "normalized_question": "现已面世的三星堆文物当中不存在哪种兽类藏品"
+  },
+  {
+    "source_id": "tools:keju:1f0d390fff30746df1f6",
+    "question": "目前三星堆遗址共发现了多少座祭祀坑？",
+    "answer": "8",
+    "normalized_question": "目前三星堆遗址共发现了多少座祭祀坑"
+  },
+  {
+    "source_id": "tools:keju:034bf2bf27775766b204",
+    "question": "三星堆的名称起源与其发掘地有关，源于发掘地是？",
+    "answer": "在三座土堆",
+    "normalized_question": "三星堆的名称起源与其发掘地有关源于发掘地是"
+  },
+  {
+    "source_id": "tools:keju:252d8f4d3a18ce8d8021",
+    "question": "三星堆遗址位于哪个省份？",
+    "answer": "四川省",
+    "normalized_question": "三星堆遗址位于哪个省份"
+  },
+  {
+    "source_id": "tools:keju:31ffbe08ddf6c73bfd23",
+    "question": "三星堆出土的青铜立人像造型高大，其中立人的身高约多少米？",
+    "answer": "1.8米",
+    "normalized_question": "三星堆出土的青铜立人像造型高大其中立人的身高约多少米"
+  },
+  {
+    "source_id": "tools:keju:1bd9ac19becde436560d",
+    "question": "三星堆青铜神树上有几只鸟？",
+    "answer": "9",
+    "normalized_question": "三星堆青铜神树上有几只鸟"
+  },
+  {
+    "source_id": "tools:keju:62a37b536b7eb7a51831",
+    "question": "青铜神树上的鸟，寓意着什么？",
+    "answer": "太阳",
+    "normalized_question": "青铜神树上的鸟寓意着什么"
+  },
+  {
+    "source_id": "tools:keju:4d66ecc9d02e020e0445",
+    "question": "青铜神树上的鸟，与古人对太阳的哪个别称有关？",
+    "answer": "金乌",
+    "normalized_question": "青铜神树上的鸟与古人对太阳的哪个别称有关"
+  },
+  {
+    "source_id": "tools:keju:3a76c793f4c31873000a",
+    "question": "青铜立人像衣上纹饰繁复精丽，但没有出现哪种纹式？",
+    "answer": "虎纹",
+    "normalized_question": "青铜立人像衣上纹饰繁复精丽但没有出现哪种纹式"
+  },
+  {
+    "source_id": "tools:keju:f5fc86ef9aa39eebdd2d",
+    "question": "三星堆遗址内的建筑群体是什么结构的？",
+    "answer": "木或土木结合",
+    "normalized_question": "三星堆遗址内的建筑群体是什么结构的"
+  },
+  {
+    "source_id": "tools:keju:452f77c409bb0d67bb5b",
+    "question": "青铜立人像身上的纹饰，精美多样，以龙纹为主，共有几条龙纹？",
+    "answer": "4条",
+    "normalized_question": "青铜立人像身上的纹饰精美多样以龙纹为主共有几条龙纹"
+  },
+  {
+    "source_id": "tools:keju:833695bebdb57b7bfae2",
+    "question": "三星堆遗址位于四川省哪个县级市？",
+    "answer": "广汉市",
+    "normalized_question": "三星堆遗址位于四川省哪个县级市"
+  },
+  {
+    "source_id": "tools:keju:ade8b8f1a52ea976d8f3",
+    "question": "三星堆青铜大立人像通高有多高？",
+    "answer": "约2.62米",
+    "normalized_question": "三星堆青铜大立人像通高有多高"
+  },
+  {
+    "source_id": "tools:keju:b887b5030d6981738a29",
+    "question": "三星堆遗址的总面积有多大？",
+    "answer": "约12平方公里",
+    "normalized_question": "三星堆遗址的总面积有多大"
+  },
+  {
+    "source_id": "tools:keju:7ca587d0eb2f7fe32a95",
+    "question": "戴冠纵目面具额头上的额饰是？",
+    "answer": "变形的夔龙",
+    "normalized_question": "戴冠纵目面具额头上的额饰是"
+  },
+  {
+    "source_id": "tools:keju:034f92406dc5c6b5d4e8",
+    "question": "青铜太阳轮的铸造方法是什么？",
+    "answer": "二次铸造法",
+    "normalized_question": "青铜太阳轮的铸造方法是什么"
+  },
+  {
+    "source_id": "tools:keju:f18fb52e2b86a7500525",
+    "question": "陶三足炊器的主要用途是什么？",
+    "answer": "蒸煮食物",
+    "normalized_question": "陶三足炊器的主要用途是什么"
+  },
+  {
+    "source_id": "tools:keju:396dde3c64915c7ce284",
+    "question": "三星堆陶器的基本组合不包括哪种？",
+    "answer": "大口陶瓮",
+    "normalized_question": "三星堆陶器的基本组合不包括哪种"
+  },
+  {
+    "source_id": "tools:keju:5cdf8ab1c41ae23893c5",
+    "question": "前国防部长张爱萍为三星堆题词的内容是什么？",
+    "answer": "沉睡数千年，一醒惊天下",
+    "normalized_question": "前国防部长张爱萍为三星堆题词的内容是什么"
+  },
+  {
+    "source_id": "tools:keju:d14968d77864d5b147dd",
+    "question": "“高柄豆”的主要用途是什么？",
+    "answer": "盛装食物",
+    "normalized_question": "高柄豆的主要用途是什么"
+  },
+  {
+    "source_id": "tools:keju:247b5383480a1b0e05c6",
+    "question": "三星堆陶器中哪种最具蜀地特色？",
+    "answer": "鸟头勺把",
+    "normalized_question": "三星堆陶器中哪种最具蜀地特色"
+  },
+  {
+    "source_id": "tools:keju:f3e4617376f00fad375e",
+    "question": "三星堆玉石器的主要用途是什么？",
+    "answer": "祭祀",
+    "normalized_question": "三星堆玉石器的主要用途是什么"
+  },
+  {
+    "source_id": "tools:keju:3692b97798a61a0ba573",
+    "question": "青铜纵目面具的眼睛凸出了多少厘米？",
+    "answer": "16厘米",
+    "normalized_question": "青铜纵目面具的眼睛凸出了多少厘米"
+  },
+  {
+    "source_id": "tools:keju:54438362ddcaead2c3e1",
+    "question": "鸭子河位于三星堆古城遗址的哪个方向？",
+    "answer": "北面",
+    "normalized_question": "鸭子河位于三星堆古城遗址的哪个方向"
+  },
+  {
+    "source_id": "tools:keju:d607b3e42b77db0403c1",
+    "question": "从众多三星堆文物当中，可看出古蜀人民所崇拜的事物是？",
+    "answer": "太阳神",
+    "normalized_question": "从众多三星堆文物当中可看出古蜀人民所崇拜的事物是"
+  },
+  {
+    "source_id": "tools:keju:25b8aa4b9d804f768781",
+    "question": "对于古蜀文明来说，古蜀族与哪类动物关系极为密切？",
+    "answer": "鸟",
+    "normalized_question": "对于古蜀文明来说古蜀族与哪类动物关系极为密切"
+  },
+  {
+    "source_id": "tools:keju:4613f1c282e04cb32967",
+    "question": "李白在诗中写到“蚕丛及鱼凫，开国何茫然！”，“蚕丛”“鱼凫”是指什么？",
+    "answer": "古蜀王",
+    "normalized_question": "李白在诗中写到蚕丛及鱼凫开国何茫然蚕丛鱼凫是指什么"
+  },
+  {
+    "source_id": "tools:keju:2ddd704b8729e2624050",
+    "question": "4500年前生活在四川的人可能会能吃到什么美食？",
+    "answer": "水稻",
+    "normalized_question": "4500年前生活在四川的人可能会能吃到什么美食"
+  },
+  {
+    "source_id": "tools:keju:ba2a4779f7e403a7dc87",
+    "question": "古蜀人造型常用的配饰是什么？",
+    "answer": "耳饰",
+    "normalized_question": "古蜀人造型常用的配饰是什么"
+  },
+  {
+    "source_id": "tools:keju:8b2290781490e6b5f980",
+    "question": "三星堆出土的众多神像、神灵都极具神秘诡秘之色彩，其造型手段也多用夸张的、超现实的表现方式，而唯有一件青铜文物可称得上是写实风格的杰作，这件文物是？",
+    "answer": "青铜鸡",
+    "normalized_question": "三星堆出土的众多神像神灵都极具神秘诡秘之色彩其造型手段也多用夸张的超现实的表现方式而唯有一件青铜文物可称得上是写实风格的杰作这件文物是"
+  },
+  {
+    "source_id": "tools:keju:356dbfd2adabae406c61",
+    "question": "金杖可能与哪个古蜀王朝有关？",
+    "answer": "鱼凫",
+    "normalized_question": "金杖可能与哪个古蜀王朝有关"
+  },
+  {
+    "source_id": "tools:keju:fe3ac15186d7494fb5c5",
+    "question": "传说中的几代蜀王名字有共通之处，即都以某种动物为名，这种动物是？",
+    "answer": "鸟",
+    "normalized_question": "传说中的几代蜀王名字有共通之处即都以某种动物为名这种动物是"
+  },
+  {
+    "source_id": "tools:keju:a09662030c2006c704b8",
+    "question": "三星堆发现的鸟类文物与现实当中的一种鸟极为相似，这种鸟是？",
+    "answer": "鱼鹰（鸬鹚）",
+    "normalized_question": "三星堆发现的鸟类文物与现实当中的一种鸟极为相似这种鸟是"
+  },
+  {
+    "source_id": "tools:keju:49f17d026cf5c2584ca0",
+    "question": "“东方巨人”是指哪件文物",
+    "answer": "青铜大立人像",
+    "normalized_question": "东方巨人是指哪件文物"
+  },
+  {
+    "source_id": "tools:keju:208d0db4c94b6cacb80b",
+    "question": "传说中，第四代蜀王杜宇的名字，与哪种鸟有关？",
+    "answer": "杜鹃",
+    "normalized_question": "传说中第四代蜀王杜宇的名字与哪种鸟有关"
+  },
+  {
+    "source_id": "tools:keju:1943c1e342e0dd09f6b6",
+    "question": "传说中，第三代蜀王鱼凫的名字，与哪种鸟有关？",
+    "answer": "鱼老鸹（鸬鹚）",
+    "normalized_question": "传说中第三代蜀王鱼凫的名字与哪种鸟有关"
+  },
+  {
+    "source_id": "tools:keju:99dfcbefeb24956ba929",
+    "question": "“蜀”字的构造与哪种昆虫有关？",
+    "answer": "蚕",
+    "normalized_question": "蜀字的构造与哪种昆虫有关"
+  },
+  {
+    "source_id": "tools:keju:e3a5c367c2a66cfaabc4",
+    "question": "民间传说中，第一位蜀王蚕丛又被奉为？",
+    "answer": "青衣神",
+    "normalized_question": "民间传说中第一位蜀王蚕丛又被奉为"
+  },
+  {
+    "source_id": "tools:keju:fc3f7ca1de5a0c7ad01a",
+    "question": "四川是丝绸起源的重要区域之一，但在四川考古中首次发现丝绸残留物是在哪一年？",
+    "answer": "2021年",
+    "normalized_question": "四川是丝绸起源的重要区域之一但在四川考古中首次发现丝绸残留物是在哪一年"
+  },
+  {
+    "source_id": "tools:keju:6e79cbe2c72459766f66",
+    "question": "地处内陆盆地的三星堆遗址内，发现大量海贝，最有可能被古蜀先民作何使用？",
+    "answer": "货币",
+    "normalized_question": "地处内陆盆地的三星堆遗址内发现大量海贝最有可能被古蜀先民作何使用"
+  },
+  {
+    "source_id": "tools:keju:a0a8e47543a1c525467f",
+    "question": "历史记载的关于古蜀地区的几代名王不包括？",
+    "answer": "铜贝",
+    "normalized_question": "历史记载的关于古蜀地区的几代名王不包括"
+  },
+  {
+    "source_id": "tools:keju:2df9760e30241e497ec9",
+    "question": "三星堆文化距今有多少年？",
+    "answer": "约4500-2800年",
+    "normalized_question": "三星堆文化距今有多少年"
+  },
+  {
+    "source_id": "tools:keju:ecee35f6cb4680c2329e",
+    "question": "第五代蜀王开明氏最为主要的功绩是什么？",
+    "answer": "治理了蜀地的水患",
+    "normalized_question": "第五代蜀王开明氏最为主要的功绩是什么"
+  },
+  {
+    "source_id": "tools:keju:105b33444a1b36cdf497",
+    "question": "“杜鹃滴血”是讲述第几代蜀王的故事？",
+    "answer": "第四代蜀王杜宇",
+    "normalized_question": "杜鹃滴血是讲述第几代蜀王的故事"
+  },
+  {
+    "source_id": "tools:keju:a637cf4b094ac8458a00",
+    "question": "三星堆古蜀国的政权最大的特点是什么？",
+    "answer": "神权色彩极为浓厚",
+    "normalized_question": "三星堆古蜀国的政权最大的特点是什么"
+  },
+  {
+    "source_id": "tools:keju:858e19dbb46a0829f475",
+    "question": "“蚕丛及鱼凫，开国何茫然”是哪位文人的作品？",
+    "answer": "李白",
+    "normalized_question": "蚕丛及鱼凫开国何茫然是哪位文人的作品"
+  },
+  {
+    "source_id": "tools:keju:199df4759304da0daf06",
+    "question": "古代人心目中“璧”，“琮”分别代表什么？",
+    "answer": "天和地",
+    "normalized_question": "古代人心目中璧琮分别代表什么"
+  },
+  {
+    "source_id": "tools:keju:542f56f118e27f55bfea",
+    "question": "鸟头勺把与传说中哪代蜀王有关？",
+    "answer": "第三代蜀王鱼凫",
+    "normalized_question": "鸟头勺把与传说中哪代蜀王有关"
+  },
+  {
+    "source_id": "tools:keju:3ec836339e9dbd57f241",
+    "question": "“金乌西坠、玉兔东升”中的金乌和玉兔分别代表什么？",
+    "answer": "太阳和月亮",
+    "normalized_question": "金乌西坠玉兔东升中的金乌和玉兔分别代表什么"
+  },
+  {
+    "source_id": "tools:keju:a7495cfb0f0735aea9a3",
+    "question": "三星堆遗址首次现于世间时，是被当地农民车水淘沟时偶然发现，当时被发现的文物主要是哪种？",
+    "answer": "玉石器",
+    "normalized_question": "三星堆遗址首次现于世间时是被当地农民车水淘沟时偶然发现当时被发现的文物主要是哪种"
+  },
+  {
+    "source_id": "tools:keju:ddac1050b9695e09fb7f",
+    "question": "三星堆遗址首次被考古队发掘后，发掘就进入了长期停滞。之后从哪一年起考古队重新恢复三星堆的考古工作？",
+    "answer": "1963年",
+    "normalized_question": "三星堆遗址首次被考古队发掘后发掘就进入了长期停滞之后从哪一年起考古队重新恢复三星堆的考古工作"
+  },
+  {
+    "source_id": "tools:keju:d42e67eb3e7a6d2637d9",
+    "question": "迄今为止已在三星堆遗址上发掘出8座祭祀坑，其中一号坑于哪一年被发掘？",
+    "answer": "1986年",
+    "normalized_question": "迄今为止已在三星堆遗址上发掘出8座祭祀坑其中一号坑于哪一年被发掘"
+  },
+  {
+    "source_id": "tools:keju:77223b29542c18672d10",
+    "question": "三星堆自发现新的6座祭祀坑以来，为了给文物创造全时段的恒温恒湿环境，于2020年在遗址现场搭建祭祀坑考古工作站，工作站中包含几个考古方舱？",
+    "answer": "4个",
+    "normalized_question": "三星堆自发现新的6座祭祀坑以来为了给文物创造全时段的恒温恒湿环境于2020年在遗址现场搭建祭祀坑考古工作站工作站中包含几个考古方舱"
+  },
+  {
+    "source_id": "tools:keju:f03d4c27bdeb06b2eb39",
+    "question": "在三星堆遗址中，一号、二号祭祀坑在同一年被陆续发现，后来被发掘的三号坑与之相隔几年？",
+    "answer": "33年",
+    "normalized_question": "在三星堆遗址中一号二号祭祀坑在同一年被陆续发现后来被发掘的三号坑与之相隔几年"
+  },
+  {
+    "source_id": "tools:keju:53eb84b9c54554e1c075",
+    "question": "在三星堆祭祀坑中，有两个坑比较特殊，初次被发现时是相互叠压的状态，这里指的是哪两个祭祀坑？",
+    "answer": "6号和7号",
+    "normalized_question": "在三星堆祭祀坑中有两个坑比较特殊初次被发现时是相互叠压的状态这里指的是哪两个祭祀坑"
+  },
+  {
+    "source_id": "tools:keju:777662fa866b961feebb",
+    "question": "三星堆文化在考古学上被分为四期，其中哪一期被认为是三星堆文化的鼎盛时期？",
+    "answer": "第三期",
+    "normalized_question": "三星堆文化在考古学上被分为四期其中哪一期被认为是三星堆文化的鼎盛时期"
+  },
+  {
+    "source_id": "tools:keju:aa20d72c2cf2c710653a",
+    "question": "据考古记载，三星堆一期文化属于哪个时期？",
+    "answer": "新石器时代晚期",
+    "normalized_question": "据考古记载三星堆一期文化属于哪个时期"
+  },
+  {
+    "source_id": "tools:keju:430c5f003882d2b6e7b1",
+    "question": "三星堆博物馆建于三星堆遗址东北角，该馆于哪一年正式建成开放？",
+    "answer": "1997年",
+    "normalized_question": "三星堆博物馆建于三星堆遗址东北角该馆于哪一年正式建成开放"
+  },
+  {
+    "source_id": "tools:keju:e65e4ef26fb4b7b9e150",
+    "question": "三星堆目前发掘的文物中，较为出名的大型青铜器——青铜神树、青铜大立人像，出自于哪个祭祀坑？",
+    "answer": "2号",
+    "normalized_question": "三星堆目前发掘的文物中较为出名的大型青铜器青铜神树青铜大立人像出自于哪个祭祀坑"
+  },
+  {
+    "source_id": "tools:keju:12d03d1ef6a9f6af4113",
+    "question": "三星堆博物馆于何时正式对外开放文物修复馆？",
+    "answer": "44531",
+    "normalized_question": "三星堆博物馆于何时正式对外开放文物修复馆"
+  },
+  {
+    "source_id": "tools:keju:172e47b15e0fd3f24b57",
+    "question": "薄如蝶翼的金面具眉眼镂空，两耳轮廓圆润，造型威严神圣，是目前三星堆考古发掘中出土最完整的一件金面具，此件文物出土于哪一年？",
+    "answer": "2021年",
+    "normalized_question": "薄如蝶翼的金面具眉眼镂空两耳轮廓圆润造型威严神圣是目前三星堆考古发掘中出土最完整的一件金面具此件文物出土于哪一年"
+  },
+  {
+    "source_id": "tools:keju:f6eda8dec0c595134a40",
+    "question": "三星堆博物馆内展示的文物不包括以下哪个",
+    "answer": "丝绸",
+    "normalized_question": "三星堆博物馆内展示的文物不包括以下哪个"
+  },
+  {
+    "source_id": "tools:keju:45e674ff07f4a22cb8a0",
+    "question": "三星堆博物馆外配置了仿古祭祀台，祭祀台上的文物是？",
+    "answer": "青铜立人像",
+    "normalized_question": "三星堆博物馆外配置了仿古祭祀台祭祀台上的文物是"
+  },
+  {
+    "source_id": "tools:keju:f2714a493dea8d2bbdd7",
+    "question": "目前已考古到的三星堆核心区域，古蜀国都城遗址面积有多大？",
+    "answer": "3.6平方公里",
+    "normalized_question": "目前已考古到的三星堆核心区域古蜀国都城遗址面积有多大"
+  },
+  {
+    "source_id": "tools:keju:e6d0ab1426f548cd4bfa",
+    "question": "三星堆祭祀坑发掘区紧挨着那一条河流？",
+    "answer": "马牧河",
+    "normalized_question": "三星堆祭祀坑发掘区紧挨着那一条河流"
+  },
+  {
+    "source_id": "tools:keju:bfd20fd053d44906eb07",
+    "question": "三星堆遗址最早发现文物是哪一年？",
+    "answer": "1929年",
+    "normalized_question": "三星堆遗址最早发现文物是哪一年"
+  },
+  {
+    "source_id": "tools:keju:217c95bb962dc3441073",
+    "question": "首次发现三星堆文物的人是谁？",
+    "answer": "燕道诚",
+    "normalized_question": "首次发现三星堆文物的人是谁"
+  },
+  {
+    "source_id": "tools:keju:57c9c65653b5e6a7c212",
+    "question": "三星堆遗址第一次科学考古发掘是哪一年？",
+    "answer": "1934年",
+    "normalized_question": "三星堆遗址第一次科学考古发掘是哪一年"
+  },
+  {
+    "source_id": "tools:keju:9217e2c51da194ffdb20",
+    "question": "三星堆二号祭祀坑出土了几件戴金面罩的青铜人头像？",
+    "answer": "4件",
+    "normalized_question": "三星堆二号祭祀坑出土了几件戴金面罩的青铜人头像"
+  },
+  {
+    "source_id": "tools:keju:244acbc7aa84af9e936a",
+    "question": "三星堆二号祭祀坑出土了几件青铜太阳轮？",
+    "answer": "6件",
+    "normalized_question": "三星堆二号祭祀坑出土了几件青铜太阳轮"
+  },
+  {
+    "source_id": "tools:keju:927f947948974489a2c0",
+    "question": "三星堆博物馆的四大特色，不包括什么？",
+    "answer": "教育",
+    "normalized_question": "三星堆博物馆的四大特色不包括什么"
+  },
+  {
+    "source_id": "tools:keju:c9e23b19865f409fbcb3",
+    "question": "四川省会是哪个城市？",
+    "answer": "成都",
+    "normalized_question": "四川省会是哪个城市"
+  },
+  {
+    "source_id": "tools:keju:e58df08449f6b4615186",
+    "question": "四川最高的山是什么山",
+    "answer": "贡嘎山",
+    "normalized_question": "四川最高的山是什么山"
+  },
+  {
+    "source_id": "tools:keju:8b09588c0ec344c060a2",
+    "question": "四川著名的九寨沟位于哪个地区？",
+    "answer": "阿坝藏族羌族自治州",
+    "normalized_question": "四川著名的九寨沟位于哪个地区"
+  },
+  {
+    "source_id": "tools:keju:c3c6864ec5a658fafdad",
+    "question": "中国的四大佛山之一位于四川哪个市？",
+    "answer": "乐山市",
+    "normalized_question": "中国的四大佛山之一位于四川哪个市"
+  },
+  {
+    "source_id": "tools:keju:23703f8f164f9f6ca29a",
+    "question": "《使蜀日记》的作者是清代学者？",
+    "answer": "方象瑛",
+    "normalized_question": "使蜀日记的作者是清代学者"
+  },
+  {
+    "source_id": "tools:keju:e000164aaa1efa429cda",
+    "question": "初唐四杰中，未曾游历蜀地的是？",
+    "answer": "杨炯",
+    "normalized_question": "初唐四杰中未曾游历蜀地的是"
+  },
+  {
+    "source_id": "tools:keju:a0ce8b0e13cc74797e7d",
+    "question": "武侯祠“攻心联”最重要的创作目的是什么？",
+    "answer": "“治蜀”",
+    "normalized_question": "武侯祠攻心联最重要的创作目的是什么"
+  },
+  {
+    "source_id": "tools:keju:b4dc03d9f3eb3fe452d3",
+    "question": "前秦王猛死后，苻坚将王猛与诸葛亮并举，封其谥号为？",
+    "answer": "武侯",
+    "normalized_question": "前秦王猛死后苻坚将王猛与诸葛亮并举封其谥号为"
+  },
+  {
+    "source_id": "tools:keju:081e8971cad399c6217b",
+    "question": "下列哪位外籍人士曾沿蜀道去过四川？",
+    "answer": "马可波罗",
+    "normalized_question": "下列哪位外籍人士曾沿蜀道去过四川"
+  },
+  {
+    "source_id": "tools:keju:d7c23f20d86f69b1783b",
+    "question": "被称为为“剑门”、“西蜀门户”的是？",
+    "answer": "剑门关",
+    "normalized_question": "被称为为剑门西蜀门户的是"
+  },
+  {
+    "source_id": "tools:keju:242e537d346d167e01c3",
+    "question": "成都平原被誉为“天府之国”的原因不包括？",
+    "answer": "因天府广场而得名",
+    "normalized_question": "成都平原被誉为天府之国的原因不包括"
+  },
+  {
+    "source_id": "tools:keju:d9b60e837de3c22f85a1",
+    "question": "以下哪项景点能代表蜀汉文化？",
+    "answer": "武侯祠",
+    "normalized_question": "以下哪项景点能代表蜀汉文化"
+  },
+  {
+    "source_id": "tools:keju:fdde4a42ec8202ea11cf",
+    "question": "以下哪项景点不在成都？",
+    "answer": "三星堆遗址",
+    "normalized_question": "以下哪项景点不在成都"
+  },
+  {
+    "source_id": "tools:keju:da8c9b3ed1389c1319c9",
+    "question": "大熊猫已在地球上生存了至少800万年，被誉为“活化石”和“中国国宝”，以下说法错误的是？",
+    "answer": "现存800只",
+    "normalized_question": "大熊猫已在地球上生存了至少800万年被誉为活化石和中国国宝以下说法错误的是"
+  },
+  {
+    "source_id": "tools:keju:f4b21ea3178ea2585fb5",
+    "question": "蜀绣又称“川绣”，是中国四大名绣之一，蜀锦、蜀绣的主要原材料是？",
+    "answer": "蚕丝",
+    "normalized_question": "蜀绣又称川绣是中国四大名绣之一蜀锦蜀绣的主要原材料是"
+  },
+  {
+    "source_id": "tools:keju:c3c88357564fa6bc59ff",
+    "question": "都江堰水利工程是世界文化遗产，通常认为都江堰水利工程是由谁修建的？",
+    "answer": "李冰",
+    "normalized_question": "都江堰水利工程是世界文化遗产通常认为都江堰水利工程是由谁修建的"
+  },
+  {
+    "source_id": "tools:keju:10448b2f8b5013fd5d68",
+    "question": "唐代大诗人杜甫居草堂所作的千古绝句“窗含西岭千秋雪，门泊东吴万里船”指的景点是？",
+    "answer": "西岭晴雪",
+    "normalized_question": "唐代大诗人杜甫居草堂所作的千古绝句窗含西岭千秋雪门泊东吴万里船指的景点是"
+  },
+  {
+    "source_id": "tools:keju:8a3de8da15b0b128d33d",
+    "question": "下列川蜀著名历史人物中哪位不属于西汉时期？",
+    "answer": "美女杨贵妃",
+    "normalized_question": "下列川蜀著名历史人物中哪位不属于西汉时期"
+  },
+  {
+    "source_id": "tools:keju:461e2f6729ffb38e8ea5",
+    "question": "下列哪项与湖北武当山、江西龙虎山、安徽齐云山合称四大道教名山",
+    "answer": "青城山",
+    "normalized_question": "下列哪项与湖北武当山江西龙虎山安徽齐云山合称四大道教名山"
+  },
+  {
+    "source_id": "tools:keju:05f485b3d2a42cb84166",
+    "question": "早在唐代就有“蜀戏冠天下”的说法。清代乾隆时，在本地车灯戏基础上，融汇各地声腔，形成了用四川话演唱的？",
+    "answer": "川剧",
+    "normalized_question": "早在唐代就有蜀戏冠天下的说法清代乾隆时在本地车灯戏基础上融汇各地声腔形成了用四川话演唱的"
+  },
+  {
+    "source_id": "tools:keju:b15e314d1d2f943bd8f3",
+    "question": "文殊院前身是唐代的“妙园塔”，清康熙年间重修之后改称“文殊院”；文殊院是什么教的道场？",
+    "answer": "佛教",
+    "normalized_question": "文殊院前身是唐代的妙园塔清康熙年间重修之后改称文殊院文殊院是什么教的道场"
+  },
+  {
+    "source_id": "tools:keju:c2f4d2cab6667b6991e1",
+    "question": "成都平原被誉为“天府之国”，是什么文明的重要发祥地？",
+    "answer": "古蜀文明",
+    "normalized_question": "成都平原被誉为天府之国是什么文明的重要发祥地"
+  },
+  {
+    "source_id": "tools:keju:7367c1cf1438a17b0d3d",
+    "question": "李白在《蜀道难》中曾写道：蚕从及鱼凫，下半句是？",
+    "answer": "开国何茫然",
+    "normalized_question": "李白在蜀道难中曾写道蚕从及鱼凫下半句是"
+  },
+  {
+    "source_id": "tools:keju:31b750c74921ec6947e6",
+    "question": "东汉时期，巴蜀产生了中国最早、最重要的宗教是？",
+    "answer": "道教",
+    "normalized_question": "东汉时期巴蜀产生了中国最早最重要的宗教是"
+  },
+  {
+    "source_id": "tools:keju:619e7cbb699b6ffaf1f1",
+    "question": "蜀绣是以四川成都为中心的刺绣产品的总称，距今已有多少年的历史？",
+    "answer": "2000",
+    "normalized_question": "蜀绣是以四川成都为中心的刺绣产品的总称距今已有多少年的历史"
+  },
+  {
+    "source_id": "tools:keju:c6ffbc79a8d989d2bfa0",
+    "question": "四川幅员辽阔，山河秀丽，历来有“峨眉天下秀、夔门天下雄、剑门天下险、（ ）”之誉",
+    "answer": "青城天下幽",
+    "normalized_question": "四川幅员辽阔山河秀丽历来有峨眉天下秀夔门天下雄剑门天下险之誉"
+  },
+  {
+    "source_id": "tools:keju:ea0561e49fd2c4455802",
+    "question": "下列风景区被列为大熊猫保护基地的有",
+    "answer": "九寨沟",
+    "normalized_question": "下列风景区被列为大熊猫保护基地的有"
+  },
+  {
+    "source_id": "tools:keju:f2455751ef930b65d9a4",
+    "question": "公元221年，刘备在成都建立了什么政权？",
+    "answer": "蜀汉",
+    "normalized_question": "公元221年刘备在成都建立了什么政权"
+  },
+  {
+    "source_id": "tools:keju:110ffc27bac6bc141484",
+    "question": "司马相如的宏富辞章，沾溉着一代又一代的巴蜀儿女，以下哪个地名与他有关？",
+    "answer": "驷马桥",
+    "normalized_question": "司马相如的宏富辞章沾溉着一代又一代的巴蜀儿女以下哪个地名与他有关"
+  },
+  {
+    "source_id": "tools:keju:6c5ae5f0760965883edf",
+    "question": "司马相如的文学成就主要是？",
+    "answer": "辞赋",
+    "normalized_question": "司马相如的文学成就主要是"
+  },
+  {
+    "source_id": "tools:keju:77b3598663ae816f159c",
+    "question": "公元1001年，北宋政权将巴蜀故地划分为“川峡四路”，下列哪项不属于川峡四路？",
+    "answer": "北京路",
+    "normalized_question": "公元1001年北宋政权将巴蜀故地划分为川峡四路下列哪项不属于川峡四路"
+  },
+  {
+    "source_id": "tools:keju:e4ff769f3a106e2e982f",
+    "question": "下列哪项不是诸葛亮治蜀采取的主要措施",
+    "answer": "及时行乐",
+    "normalized_question": "下列哪项不是诸葛亮治蜀采取的主要措施"
+  },
+  {
+    "source_id": "tools:keju:1cac06a10c152a8ddb80",
+    "question": "秦国征服巴、蜀后，在四川地区设立巴、蜀二郡，汉时又增设了",
+    "answer": "广汉郡",
+    "normalized_question": "秦国征服巴蜀后在四川地区设立巴蜀二郡汉时又增设了"
+  },
+  {
+    "source_id": "tools:keju:76327dc50e420163991b",
+    "question": "下列省市中，不与四川省接壤的有？",
+    "answer": "湖南",
+    "normalized_question": "下列省市中不与四川省接壤的有"
+  },
+  {
+    "source_id": "tools:keju:696994d8980b2b894a79",
+    "question": "四川省面积48.6万平方千米，居全国第几？",
+    "answer": "5",
+    "normalized_question": "四川省面积486万平方千米居全国第几"
+  },
+  {
+    "source_id": "tools:keju:8f8507d3c2eec806d3c8",
+    "question": "下列中国四大古城中位于四川省的是？",
+    "answer": "阀中古城",
+    "normalized_question": "下列中国四大古城中位于四川省的是"
+  },
+  {
+    "source_id": "tools:keju:a39ce73d28b95c0eb8bc",
+    "question": "下列哪座城市享有“巴人故里、中国气都”之称？",
+    "answer": "达州",
+    "normalized_question": "下列哪座城市享有巴人故里中国气都之称"
+  },
+  {
+    "source_id": "tools:keju:9a11c63981cd712f76da",
+    "question": "四川又被称为“天府之国”。“天府”一词，最早见于？",
+    "answer": "《周礼》",
+    "normalized_question": "四川又被称为天府之国天府一词最早见于"
+  },
+  {
+    "source_id": "tools:keju:14eefedd92c05ce98718",
+    "question": "四川哪个地级市被称为南国灯城？",
+    "answer": "自贡",
+    "normalized_question": "四川哪个地级市被称为南国灯城"
+  },
+  {
+    "source_id": "tools:keju:d95681142e45d14dc647",
+    "question": "下列四处世界文化与自然双遗产中，位于四川省的是？",
+    "answer": "峨眉山乐山大佛",
+    "normalized_question": "下列四处世界文化与自然双遗产中位于四川省的是"
+  },
+  {
+    "source_id": "tools:keju:6baff5d979345ea1f85f",
+    "question": "历史上，是谁写下了《隆中对》，最早称四川为“天府”？",
+    "answer": "诸葛亮",
+    "normalized_question": "历史上是谁写下了隆中对最早称四川为天府"
+  },
+  {
+    "source_id": "tools:keju:eb27c8fe9810a6ec19d4",
+    "question": "李冰是战国时代著名的水利工程专家、蜀郡太守，川西民间称李冰为？",
+    "answer": "川主",
+    "normalized_question": "李冰是战国时代著名的水利工程专家蜀郡太守川西民间称李冰为"
+  },
+  {
+    "source_id": "tools:keju:97e64d59001740b3bca8",
+    "question": "以下哪个自治州不在四川省？",
+    "answer": "黔东南苗族侗族自治州",
+    "normalized_question": "以下哪个自治州不在四川省"
+  },
+  {
+    "source_id": "tools:keju:426aed6ffd2f5e609c7d",
+    "question": "重庆市在哪一年被列为中央直辖市？",
+    "answer": "1997年",
+    "normalized_question": "重庆市在哪一年被列为中央直辖市"
+  },
+  {
+    "source_id": "tools:keju:763f39cd06171ff2808a",
+    "question": "四川省简称什么？",
+    "answer": "川或蜀",
+    "normalized_question": "四川省简称什么"
+  },
+  {
+    "source_id": "tools:keju:9e3e130344e44511e23a",
+    "question": "“中国天府之国”指的是哪个省份",
+    "answer": "四川省",
+    "normalized_question": "中国天府之国指的是哪个省份"
+  },
+  {
+    "source_id": "tools:keju:dbd78344710ca83e0178",
+    "question": "明代状元杨慎在《升庵外籍·饮食部》中，记录了多少条巴蜀的茶、酒、食品、饮宴的资料？",
+    "answer": "24条",
+    "normalized_question": "明代状元杨慎在升庵外籍饮食部中记录了多少条巴蜀的茶酒食品饮宴的资料"
+  },
+  {
+    "source_id": "tools:keju:389e1c1066b74de7380c",
+    "question": "北宋前期，四川地区商业十分繁荣，出现了世界上最早的纸币，这种纸币是？",
+    "answer": "交子",
+    "normalized_question": "北宋前期四川地区商业十分繁荣出现了世界上最早的纸币这种纸币是"
+  },
+  {
+    "source_id": "tools:keju:33f88caa2e1b50384618",
+    "question": "下列哪种作物，在明朝万历年间引进四川？",
+    "answer": "草棉",
+    "normalized_question": "下列哪种作物在明朝万历年间引进四川"
+  },
+  {
+    "source_id": "tools:keju:3b9445a6a9da8cdfdd28",
+    "question": "下列哪个市，于1997年从四川分出，成为中央直辖市？",
+    "answer": "重庆市",
+    "normalized_question": "下列哪个市于1997年从四川分出成为中央直辖市"
+  },
+  {
+    "source_id": "tools:keju:c84e54309a60d0201531",
+    "question": "清代四川农业有很大发展，总结农业生产经验的书籍有？",
+    "answer": "《三农记》",
+    "normalized_question": "清代四川农业有很大发展总结农业生产经验的书籍有"
+  },
+  {
+    "source_id": "tools:keju:0002c7b2b4717e88429f",
+    "question": "有关四川上古历史记载的重要著作有？",
+    "answer": "《蜀王本纪》和《华阳国志》",
+    "normalized_question": "有关四川上古历史记载的重要著作有"
+  },
+  {
+    "source_id": "tools:keju:696974e979ce407a1039",
+    "question": "在我国成都平原盛行着一种独特的青铜文化，它是商代蜀文化的杰出代表，它是？",
+    "answer": "三星堆文化",
+    "normalized_question": "在我国成都平原盛行着一种独特的青铜文化它是商代蜀文化的杰出代表它是"
+  },
+  {
+    "source_id": "tools:keju:d313ab80eddeab30e079",
+    "question": "下列哪个古遗址被誉为“长江文明之源”？",
+    "answer": "三星堆",
+    "normalized_question": "下列哪个古遗址被誉为长江文明之源"
+  },
+  {
+    "source_id": "tools:keju:da26cfe3fe96cf2c5641",
+    "question": "“君问归期未有期”，下半句是？",
+    "answer": "巴山夜雨涨秋池",
+    "normalized_question": "君问归期未有期下半句是"
+  },
+  {
+    "source_id": "tools:keju:11b0edd10df219853f23",
+    "question": "“丞相祠堂何处寻”，下半句是？",
+    "answer": "锦官城外柏森森",
+    "normalized_question": "丞相祠堂何处寻下半句是"
+  },
+  {
+    "source_id": "tools:keju:369a9c523cba0c60c683",
+    "question": "“晓看红湿处”，下半句是？",
+    "answer": "花重锦官城",
+    "normalized_question": "晓看红湿处下半句是"
+  },
+  {
+    "source_id": "tools:keju:c27116c2efeefcbba3aa",
+    "question": "“锦城丝管日纷纷”，下半句是？",
+    "answer": "半入江风半入云",
+    "normalized_question": "锦城丝管日纷纷下半句是"
+  },
+  {
+    "source_id": "tools:keju:5016a0ea3fe226fb4c05",
+    "question": "“巴山楚水凄凉地”，下半句是？",
+    "answer": "二十三年弃置身",
+    "normalized_question": "巴山楚水凄凉地下半句是"
+  },
+  {
+    "source_id": "tools:keju:70293dd02f5e5250f87f",
+    "question": "“夜发清溪向三峡”，下半句是？",
+    "answer": "思君不见下渝州",
+    "normalized_question": "夜发清溪向三峡下半句是"
+  },
+  {
+    "source_id": "tools:keju:958e73d593186e90e348",
+    "question": "“蜀僧抱绿绮”，下半句是？",
+    "answer": "西下峨眉峰",
+    "normalized_question": "蜀僧抱绿绮下半句是"
+  },
+  {
+    "source_id": "tools:keju:31b2942a7f6426d4437e",
+    "question": "“见说蚕丛路”，下半句是？",
+    "answer": "崎岖不易行",
+    "normalized_question": "见说蚕丛路下半句是"
+  },
+  {
+    "source_id": "tools:keju:5ca36701ae13925e50fa",
+    "question": "“九天开出一成都”，下半句是？",
+    "answer": "万户千门入画图",
+    "normalized_question": "九天开出一成都下半句是"
+  },
+  {
+    "source_id": "tools:keju:0f3a41a3f52acd45e64d",
+    "question": "“关下险固凭三辅”，下半句是？",
+    "answer": "陇右勾连接四川",
+    "normalized_question": "关下险固凭三辅下半句是"
+  },
+  {
+    "source_id": "tools:keju:080f3bc4a244a7370d6a",
+    "question": "明末清初成书的哪本著作记录了蜀话的音韵",
+    "answer": "《蜀语》",
+    "normalized_question": "明末清初成书的哪本著作记录了蜀话的音韵"
+  },
+  {
+    "source_id": "tools:keju:8aa86acaa03a57cf4c11",
+    "question": "四川剧种中最具特色的是哪一种？",
+    "answer": "川剧",
+    "normalized_question": "四川剧种中最具特色的是哪一种"
+  },
+  {
+    "source_id": "tools:keju:0c8ec03c1f0d444df7fd",
+    "question": "下列哪个不是川剧的“三小”",
+    "answer": "花旦",
+    "normalized_question": "下列哪个不是川剧的三小"
+  },
+  {
+    "source_id": "tools:keju:5332d0f985cd710ae3ab",
+    "question": "下列哪个不是川剧曲目",
+    "answer": "《牡丹亭》",
+    "normalized_question": "下列哪个不是川剧曲目"
+  },
+  {
+    "source_id": "tools:keju:dd2937250c5f5b0127c7",
+    "question": "下列哪个不是四川特色景点",
+    "answer": "西湖",
+    "normalized_question": "下列哪个不是四川特色景点"
+  },
+  {
+    "source_id": "tools:keju:663dcaa59620df47e429",
+    "question": "四川的贡嘎山是哪个著名的山脉的一部分？",
+    "answer": "大雪山山脉",
+    "normalized_question": "四川的贡嘎山是哪个著名的山脉的一部分"
+  },
+  {
+    "source_id": "tools:keju:295ce50419874d666b52",
+    "question": "四川著名景点乐山大佛位于哪个市？",
+    "answer": "乐山市",
+    "normalized_question": "四川著名景点乐山大佛位于哪个市"
+  },
+  {
+    "source_id": "tools:keju:15beba4a769944d0f2df",
+    "question": "四川著名景点四姑娘山位于哪个市/自治州？",
+    "answer": "阿坝藏族羌族自治州",
+    "normalized_question": "四川著名景点四姑娘山位于哪个市自治州"
+  },
+  {
+    "source_id": "tools:keju:f9dc896d1290cd006eea",
+    "question": "四川著名景点九寨沟位于哪个市/自治州？",
+    "answer": "阿坝藏族羌族自治州",
+    "normalized_question": "四川著名景点九寨沟位于哪个市自治州"
+  },
+  {
+    "source_id": "tools:keju:af1951890ae8868b616c",
+    "question": "四川著名景点都江堰位于哪个市？",
+    "answer": "成都市",
+    "normalized_question": "四川著名景点都江堰位于哪个市"
+  },
+  {
+    "source_id": "tools:keju:4f2e745ea35c201e4ecf",
+    "question": "四川著名景点巴山大峡谷位于哪个市？",
+    "answer": "达州市",
+    "normalized_question": "四川著名景点巴山大峡谷位于哪个市"
+  },
+  {
+    "source_id": "tools:keju:2da1127f9692154e5780",
+    "question": "川剧绝技丰富，令人叹为观止，下列哪项不是川剧表演艺术的特殊技巧之一？",
+    "answer": "摇花手",
+    "normalized_question": "川剧绝技丰富令人叹为观止下列哪项不是川剧表演艺术的特殊技巧之一"
+  },
+  {
+    "source_id": "tools:keju:d468b1c645f610dcc5ab",
+    "question": "“天下熙熙，皆为利来；天下攘攘，皆为利往。”是哪个著名商圈的生动写照",
+    "answer": "春熙路",
+    "normalized_question": "天下熙熙皆为利来天下攘攘皆为利往是哪个著名商圈的生动写照"
+  },
+  {
+    "source_id": "tools:keju:32932d52bee810fef851",
+    "question": "四川话发源于",
+    "answer": "古巴蜀语",
+    "normalized_question": "四川话发源于"
+  },
+  {
+    "source_id": "tools:keju:31bf883d665b85187742",
+    "question": "四川儿女爱呼父亲为",
+    "answer": "“老汉”",
+    "normalized_question": "四川儿女爱呼父亲为"
+  },
+  {
+    "source_id": "tools:keju:c33ea8dc681015427966",
+    "question": "四川方言“斩劲”是指？",
+    "answer": "用劲",
+    "normalized_question": "四川方言斩劲是指"
+  },
+  {
+    "source_id": "tools:keju:b64576f636400cf51402",
+    "question": "四川方言“毛焦火辣”是指？",
+    "answer": "烦躁急躁",
+    "normalized_question": "四川方言毛焦火辣是指"
+  },
+  {
+    "source_id": "tools:keju:2f9dd9ef2c115f8696cc",
+    "question": "四川方言“乌儿麻糖”是指？",
+    "answer": "一团糟",
+    "normalized_question": "四川方言乌儿麻糖是指"
+  },
+  {
+    "source_id": "tools:keju:68b85614aa47546436a4",
+    "question": "四川方言“爪梦脚”是指？",
+    "answer": "不清醒",
+    "normalized_question": "四川方言爪梦脚是指"
+  },
+  {
+    "source_id": "tools:keju:ce50376f8cc8a78fe76f",
+    "question": "四川方言“耳瓜子”是指？",
+    "answer": "耳朵",
+    "normalized_question": "四川方言耳瓜子是指"
+  },
+  {
+    "source_id": "tools:keju:36e8c74a9401d2c5e2ad",
+    "question": "四川方言“耙耳朵”是指？",
+    "answer": "妻管严",
+    "normalized_question": "四川方言耙耳朵是指"
+  },
+  {
+    "source_id": "tools:keju:c6b5453988a602391510",
+    "question": "四川方言“偷油婆”是指？",
+    "answer": "蟑螂",
+    "normalized_question": "四川方言偷油婆是指"
+  },
+  {
+    "source_id": "tools:keju:0a2464a549066e2cc27d",
+    "question": "四川方言“耗老官儿”是指？",
+    "answer": "老鼠",
+    "normalized_question": "四川方言耗老官儿是指"
+  },
+  {
+    "source_id": "tools:keju:3bca7211cd72cfc8db3e",
+    "question": "四川方言“癞疙宝”是指？",
+    "answer": "蟾蜍",
+    "normalized_question": "四川方言癞疙宝是指"
+  },
+  {
+    "source_id": "tools:keju:3a0baf4428d998c7af9b",
+    "question": "四川方言“罢脚货”是指？",
+    "answer": "卖剩下的次品",
+    "normalized_question": "四川方言罢脚货是指"
+  },
+  {
+    "source_id": "tools:keju:ee8c1a0995d158e72377",
+    "question": "四川方言“摆龙门阵”是指？",
+    "answer": "聊天、闲谈",
+    "normalized_question": "四川方言摆龙门阵是指"
+  },
+  {
+    "source_id": "tools:keju:9972fbac539b2a7bf269",
+    "question": "四川方言“冲壳子”是指？",
+    "answer": "吹牛",
+    "normalized_question": "四川方言冲壳子是指"
+  },
+  {
+    "source_id": "tools:keju:29cb6f97b5949548acb5",
+    "question": "四川方言“打滥仗”是指？",
+    "answer": "不务正业",
+    "normalized_question": "四川方言打滥仗是指"
+  },
+  {
+    "source_id": "tools:keju:7e4d8fc66249f99493a4",
+    "question": "四川方言“巴适”是指？",
+    "answer": "舒服、夸赞",
+    "normalized_question": "四川方言巴适是指"
+  },
+  {
+    "source_id": "tools:keju:3c5fd1a283ddc2a4f468",
+    "question": "四川方言“藏猫儿”是指？",
+    "answer": "捉迷藏",
+    "normalized_question": "四川方言藏猫儿是指"
+  },
+  {
+    "source_id": "tools:keju:4b5816a9bbdc20b8dfb5",
+    "question": "四川方言“吃九斗碗”是指？",
+    "answer": "赴宴",
+    "normalized_question": "四川方言吃九斗碗是指"
+  },
+  {
+    "source_id": "tools:keju:6a8dc69cef9a74f9f2eb",
+    "question": "四川方言“吃赏午”是指？",
+    "answer": "吃午饭",
+    "normalized_question": "四川方言吃赏午是指"
+  },
+  {
+    "source_id": "tools:keju:f5dde45783f6af9506a5",
+    "question": "四川方言“幺儿子”是指？",
+    "answer": "家里最小的儿子",
+    "normalized_question": "四川方言幺儿子是指"
+  },
+  {
+    "source_id": "tools:keju:2fce54f0a0bd4fa93511",
+    "question": "四川方言“叮叮猫儿”是指？",
+    "answer": "蜻蜓",
+    "normalized_question": "四川方言叮叮猫儿是指"
+  },
+  {
+    "source_id": "tools:keju:c9412f017a1fc32d206a",
+    "question": "下列哪项不是四川小吃？",
+    "answer": "杨枝甘露",
+    "normalized_question": "下列哪项不是四川小吃"
+  },
+  {
+    "source_id": "tools:keju:45ac7a40da4d974206bc",
+    "question": "下列哪项不是四川小吃？",
+    "answer": "双皮奶",
+    "normalized_question": "下列哪项不是四川小吃"
+  },
+  {
+    "source_id": "tools:keju:e15a1b05934adb2af399",
+    "question": "下列哪道菜不是川菜经典？",
+    "answer": "咕噜肉",
+    "normalized_question": "下列哪道菜不是川菜经典"
+  },
+  {
+    "source_id": "tools:keju:585f6858a740d686ebc3",
+    "question": "下列哪个不是川菜的经典味型？",
+    "answer": "鲜香味",
+    "normalized_question": "下列哪个不是川菜的经典味型"
+  },
+  {
+    "source_id": "tools:keju:04ad4b8bce69744921a0",
+    "question": "用糯米粉面包馅心，外裹新鲜绿色粑叶，置旺火蒸制而成的菜叫？",
+    "answer": "叶儿粑",
+    "normalized_question": "用糯米粉面包馅心外裹新鲜绿色粑叶置旺火蒸制而成的菜叫"
+  },
+  {
+    "source_id": "tools:keju:ddc80095f96ac685b9ee",
+    "question": "四川人吃火锅最喜欢吃的“黄喉”，取自猪的那个部位？",
+    "answer": "主动脉",
+    "normalized_question": "四川人吃火锅最喜欢吃的黄喉取自猪的那个部位"
+  },
+  {
+    "source_id": "tools:keju:20817558ba4ae2d19d3b",
+    "question": "金丝毛面是四川哪个地区的特色美食？",
+    "answer": "甘孜州",
+    "normalized_question": "金丝毛面是四川哪个地区的特色美食"
+  },
+  {
+    "source_id": "tools:keju:93700a863308d0d63042",
+    "question": "四川火锅，以什么特点著称？",
+    "answer": "麻，辣，鲜，香",
+    "normalized_question": "四川火锅以什么特点著称"
+  },
+  {
+    "source_id": "tools:keju:324e30f7b250a761ac74",
+    "question": "四川火锅大约出现于哪个朝代？",
+    "answer": "清代",
+    "normalized_question": "四川火锅大约出现于哪个朝代"
+  }
+]

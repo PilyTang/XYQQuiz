@@ -1,0 +1,105 @@
+{
+  "checked_date": "2026-10-10",
+  "current_version": "0.5.8",
+  "suggested_next_version": "0.5.9",
+  "version_changed": false,
+  "release_published": false,
+  "new_frozen_package_built": false,
+  "source_head": "fcc8b7e75ad7a0368b33eeddb305153186870c8a",
+  "remote_main_and_v058": "fcc8b7e75ad7a0368b33eeddb305153186870c8a",
+  "remote_maintenance_branch": "8586633444d2c2f8db3274f4bdcf76e8bfddc03e",
+  "github_latest_release": "https://github.com/PilyTang/XYQQuiz/releases/tag/v0.5.8",
+  "cnb_client_manifest": "https://cnb.cool/pilytang/XYQQuiz/-/git/raw/main/latest.json",
+  "current_release_checksum_files_and_manifest_sha256": "d439369fac250e07b84c16217f0b001f1926db8a312c5ca86d3d23ca2d527774",
+  "old_release_zip_downloaded": false,
+  "text_records": 3166,
+  "text_records_added": 580,
+  "topic_prefix_variants_in_additions": 195,
+  "teacher_icon_records": 449,
+  "teacher_icon_variants_added": 82,
+  "teacher_distinct_names": 366,
+  "scholar_statements": 574,
+  "scholar_runtime_enabled": false,
+  "current_tests": {
+    "total": 841,
+    "passed": 838,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 219.61,
+    "environment": "Normal host permissions",
+    "skip_cases": [
+      {
+        "name": "test_five_real_positive_q98_images_never_authorize_cached_answer_reuse",
+        "reason": "private real-image corpus is not included in the public repository"
+      },
+      {
+        "name": "test_real_recognition_fixture[waiting-for-real-screenshots]",
+        "reason": "等待真实截图：未显式传入 --recognition-manifest"
+      },
+      {
+        "name": "test_real_recognition_diagnostics_prove_all_positive_rois_used_rec_only",
+        "reason": "等待真实截图：未显式传入 --recognition-manifest"
+      }
+    ]
+  },
+  "old_data_upgrade_probe": {
+    "simulation": "Copied existing 0.5.8 data directory with new bundled text supplements",
+    "bundled_text_count": 3166,
+    "upgraded_old_data_text_count": 3166,
+    "text_supplements_seeded": true,
+    "imported_record_count": 580,
+    "repeated_startup_added_count": 0,
+    "old_official_pointer_preserved": true,
+    "frozen_executable_tested": false
+  },
+  "remaining": [
+    "Update release version and user-facing documentation together",
+    "Build and validate the frozen package from a clean release commit",
+    "Publish the same verified archive to GitHub and CNB, then update latest.json after authorization"
+  ],
+  "pre_fix_tests": {
+    "total": 831,
+    "passed": 828,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "environment": "Normal host permissions; restricted local-server tests were not counted",
+    "elapsed_seconds": 218.29,
+    "skip_cases": [
+      {
+        "name": "test_five_real_positive_q98_images_never_authorize_cached_answer_reuse",
+        "reason": "private real-image corpus is not included in the public repository"
+      },
+      {
+        "name": "test_real_recognition_fixture[waiting-for-real-screenshots]",
+        "reason": "等待真实截图：未显式传入 --recognition-manifest"
+      },
+      {
+        "name": "test_real_recognition_diagnostics_prove_all_positive_rois_used_rec_only",
+        "reason": "等待真实截图：未显式传入 --recognition-manifest"
+      }
+    ]
+  },
+  "pre_fix_old_data_upgrade_probe": {
+    "simulation": "Copied existing 0.5.8 data directory with new bundled text supplements",
+    "bundled_text_count": 3166,
+    "upgraded_old_data_text_count": 2586,
+    "text_supplements_seeded": false,
+    "old_official_pointer_preserved": true,
+    "frozen_executable_tested": false
+  },
+  "last_local_validation_date": "2026-10-11",
+  "text_upgrade_fix": {
+    "date": "2026-10-11",
+    "status": "verified_in_source",
+    "targeted_tests_passed": 98,
+    "first_service_start_tested": true,
+    "custom_data_directory_tested": true,
+    "local_questions_preserved": true,
+    "incremental_merge_and_deduplication_tested": true,
+    "failures_keep_old_state_tested": true,
+    "official_refresh_preservation_tested": true,
+    "frozen_executable_tested": false
+  }
+}

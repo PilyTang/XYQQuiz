@@ -56,6 +56,7 @@ from xyq_quiz.desktop.webview import (
 from xyq_quiz.knowledge.knowledge import load_knowledge_snapshot
 from xyq_quiz.knowledge.local import LocalQuestionStore
 from xyq_quiz.knowledge.matcher import QuestionMatcher
+from xyq_quiz.knowledge.supplements import initialize_question_supplements
 from xyq_quiz.knowledge.updater import QuestionBankUpdater, load_current_generation
 from xyq_quiz.knowledge.teacher_bank import recover_teacher_bank
 from xyq_quiz.knowledge.teacher_matcher import TeacherIconMatcher
@@ -505,6 +506,7 @@ def build_services(
         config.effective_layout_paths
     )
     paths = runtime_paths or RuntimePaths.discover()
+    initialize_question_supplements(config.data_dir, paths.default_data_dir)
     current = load_current_generation(config.data_dir)
     local_question_store = LocalQuestionStore(paths.local_questions_path)
     knowledge = load_knowledge_snapshot(
@@ -580,7 +582,7 @@ def build_services(
         runtime,
         scan_fps=config.recognition.scan_fps,
     )
-    return Services(
+    services = Services(
         hub=hub,
         runtime=runtime,
         capture=capture,
@@ -614,6 +616,9 @@ def build_services(
         video_hub=video_hub,
         preview_width=640 if config.performance.low_resource_mode else 1024,
     )
+    coordinator.diagnostic_metadata = services.snapshot_diagnostic_metadata
+    coordinator.diagnostic_config = config
+    return services
 
 
 def main(argv: Sequence[str] | None = None) -> int:

@@ -143,6 +143,52 @@ def test_valid_update_publishes_one_audited_generation(tmp_path: Path) -> None:
     assert not list(tmp_path.glob(".current-*.tmp"))
 
 
+@pytest.mark.parametrize("upgraded", [False, True])
+def test_official_refresh_preserves_independent_text_supplements(tmp_path: Path, upgraded: bool) -> None:
+    from xyq_quiz.knowledge.models import normalize_text
+    from xyq_quiz.knowledge.supplements import initialize_question_supplements
+    _seed_old_generation(tmp_path)
+    root = tmp_path / "supplements"
+    root.mkdir()
+    rows = [{"source_id": "tools:fixture", "question": "独立补充问题",
+             "answer": "独立补充答案", "normalized_question": normalize_text("独立补充问题")}]
+    raw = _json_bytes(rows)
+    (root / "text_questions.json").write_bytes(raw)
+    (root / "metadata.json").write_bytes(_json_bytes(dict(
+        schema_version=1, record_count=1, sha256=hashlib.sha256(raw).hexdigest(),
+    )))
+    if upgraded:
+        bundled = tmp_path / "bundled"
+        extra = bundled / "supplements"
+        extra.mkdir(parents=True)
+        new_raw = _json_bytes([dict(source_id="tools:next", question="升级增加问题",
+                                   answer="升级增加答案", normalized_question="升级增加问题")])
+        (extra / "text_questions.json").write_bytes(new_raw)
+        (extra / "metadata.json").write_bytes(_json_bytes(dict(
+            schema_version=1, record_count=1, sha256=hashlib.sha256(new_raw).hexdigest(),
+        )))
+        assert initialize_question_supplements(tmp_path, bundled) == 1
+    before = {path.relative_to(root): path.read_bytes() for path in root.rglob("*") if path.is_file()}
+    updater = QuestionBankUpdater(tmp_path, transport=_transport(_rows(2000)))
+    for _ in range(2):
+        updater.update()
+        current = load_current_generation(tmp_path)
+        assert current.question_bank.count == 2001 + int(upgraded)
+        assert current.question_bank.records_for("独立补充问题")[0].answer == "独立补充答案"
+        assert current.metadata["published_record_count"] == 2000
+        assert {path.relative_to(root): path.read_bytes() for path in root.rglob("*") if path.is_file()} == before
+    pointer = (tmp_path / "current.json").read_bytes()
+    if upgraded:
+        generation_id = json.loads((root / "current.json").read_text("utf-8"))["generation_id"]
+        question_path = root / "generations" / generation_id / "text_questions.json"
+    else:
+        question_path = root / "text_questions.json"
+    question_path.write_bytes(b"broken")
+    with pytest.raises(ValueError, match="SHA-256"):
+        updater.update()
+    assert (tmp_path / "current.json").read_bytes() == pointer
+
+
 @pytest.mark.parametrize(
     "failure_stage",
     [

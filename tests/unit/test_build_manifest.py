@@ -56,3 +56,22 @@ def test_question_bank_build_metadata_rejects_hash_mismatch(tmp_path: Path) -> N
 
     with pytest.raises(ValueError, match="SHA-256"):
         load_question_bank_manifest(tmp_path)
+
+
+def test_build_manifest_includes_effective_count_and_supplement_hash(tmp_path: Path) -> None:
+    import shutil
+    from xyq_quiz.knowledge.updater import load_current_generation
+    data = tmp_path / "_internal/defaults/data"
+    source = ROOT / "data"
+    current = load_current_generation(source)
+    generation = data / "generations" / current.generation_id
+    shutil.copytree(current.question_path.parent, generation)
+    shutil.copy2(source / "current.json", data / "current.json")
+    shutil.copytree(source / "supplements", data / "supplements")
+    result = load_question_bank_manifest(tmp_path)
+    assert result["record_count"] == 2586
+    assert result["effective_record_count"] == 3166
+    assert result["supplement_record_count"] == 580
+    assert result["supplement"]["sha256"] == hashlib.sha256(
+        (data / "supplements/text_questions.json").read_bytes()
+    ).hexdigest()

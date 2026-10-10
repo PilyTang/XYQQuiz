@@ -46,3 +46,10 @@ grant rights to them. See data/teachers_day/supplements/README.md for changes.
 A supplemental 180-degree pixel rotation of NetEase's 佛法无边 icon is retained
 with its original source reference and transformation hashes. The official
 original remains unchanged. This variant is also third-party game content.
+
+Additional text question/answer records, Teachers' Day icon renditions, and
+the independent true/false scholar dataset were retrieved from NetEase's
+public tools page at https://xyq.163.com/tools/ on 2026-10-03. Their source
+references, record counts, exclusions, and SHA-256 hashes are retained with
+the datasets and in docs/evidence/2026-10-03-official-tools-import.json.
+The third-party content rights notice above also applies to these additions.

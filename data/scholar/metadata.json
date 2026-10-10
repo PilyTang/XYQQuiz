@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "source_url": "https://xyq.163.com/tools/",
+  "updated_at": "2026-10-03T08:25:55.830432+00:00",
+  "source_html_sha256": "60de4190b08b9fc7cab4b2f0e7d33982bb98b30de3c7541537035866b3765920",
+  "record_count": 574,
+  "sha256": "83c48b85104883ed6fe733fd53161f095159ed647aa5c5ebac585860c37e94f2",
+  "question_type": "true_false",
+  "runtime_enabled": false
+}

@@ -1,0 +1,1028 @@
+[
+  {
+    "source_id": "teachers_day:yzz:480c2d095086a7bd",
+    "name": "远古之镜",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i3.cdn.yzz.cn/xyq/imgx2021/09/07/605_135108_29b42.png",
+    "image_path": "icons/e78206e1567cabe689d92e7cc520fc168f32c319f2fc92042a1100a7e3cf50aa.png",
+    "image_sha256": "e78206e1567cabe689d92e7cc520fc168f32c319f2fc92042a1100a7e3cf50aa"
+  },
+  {
+    "source_id": "teachers_day:yzz:faec3ba7dcb6ecd4",
+    "name": "混沌之谜",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2021/09/07/605_135116_e0895.png",
+    "image_path": "icons/b1c49b00361fbd1153549af55d2f26b38e67c108f9fc53cd3878547c0dc75d23.png",
+    "image_sha256": "b1c49b00361fbd1153549af55d2f26b38e67c108f9fc53cd3878547c0dc75d23"
+  },
+  {
+    "source_id": "teachers_day:yzz:e35fdcbd315bc467",
+    "name": "长生之祀",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2021/09/07/605_135126_c7aca.png",
+    "image_path": "icons/6e985dc3e45403c9e973763d1e0e54ac85711746abde93ef3379b8cc47ddf953.png",
+    "image_sha256": "6e985dc3e45403c9e973763d1e0e54ac85711746abde93ef3379b8cc47ddf953"
+  },
+  {
+    "source_id": "teachers_day:yzz:328b08d2163f701c",
+    "name": "潮汐之咒",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i3.cdn.yzz.cn/xyq/imgx2021/09/07/605_135136_f915e.png",
+    "image_path": "icons/4c47881e21741c748c32248eacd09a3adcce294d65f9d686f98b648175669267.png",
+    "image_sha256": "4c47881e21741c748c32248eacd09a3adcce294d65f9d686f98b648175669267"
+  },
+  {
+    "source_id": "teachers_day:yzz:9c011edd18be78ad",
+    "name": "澄心之浪",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2021/09/07/605_135144_3c004.png",
+    "image_path": "icons/549452a0b0d1034bae27352f190dd3de733435a3ceccae6c9eb08d2052d2732b.png",
+    "image_sha256": "549452a0b0d1034bae27352f190dd3de733435a3ceccae6c9eb08d2052d2732b"
+  },
+  {
+    "source_id": "teachers_day:yzz:79f1c110d1e17c7b",
+    "name": "遨游",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2021/09/07/605_135151_a3761.png",
+    "image_path": "icons/b77b42c9d96ee4d24db76a3bf18a39d814db2699bf61c74d0d189cb05ce0f811.png",
+    "image_sha256": "b77b42c9d96ee4d24db76a3bf18a39d814db2699bf61c74d0d189cb05ce0f811"
+  },
+  {
+    "source_id": "teachers_day:yzz:6e1b0f5dc8e6f6c7",
+    "name": "慈悲为怀",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_165233_6483c_lit.png",
+    "image_path": "icons/8b205709622372e53ee4f23fa95ddc482c5359c8f5014ec7a77eadcd370d1468.png",
+    "image_sha256": "8b205709622372e53ee4f23fa95ddc482c5359c8f5014ec7a77eadcd370d1468"
+  },
+  {
+    "source_id": "teachers_day:yzz:df933b3d63f3c653",
+    "name": "光明净土",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_165249_aba08_lit.png",
+    "image_path": "icons/ce701adc46766b7e8b6b306a2792fc63132a536e2d5aa7561bc5fe515b9d4ff8.png",
+    "image_sha256": "ce701adc46766b7e8b6b306a2792fc63132a536e2d5aa7561bc5fe515b9d4ff8"
+  },
+  {
+    "source_id": "teachers_day:yzz:4f3db9e7a45a816d",
+    "name": "怒啸",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i3.cdn.yzz.cn/xyq/imgx2023/09/07/605_110652_fb15c.png",
+    "image_path": "icons/6fcab3c3fb5b4e4f2a27a9b2ba20ae36e9001cd81cb67f568253b6d26553f650.png",
+    "image_sha256": "6fcab3c3fb5b4e4f2a27a9b2ba20ae36e9001cd81cb67f568253b6d26553f650"
+  },
+  {
+    "source_id": "teachers_day:yzz:69bf4fef1571407f",
+    "name": "吃茶去了",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163202_8855d_lit.png",
+    "image_path": "icons/de3ed5d32c04bddeb9d52ad888f84bf9f4070c07c8788402aa9d3955268d59e5.png",
+    "image_sha256": "de3ed5d32c04bddeb9d52ad888f84bf9f4070c07c8788402aa9d3955268d59e5"
+  },
+  {
+    "source_id": "teachers_day:yzz:d74fad077795d7f4",
+    "name": "天花乱坠",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163216_5b6db_lit.png",
+    "image_path": "icons/f72ac3c9998f55ccc990ab8c1bb7235e54b3f0a9cfc3bd9e2215c850b7cd4a39.png",
+    "image_sha256": "f72ac3c9998f55ccc990ab8c1bb7235e54b3f0a9cfc3bd9e2215c850b7cd4a39"
+  },
+  {
+    "source_id": "teachers_day:yzz:3b361d2d80974afc",
+    "name": "一叶菩提",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163412_2d620_lit.png",
+    "image_path": "icons/d91687d316ecd0f99db001859a9a086bebb5e2947dfec214ccd457913e2c2ef1.png",
+    "image_sha256": "d91687d316ecd0f99db001859a9a086bebb5e2947dfec214ccd457913e2c2ef1"
+  },
+  {
+    "source_id": "teachers_day:yzz:c182fd68d04667c5",
+    "name": "随遇而安",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163425_e111c_lit.png",
+    "image_path": "icons/f69e014a3e31da50593cc593107f4aa7e776b2cca436767c9bb47583ea43f984.png",
+    "image_sha256": "f69e014a3e31da50593cc593107f4aa7e776b2cca436767c9bb47583ea43f984"
+  },
+  {
+    "source_id": "teachers_day:yzz:1e1a73c6a308d0f6",
+    "name": "福至心灵",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163454_0cf6f_lit.png",
+    "image_path": "icons/25f32762eff202ddc41d49296e33577113cea73334ba123e266cb9d2391d74f0.png",
+    "image_sha256": "25f32762eff202ddc41d49296e33577113cea73334ba123e266cb9d2391d74f0"
+  },
+  {
+    "source_id": "teachers_day:yzz:9c582d8bcfbcfabb",
+    "name": "知足常乐",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163505_a45fd_lit.png",
+    "image_path": "icons/fa545a92f3e686526aab9c45cbfcb059e5634f1479c5458fcb00a427c0926c0f.png",
+    "image_sha256": "fa545a92f3e686526aab9c45cbfcb059e5634f1479c5458fcb00a427c0926c0f"
+  },
+  {
+    "source_id": "teachers_day:yzz:7ca97d96fc846090",
+    "name": "立地成佛",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163516_806ba_lit.png",
+    "image_path": "icons/1f556284fb7ffa659d8d1b75c31e206e1fc951a41f707b084c5dc14b9ffdcb13.png",
+    "image_sha256": "1f556284fb7ffa659d8d1b75c31e206e1fc951a41f707b084c5dc14b9ffdcb13"
+  },
+  {
+    "source_id": "teachers_day:yzz:111cdb4c212b2d8d",
+    "name": "吉人天相",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163524_605a3_lit.png",
+    "image_path": "icons/ec3557f7f9ece45bc97f5fdf7071e334784d15b5436bc7163a0842e1f592eb59.png",
+    "image_sha256": "ec3557f7f9ece45bc97f5fdf7071e334784d15b5436bc7163a0842e1f592eb59"
+  },
+  {
+    "source_id": "teachers_day:yzz:b6ca629edfa88c39",
+    "name": "因果·无争",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "https://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163552_cff4c_lit.png",
+    "image_path": "icons/312bea34a174a4a5d5a4cfb13f926c0e9167dd446ffd468fd8005620fe3d4563.png",
+    "image_sha256": "312bea34a174a4a5d5a4cfb13f926c0e9167dd446ffd468fd8005620fe3d4563"
+  },
+  {
+    "source_id": "teachers_day:yzz:232a6b04ac656c9f",
+    "name": "福慧无量",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165243_4898b_lit.png",
+    "image_path": "icons/aca88b603def1aa081db9e53d31ff8458440cd450fa3b2b2676a935e200006c7.png",
+    "image_sha256": "aca88b603def1aa081db9e53d31ff8458440cd450fa3b2b2676a935e200006c7"
+  },
+  {
+    "source_id": "teachers_day:yzz:efd228c2ebba3839",
+    "name": "欢喜自在",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165254_610d4_lit.png",
+    "image_path": "icons/2f0d63900e8758246f3d36fe94458d9d3ca150e9f52a1698456606795973a8d2.png",
+    "image_sha256": "2f0d63900e8758246f3d36fe94458d9d3ca150e9f52a1698456606795973a8d2"
+  },
+  {
+    "source_id": "teachers_day:yzz:a29c59e3496ea9d7",
+    "name": "来去自如",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165302_10926_lit.png",
+    "image_path": "icons/bdafdd98ff9e206cdaacbcd277947b413400749675e995e04f828d7c8379ed06.png",
+    "image_sha256": "bdafdd98ff9e206cdaacbcd277947b413400749675e995e04f828d7c8379ed06"
+  },
+  {
+    "source_id": "teachers_day:yzz:ad3fced15aad853f",
+    "name": "善果圆成",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165318_14d39_lit.png",
+    "image_path": "icons/b529b6f460adbc40f1429d29802d78dcfca1fe829809dcf2a8e814f05dcd4c90.png",
+    "image_sha256": "b529b6f460adbc40f1429d29802d78dcfca1fe829809dcf2a8e814f05dcd4c90"
+  },
+  {
+    "source_id": "teachers_day:yzz:1fda8656ac18d106",
+    "name": "缘起法随",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_165324_d80e9_lit.png",
+    "image_path": "icons/c2748c720a78777ac78d0f2fedfa06027f7b3c848ff81ce8b6b196df351edb48.png",
+    "image_sha256": "c2748c720a78777ac78d0f2fedfa06027f7b3c848ff81ce8b6b196df351edb48"
+  },
+  {
+    "source_id": "teachers_day:yzz:e2127b7dcc79d7b9",
+    "name": "大肚能容",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_163540_66fef_lit.png",
+    "image_path": "icons/0aaf65c6463c1e7027e0da4b630c8df4c6651000649b2cf3b2801eb407bfbe13.png",
+    "image_sha256": "0aaf65c6463c1e7027e0da4b630c8df4c6651000649b2cf3b2801eb407bfbe13"
+  },
+  {
+    "source_id": "teachers_day:yzz:6216204dff9d07be",
+    "name": "因果·戒宝",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_163616_ea60c_lit.png",
+    "image_path": "icons/a15b691f0c59317d82834482a27fcf7c45ec67790c7eea0c8460b30bbbb1f745.png",
+    "image_sha256": "a15b691f0c59317d82834482a27fcf7c45ec67790c7eea0c8460b30bbbb1f745"
+  },
+  {
+    "source_id": "teachers_day:yzz:65f596630b7ce9b9",
+    "name": "因果·止怒",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163623_bc73c_lit.png",
+    "image_path": "icons/21b582b23bfd1c0dd74953c326599a026498fb72aed75c37c6912d44c3095ba8.png",
+    "image_sha256": "21b582b23bfd1c0dd74953c326599a026498fb72aed75c37c6912d44c3095ba8"
+  },
+  {
+    "source_id": "teachers_day:yzz:5e219ca8f108a7a2",
+    "name": "因果·释物",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163632_e3f81_lit.png",
+    "image_path": "icons/b5580d8e358dae3ddf5d29e1fc4a776261dbfe858265b270d3c5e1dcdf6913a9.png",
+    "image_sha256": "b5580d8e358dae3ddf5d29e1fc4a776261dbfe858265b270d3c5e1dcdf6913a9"
+  },
+  {
+    "source_id": "teachers_day:yzz:0b0ef5ac9bf7776c",
+    "name": "以和为贵",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163653_2020e_lit.png",
+    "image_path": "icons/0f9015a18034e156ca13a67ea466c6d3ef1be6a59682b318b1fa4227c8f8ac6a.png",
+    "image_sha256": "0f9015a18034e156ca13a67ea466c6d3ef1be6a59682b318b1fa4227c8f8ac6a"
+  },
+  {
+    "source_id": "teachers_day:yzz:fd9b287d53d702da",
+    "name": "广结善缘",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i2.cdn.yzz.cn/xyq/imgx2026/09/08/611_163702_ea3b4_lit.png",
+    "image_path": "icons/b1f297ea6372e04006ae8ae87b940d7fa5fc4fe66920d79c5b9152f4117f006a.png",
+    "image_sha256": "b1f297ea6372e04006ae8ae87b940d7fa5fc4fe66920d79c5b9152f4117f006a"
+  },
+  {
+    "source_id": "teachers_day:yzz:58da26bd2d0f76e7",
+    "name": "返本归真",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_163715_460df_lit.png",
+    "image_path": "icons/03e27c220b7e1b796478556300294f6fb44f3372067c2c9dcc0b9fd73bb23c09.png",
+    "image_sha256": "03e27c220b7e1b796478556300294f6fb44f3372067c2c9dcc0b9fd73bb23c09"
+  },
+  {
+    "source_id": "teachers_day:yzz:92dd2d65a25dd1a9",
+    "name": "随心如意",
+    "category": "补充技能",
+    "category_code": "supplement",
+    "source_url": "http://i1.cdn.yzz.cn/xyq/imgx2026/09/08/611_163728_373ef_lit.png",
+    "image_path": "icons/72a53198525f9682ba2666a62f4aaa8bce88adb8c8a1cae99c5c9bf2a99f61c2.png",
+    "image_sha256": "72a53198525f9682ba2666a62f4aaa8bce88adb8c8a1cae99c5c9bf2a99f61c2"
+  },
+  {
+    "source_id": "teachers_day:variant:310:rot180",
+    "name": "佛法无边",
+    "category": "化生寺",
+    "category_code": "hss",
+    "source_url": "https://w.163.com//h5/xyq/dtk/img/jn/hss/fwb.png",
+    "image_path": "icons/e9b5bdf89a1ecb4b540580faf453775472ce5f8b4ebbbe76a3582e7a29b475e1.png",
+    "image_sha256": "e9b5bdf89a1ecb4b540580faf453775472ce5f8b4ebbbe76a3582e7a29b475e1"
+  },
+  {
+    "source_id": "teachers_day:tools:e2b0dc3235beef04e411",
+    "name": "铜墙铁壁",
+    "category": "坐骑技能",
+    "category_code": "zqjn",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083108004360ffa919fb2c28_b323b5d.png",
+    "image_path": "icons/517b2a97e71c77d89cb01c16e4f5fa31bfe2ba507ab3d7b2892055da3d34116d.png",
+    "image_sha256": "517b2a97e71c77d89cb01c16e4f5fa31bfe2ba507ab3d7b2892055da3d34116d"
+  },
+  {
+    "source_id": "teachers_day:tools:055540a4651722297061",
+    "name": "冥想",
+    "category": "辅助技能",
+    "category_code": "fzjn",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083108005ad6d8d1dd76753a_75808de.png",
+    "image_path": "icons/8f008767c947eb831c70ba82ead5c4211a8ad773484b9fb2c96ba4974690c1f7.png",
+    "image_sha256": "8f008767c947eb831c70ba82ead5c4211a8ad773484b9fb2c96ba4974690c1f7"
+  },
+  {
+    "source_id": "teachers_day:tools:9947ba609d81554009ad",
+    "name": "枫影二刃",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_1_b62ca19.png",
+    "image_path": "icons/b85fd9e3361053549050a01680880533255e31b09d6db43ddbbbc37b33f397d8.png",
+    "image_sha256": "b85fd9e3361053549050a01680880533255e31b09d6db43ddbbbc37b33f397d8"
+  },
+  {
+    "source_id": "teachers_day:tools:2807d16a23bc0e6c0e64",
+    "name": "故壤归心",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_2_75feb7d.png",
+    "image_path": "icons/2cf5b9f8c7d8245bfbde08bda51b0ba5384b8bd588e9bb0e6c2b4d1320087111.png",
+    "image_sha256": "2cf5b9f8c7d8245bfbde08bda51b0ba5384b8bd588e9bb0e6c2b4d1320087111"
+  },
+  {
+    "source_id": "teachers_day:tools:ae623189d4b427644a77",
+    "name": "黎魂",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_3_4de9a9d.png",
+    "image_path": "icons/baa4b67e71dbf33f847442e729dffea1c2e3c5632c4b704817692417ff8eea7c.png",
+    "image_sha256": "baa4b67e71dbf33f847442e729dffea1c2e3c5632c4b704817692417ff8eea7c"
+  },
+  {
+    "source_id": "teachers_day:tools:056074f9bfd316294108",
+    "name": "力辟苍穹",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_4_eaca105.png",
+    "image_path": "icons/edea9184f3561dbefde301850226e191f12fda90a5d07e193e91d5fbc9d37bc2.png",
+    "image_sha256": "edea9184f3561dbefde301850226e191f12fda90a5d07e193e91d5fbc9d37bc2"
+  },
+  {
+    "source_id": "teachers_day:tools:e0840ebd0e363cbd82da",
+    "name": "怒哮",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_5_4969995.png",
+    "image_path": "icons/1358eeaf69792307fd2f41fc9bef123a027507356faa3fb6c0391ec008fb6602.png",
+    "image_sha256": "1358eeaf69792307fd2f41fc9bef123a027507356faa3fb6c0391ec008fb6602"
+  },
+  {
+    "source_id": "teachers_day:tools:826d9b907a74021a5cbe",
+    "name": "三荒尽灭",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_6_c4110bd.png",
+    "image_path": "icons/b01ad1def7d526436e0ab5b5f41814c3d4e9e978cce6de5e46095ed159bf7836.png",
+    "image_sha256": "b01ad1def7d526436e0ab5b5f41814c3d4e9e978cce6de5e46095ed159bf7836"
+  },
+  {
+    "source_id": "teachers_day:tools:243572f3655f0e33cf6d",
+    "name": "铁血生风",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_7_861bd0c.png",
+    "image_path": "icons/eeb0b6b071ce04fe8ea91766aa08ff83c12426d3c124679002189e6f793fcdb8.png",
+    "image_sha256": "eeb0b6b071ce04fe8ea91766aa08ff83c12426d3c124679002189e6f793fcdb8"
+  },
+  {
+    "source_id": "teachers_day:tools:394240f6ff862490ee59",
+    "name": "炎魂",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_8_b0bc986.png",
+    "image_path": "icons/0122a31d3c77f8433e1b58773bdc6f1342c8ee5067b4c4c5b152a03932116b80.png",
+    "image_sha256": "0122a31d3c77f8433e1b58773bdc6f1342c8ee5067b4c4c5b152a03932116b80"
+  },
+  {
+    "source_id": "teachers_day:tools:ba1a1a845f13fc5065c4",
+    "name": "一斧开天",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_9_38f5422.png",
+    "image_path": "icons/66276f9b4ee5c5bb6a546b011f278d8d9eb39efab19e0b09313ef70b2825dd95.png",
+    "image_sha256": "66276f9b4ee5c5bb6a546b011f278d8d9eb39efab19e0b09313ef70b2825dd95"
+  },
+  {
+    "source_id": "teachers_day:tools:424a8ba8460a4e9db979",
+    "name": "战鼓",
+    "category": "九黎城",
+    "category_code": "jlc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_10_3565861.png",
+    "image_path": "icons/62f2ed67228f6ad771fa659f356a14344f78b20fdbd309c6bdf46ab0df023f07.png",
+    "image_sha256": "62f2ed67228f6ad771fa659f356a14344f78b20fdbd309c6bdf46ab0df023f07"
+  },
+  {
+    "source_id": "teachers_day:tools:0b018cbb01acf64e913d",
+    "name": "虫之噬",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150219mogftg1z1gdugn3g_c5fcd7a.png",
+    "image_path": "icons/3de9f30dfc5d0b1188fdb4cc0b1938ac1d3967ea956c46352b198edd565c8544.png",
+    "image_sha256": "3de9f30dfc5d0b1188fdb4cc0b1938ac1d3967ea956c46352b198edd565c8544"
+  },
+  {
+    "source_id": "teachers_day:tools:64ae37925767dc7a5195",
+    "name": "蛙之影",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150219gw1z6lr4jo3z6fjw_dbca8e7.png",
+    "image_path": "icons/b28510887d8d813ebc9ebd840b02d25bc1d5619a1b139a189f638a7a7c4e0289.png",
+    "image_sha256": "b28510887d8d813ebc9ebd840b02d25bc1d5619a1b139a189f638a7a7c4e0289"
+  },
+  {
+    "source_id": "teachers_day:tools:8f82f3a0380cf185e2fe",
+    "name": "龟之象",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150219oszvhh4vs6tz5969_0424d0c.png",
+    "image_path": "icons/a837e6d9cd30ec68eb9b8436473efa4af1ba1839b44cea494c5ca464a8cc4c62.png",
+    "image_sha256": "a837e6d9cd30ec68eb9b8436473efa4af1ba1839b44cea494c5ca464a8cc4c62"
+  },
+  {
+    "source_id": "teachers_day:tools:939ed4dc4ca7b69f36af",
+    "name": "沉没",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220yfmv9gh5mmqxfufx_b7c7aff.png",
+    "image_path": "icons/52ee9eebec9350ced674476b616c87f356661cd96a6cbb191f3678c465907302.png",
+    "image_sha256": "52ee9eebec9350ced674476b616c87f356661cd96a6cbb191f3678c465907302"
+  },
+  {
+    "source_id": "teachers_day:tools:ddc3fbc5c58452e61896",
+    "name": "汹涌",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220gom9ookk1mym0ytc_87ef442.png",
+    "image_path": "icons/7cb586a80605852f28d3697392cb9897f5a04e6fe249f3fea9d96e44e1cbc506.png",
+    "image_sha256": "7cb586a80605852f28d3697392cb9897f5a04e6fe249f3fea9d96e44e1cbc506"
+  },
+  {
+    "source_id": "teachers_day:tools:f4162917c9c4e455708a",
+    "name": "聆音",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220qqff1imno1no16rn_1ed58bd.png",
+    "image_path": "icons/616a2168555f492eb2de69f0b0cbea72d163fff874ae37681c59431a92a83a20.png",
+    "image_sha256": "616a2168555f492eb2de69f0b0cbea72d163fff874ae37681c59431a92a83a20"
+  },
+  {
+    "source_id": "teachers_day:tools:f45679b4ae81c2ba3683",
+    "name": "随波逐浪",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220tii7wsmy7si8bszw_16ba6a3.png",
+    "image_path": "icons/d65ce08b9a9f0c7d62db85f3168a7f3d76f70a15259cbe751cde2eec17ab35b9.png",
+    "image_sha256": "d65ce08b9a9f0c7d62db85f3168a7f3d76f70a15259cbe751cde2eec17ab35b9"
+  },
+  {
+    "source_id": "teachers_day:tools:91c130f3adcdb921cb8f",
+    "name": "万里烟波",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220dz91cbc47k1re55q_86d76e8.png",
+    "image_path": "icons/cb6966df23609ba41d95a344f2bb87ae2c7d09df16d3bed49496e4c87f2807db.png",
+    "image_sha256": "cb6966df23609ba41d95a344f2bb87ae2c7d09df16d3bed49496e4c87f2807db"
+  },
+  {
+    "source_id": "teachers_day:tools:5e9505f77ce1a0c15b12",
+    "name": "涤荡",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221gly3lbsd0llblnfd_679560b.png",
+    "image_path": "icons/fbd6fff8ac2ea7ad4280cade296deb804040b7f6d5635b68776ba193d7678c67.png",
+    "image_sha256": "fbd6fff8ac2ea7ad4280cade296deb804040b7f6d5635b68776ba193d7678c67"
+  },
+  {
+    "source_id": "teachers_day:tools:5287fa4a173fd7749a2b",
+    "name": "暗涌",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221v1f2ejj6dvjtg73s_83a5b80.png",
+    "image_path": "icons/2632c7af85582539e7f74bbfcdf9a9c8edbbff034a7066c4738a049c143d785a.png",
+    "image_sha256": "2632c7af85582539e7f74bbfcdf9a9c8edbbff034a7066c4738a049c143d785a"
+  },
+  {
+    "source_id": "teachers_day:tools:a49b40bee9e9ae7d77e8",
+    "name": "森罗万象",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221bjnveap1c2abqjfn_9a5f544.png",
+    "image_path": "icons/3159fe9e3ed5128236ba8a5c5450c471fd2a921d5c77636f6186303f106332a7.png",
+    "image_sha256": "3159fe9e3ed5128236ba8a5c5450c471fd2a921d5c77636f6186303f106332a7"
+  },
+  {
+    "source_id": "teachers_day:tools:227b197ea898ad9e0e48",
+    "name": "神游物外",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221r8me4w8dg5r8hwgh_f742fff.png",
+    "image_path": "icons/df4b754a18ef31c02d41b8cc0d9e71935f551ff6e2a397602fced53ef7c1d4f5.png",
+    "image_sha256": "df4b754a18ef31c02d41b8cc0d9e71935f551ff6e2a397602fced53ef7c1d4f5"
+  },
+  {
+    "source_id": "teachers_day:tools:f50e301993d80eb658d3",
+    "name": "海市蜃楼",
+    "category": "东海渊",
+    "category_code": "dhy",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221ayofxtdqdhgpz7ff_5da0d32.png",
+    "image_path": "icons/39f92b87599bbd08fd8cb7314d51e3890ef404908d8782b2d4fd84d56d012698.png",
+    "image_sha256": "39f92b87599bbd08fd8cb7314d51e3890ef404908d8782b2d4fd84d56d012698"
+  },
+  {
+    "source_id": "teachers_day:tools:9d730cfa4cecfc838ce4",
+    "name": "炽火流离",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173356qnr17uokdn45arng.jpg.thumb_1b5cac4.jpg",
+    "image_path": "icons/85d7fbd426901bf2827d8812740b4581f03da25c0541e64e8eba85e45234a00c.jpg",
+    "image_sha256": "85d7fbd426901bf2827d8812740b4581f03da25c0541e64e8eba85e45234a00c"
+  },
+  {
+    "source_id": "teachers_day:tools:f06c93a19c70662f290d",
+    "name": "极天炼焰",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173352f4xlbqdibxtoztto.jpg.thumb_c27f711.jpg",
+    "image_path": "icons/4bee40a687eeb624ac74c6726891afc8fd3d4e11d224915e4d2087c217c32320.jpg",
+    "image_sha256": "4bee40a687eeb624ac74c6726891afc8fd3d4e11d224915e4d2087c217c32320"
+  },
+  {
+    "source_id": "teachers_day:tools:4f02b422e0acd5808d79",
+    "name": "唤灵·魂火",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/174023pmnidip3qupsipdi.jpg.thumb_f057cc6.jpg",
+    "image_path": "icons/9164a6b735e32aab4df5e99407647962ba8d5c7cb8aaa6f436dbf3aff5e065d3.jpg",
+    "image_sha256": "9164a6b735e32aab4df5e99407647962ba8d5c7cb8aaa6f436dbf3aff5e065d3"
+  },
+  {
+    "source_id": "teachers_day:tools:f3ad281ee33d2c62219e",
+    "name": "唤魔·堕羽",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/174028lhiq73j6xtbstqel.jpg.thumb_bb4088d.jpg",
+    "image_path": "icons/1393ef70a0f0243585b2bbf72c383750574b8b5cef8c1549305786c5dca6040f.jpg",
+    "image_sha256": "1393ef70a0f0243585b2bbf72c383750574b8b5cef8c1549305786c5dca6040f"
+  },
+  {
+    "source_id": "teachers_day:tools:9a914aa03245d6291aec",
+    "name": "幽影灵魄",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173403az99n9sh6uh6es40.jpg.thumb_b05e469.jpg",
+    "image_path": "icons/a59532e8bb54db12aea9b826a77b2e67d2fe1175c5fe2a4faed14fee59f73bbb.jpg",
+    "image_sha256": "a59532e8bb54db12aea9b826a77b2e67d2fe1175c5fe2a4faed14fee59f73bbb"
+  },
+  {
+    "source_id": "teachers_day:tools:bd6c30e9dd7adf8991f9",
+    "name": "魂兮归来",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173411v4eg1p6jz6iimmgz.jpg.thumb_c0daf52.jpg",
+    "image_path": "icons/5798a984e35b0942938a2b9326018f1ae79419b966cb04917165912a965b248f.jpg",
+    "image_sha256": "5798a984e35b0942938a2b9326018f1ae79419b966cb04917165912a965b248f"
+  },
+  {
+    "source_id": "teachers_day:tools:e9339e61d754a93719ac",
+    "name": "净世煌火",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173415sju55yfd21lljldu.jpg.thumb_442bdae.jpg",
+    "image_path": "icons/243825120bb7623a8d6aee2a412a055eedaeb39cfc01c25ee365ebe635c59593.jpg",
+    "image_sha256": "243825120bb7623a8d6aee2a412a055eedaeb39cfc01c25ee365ebe635c59593"
+  },
+  {
+    "source_id": "teachers_day:tools:407a79b537178721bb26",
+    "name": "焚魔烈焰",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173419wqodn80azbj0zmik.jpg.thumb_1524e37.jpg",
+    "image_path": "icons/109161d68ad217931c7577121e8b5c9ff4b8b05f8485bdce258271aeb5aecbb0.jpg",
+    "image_sha256": "109161d68ad217931c7577121e8b5c9ff4b8b05f8485bdce258271aeb5aecbb0"
+  },
+  {
+    "source_id": "teachers_day:tools:0370c1a4df48304a26b6",
+    "name": "谜毒之缚",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173424af4g8ht0dd3bjajh.jpg.thumb_5026b1f.jpg",
+    "image_path": "icons/f32f31003b42e2108e512fc08fbcfc38c925bdc9bd5515837f66a31cacf5b808.jpg",
+    "image_sha256": "f32f31003b42e2108e512fc08fbcfc38c925bdc9bd5515837f66a31cacf5b808"
+  },
+  {
+    "source_id": "teachers_day:tools:021830e0ae2f146bb2d5",
+    "name": "诡蝠之刑",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173428qlbch3ij8lzcifiv.jpg.thumb_36819e1.jpg",
+    "image_path": "icons/a18777199a90ee77be5df9ecb11fcebdcb5bf634d0dabf8be203b6b94b64b3cb.jpg",
+    "image_sha256": "a18777199a90ee77be5df9ecb11fcebdcb5bf634d0dabf8be203b6b94b64b3cb"
+  },
+  {
+    "source_id": "teachers_day:tools:a9ee4d2ed5460b8bae03",
+    "name": "怨怖之泣",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173432dc0ahsz1eccz8ehm.jpg.thumb_024df36.jpg",
+    "image_path": "icons/b348ab4945dbf5aea8f270d8d8fedb78509c28d62dc60e109852b0388aff3c4b.jpg",
+    "image_sha256": "b348ab4945dbf5aea8f270d8d8fedb78509c28d62dc60e109852b0388aff3c4b"
+  },
+  {
+    "source_id": "teachers_day:tools:d9a25419d1cb2a699923",
+    "name": "誓血之祭",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173439tffs7snssnrob2os.jpg.thumb_e2545ca.jpg",
+    "image_path": "icons/33bdc56203699a8f86caae44fd868dba0131ce53beee57d5427eac1a55676d89.jpg",
+    "image_sha256": "33bdc56203699a8f86caae44fd868dba0131ce53beee57d5427eac1a55676d89"
+  },
+  {
+    "source_id": "teachers_day:tools:c0c01bd6a913c299f255",
+    "name": "唤魔·毒魅",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/174032fnuzsgzuuvt8leag.jpg.thumb_f1b4291.jpg",
+    "image_path": "icons/b36403f898feb165f9c85de956ff70cf7f588bf01e9388d438ca8247fa97e142.jpg",
+    "image_sha256": "b36403f898feb165f9c85de956ff70cf7f588bf01e9388d438ca8247fa97e142"
+  },
+  {
+    "source_id": "teachers_day:tools:e6337a8ee9be5889add4",
+    "name": "唤灵·焚魂",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/174036jwti2hblltcko6gk.jpg.thumb_347844a.jpg",
+    "image_path": "icons/b654fe18806b263acd49c42bab3c419821ecb6eb379b9971e5e260c106ec754d.jpg",
+    "image_sha256": "b654fe18806b263acd49c42bab3c419821ecb6eb379b9971e5e260c106ec754d"
+  },
+  {
+    "source_id": "teachers_day:tools:364a9b036f07c8d65243",
+    "name": "天魔觉醒",
+    "category": "女魃墓",
+    "category_code": "nbm",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/125217ebq2zqqhhqqbdnta.png.thumb_b0c168e.jpg",
+    "image_path": "icons/a1b24de41eb6fea333b0a5748b909fa83491c756a4d31c98e299ab3aa12c0295.png",
+    "image_sha256": "a1b24de41eb6fea333b0a5748b909fa83491c756a4d31c98e299ab3aa12c0295"
+  },
+  {
+    "source_id": "teachers_day:tools:bc0d017ff4683cf74a9c",
+    "name": "当头一棒",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172027tgd202lv10h2dbeg.jpg.thumb_370436f.jpg",
+    "image_path": "icons/4a26f036a16876225e164440cc52b61a7ed46b98d9338353b5e5ff31137cc340.jpg",
+    "image_sha256": "4a26f036a16876225e164440cc52b61a7ed46b98d9338353b5e5ff31137cc340"
+  },
+  {
+    "source_id": "teachers_day:tools:a04c4d93872b8d1ad6c3",
+    "name": "神针撼海",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172048hjukdai3wuiizid0.jpg.thumb_6c9a88c.jpg",
+    "image_path": "icons/923d98c22ac9a84768d3aeb87860545b4cbb2808fcf7a6bccc60c048a7c48ad4.jpg",
+    "image_sha256": "923d98c22ac9a84768d3aeb87860545b4cbb2808fcf7a6bccc60c048a7c48ad4"
+  },
+  {
+    "source_id": "teachers_day:tools:7c8ba8f065abe35f2322",
+    "name": "杀威铁棒",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172053fc17dw2aazzoi0cu.jpg.thumb_f4bd471.jpg",
+    "image_path": "icons/10ce0b23cd42b6ede2760ea048fe69558ddb714593fb3385515b91f1f965c6b6.jpg",
+    "image_sha256": "10ce0b23cd42b6ede2760ea048fe69558ddb714593fb3385515b91f1f965c6b6"
+  },
+  {
+    "source_id": "teachers_day:tools:54f4569529702132b65d",
+    "name": "泼天乱棒",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172057uav66b789waacwpz.jpg.thumb_0ba1cfa.jpg",
+    "image_path": "icons/7d2f7ffa93f4cba2e26c1ec808f3a888558c77974a024b46a2792434cad01fe9.jpg",
+    "image_sha256": "7d2f7ffa93f4cba2e26c1ec808f3a888558c77974a024b46a2792434cad01fe9"
+  },
+  {
+    "source_id": "teachers_day:tools:fdc1cc96d0ba3bb18c42",
+    "name": "担山赶月",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172101bqwcrawqcfrbaady.jpg.thumb_d360f97.jpg",
+    "image_path": "icons/5208b7171297bc597c5f8767045b89fe9e5073eabaf498f3e0c46cd79e5a48df.jpg",
+    "image_sha256": "5208b7171297bc597c5f8767045b89fe9e5073eabaf498f3e0c46cd79e5a48df"
+  },
+  {
+    "source_id": "teachers_day:tools:fa93bd6a40668e11b056",
+    "name": "铜头铁臂",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172105xfuxzcq8y6nk4cuu.jpg.thumb_dc5315b.jpg",
+    "image_path": "icons/2e0473ddf47fd410d416787fd1317456400d7ce75b39b46ac0f6cd76884ff8a9.jpg",
+    "image_sha256": "2e0473ddf47fd410d416787fd1317456400d7ce75b39b46ac0f6cd76884ff8a9"
+  },
+  {
+    "source_id": "teachers_day:tools:33211498c78482d038d2",
+    "name": "呼子唤孙",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172110aui9zhtk55trwwmk.jpg.thumb_0b35b6d.jpg",
+    "image_path": "icons/8414debfb04a6f280a6a13a754a34179348ed88751081b9ab7b42be3db1daebe.jpg",
+    "image_sha256": "8414debfb04a6f280a6a13a754a34179348ed88751081b9ab7b42be3db1daebe"
+  },
+  {
+    "source_id": "teachers_day:tools:84f2cb13cc28bdf1eeea",
+    "name": "八戒上身",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172118kii11o1030tl9ois.jpg.thumb_cf5016b.jpg",
+    "image_path": "icons/6d85e6a8c283ff8be31c43c6370ea7446e5e53905ee9508214b973703973ab8a.jpg",
+    "image_sha256": "6d85e6a8c283ff8be31c43c6370ea7446e5e53905ee9508214b973703973ab8a"
+  },
+  {
+    "source_id": "teachers_day:tools:6e61fc5a0ffe2131b31c",
+    "name": "无所遁形",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172123lhskfslysl9xa9kf.jpg.thumb_12c0883.jpg",
+    "image_path": "icons/5e64d6cf37ac24d5dc994b2075170405f6e394d1822862d893fa2cf3204bb04f.jpg",
+    "image_sha256": "5e64d6cf37ac24d5dc994b2075170405f6e394d1822862d893fa2cf3204bb04f"
+  },
+  {
+    "source_id": "teachers_day:tools:a6146b29c81c3b6022f2",
+    "name": "除光息焰",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172131pr888rzrtgkoh2gr.jpg.thumb_27dc11a.jpg",
+    "image_path": "icons/cc6f6a884051c4993e32c01289945391a59a1f2b764e13e4e2b1c6ab060d81d7.jpg",
+    "image_sha256": "cc6f6a884051c4993e32c01289945391a59a1f2b764e13e4e2b1c6ab060d81d7"
+  },
+  {
+    "source_id": "teachers_day:tools:2a8936453b6c14caced9",
+    "name": "九幽除名",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172137j1d2inmf1a4iudui.jpg.thumb_26e4e49.jpg",
+    "image_path": "icons/2050b71b225f1b99fd338c60e5f2e7e95ecc0ce2edf1297fa5dc1a0086a0ee0f.jpg",
+    "image_sha256": "2050b71b225f1b99fd338c60e5f2e7e95ecc0ce2edf1297fa5dc1a0086a0ee0f"
+  },
+  {
+    "source_id": "teachers_day:tools:ced51579080ae6eeb903",
+    "name": "移星换斗",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172143k9hx2hkbl76x23r6.jpg.thumb_3dab1ee.jpg",
+    "image_path": "icons/760450ee2d6168b85f6117a90eb7425bb05adba055b4157b0bac8f5208626617.jpg",
+    "image_sha256": "760450ee2d6168b85f6117a90eb7425bb05adba055b4157b0bac8f5208626617"
+  },
+  {
+    "source_id": "teachers_day:tools:faf57fc9776a5b6457d5",
+    "name": "云暗天昏",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172148xo1iw7o5p4uxxnox.jpg.thumb_f273a9d.jpg",
+    "image_path": "icons/deb7789c8328c1a5343af96ce19f48c6eee969ac228b691c0e5112076675c63f.jpg",
+    "image_sha256": "deb7789c8328c1a5343af96ce19f48c6eee969ac228b691c0e5112076675c63f"
+  },
+  {
+    "source_id": "teachers_day:tools:aca9910150355e9225d6",
+    "name": "筋斗云",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172153n4dw74fhzfwpfdly.jpg.thumb_55659bd.jpg",
+    "image_path": "icons/dc5de0c5a99e7325dd0fd0d6ca137b5b479a03d9e1030f59fec65ac5641dac78.jpg",
+    "image_sha256": "dc5de0c5a99e7325dd0fd0d6ca137b5b479a03d9e1030f59fec65ac5641dac78"
+  },
+  {
+    "source_id": "teachers_day:tools:4e09efa8cae9b45d8eaf",
+    "name": "威震凌霄",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172157vo232w19o9m2oluu.jpg.thumb_24322bf.jpg",
+    "image_path": "icons/b7d7cfae694a9cdce2ff94aef90eb59253378daae1db23920e294d9affd77ff1.jpg",
+    "image_sha256": "b7d7cfae694a9cdce2ff94aef90eb59253378daae1db23920e294d9affd77ff1"
+  },
+  {
+    "source_id": "teachers_day:tools:52250e0c59da7b37fb6e",
+    "name": "气慑天军",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172201a3car5asowh83skg.jpg.thumb_941b590.jpg",
+    "image_path": "icons/b250ab97b17b04c6962bc9c297ac24c8ccd65d2c533473e63f543c153bdca7f7.jpg",
+    "image_sha256": "b250ab97b17b04c6962bc9c297ac24c8ccd65d2c533473e63f543c153bdca7f7"
+  },
+  {
+    "source_id": "teachers_day:tools:289e66ea8bd7822804c0",
+    "name": "天地洞明",
+    "category": "花果山",
+    "category_code": "hgs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/125035fxiibekbemzw8feb.png.thumb_8799624.jpg",
+    "image_path": "icons/485172756a00d3ad493db454a9f1b6d4a857797a4585e72d9eae8a91fcdced07.png",
+    "image_sha256": "485172756a00d3ad493db454a9f1b6d4a857797a4585e72d9eae8a91fcdced07"
+  },
+  {
+    "source_id": "teachers_day:tools:5532b4e0cf68c685684e",
+    "name": "诱袭",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170754mh6gk5zwjbvhzhiw.jpg.thumb_4f3add1.jpg",
+    "image_path": "icons/398e7a66ff7934b1bc0921cc4f1b8712ff4a73d550c9a38bdc4e6e521df99fc0.jpg",
+    "image_sha256": "398e7a66ff7934b1bc0921cc4f1b8712ff4a73d550c9a38bdc4e6e521df99fc0"
+  },
+  {
+    "source_id": "teachers_day:tools:3888fc941cccb486fe2b",
+    "name": "破击",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170758zooku84bhobkymo4.jpg.thumb_52c7ae8.jpg",
+    "image_path": "icons/db84cf0dde1467636b44a64dd66b9e2dafb4944f543d4644fac21b9aa6ac4934.jpg",
+    "image_sha256": "db84cf0dde1467636b44a64dd66b9e2dafb4944f543d4644fac21b9aa6ac4934"
+  },
+  {
+    "source_id": "teachers_day:tools:07fbfce1087f1a64fd0f",
+    "name": "针锋相对",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170807gj4ewziwklhe00ll.jpg.thumb_ab6b9bc.jpg",
+    "image_path": "icons/a5b0e8e3a22379b138f3233ee62281e20ac0e36d6f49f0c28fb8cfd229f159bf.jpg",
+    "image_sha256": "a5b0e8e3a22379b138f3233ee62281e20ac0e36d6f49f0c28fb8cfd229f159bf"
+  },
+  {
+    "source_id": "teachers_day:tools:cdc13ef5de7677abad43",
+    "name": "攻守易位",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170811zzjjjjvpmfcq7x7n.jpg.thumb_cbbbc5d.jpg",
+    "image_path": "icons/3c01cd654e16a943318497e4fdd34bdbd568682d9c198840cd3456d31dc19542.jpg",
+    "image_sha256": "3c01cd654e16a943318497e4fdd34bdbd568682d9c198840cd3456d31dc19542"
+  },
+  {
+    "source_id": "teachers_day:tools:d0bc8159b29d93cc6793",
+    "name": "天马行空",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170815ozrirazfwbwaaeae.jpg.thumb_80b7317.jpg",
+    "image_path": "icons/c545268b6605bc1a3af3bd160d304f6e179e3619c7aa5ade557c7ea39012e446.jpg",
+    "image_sha256": "c545268b6605bc1a3af3bd160d304f6e179e3619c7aa5ade557c7ea39012e446"
+  },
+  {
+    "source_id": "teachers_day:tools:a5987dab2b726f63bb8d",
+    "name": "匠心·削铁",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170820e17rrz0p021yr2xs.jpg.thumb_aed7e02.jpg",
+    "image_path": "icons/f1faaa1b9abc7ddb23493de52dc35a4bbd0badc57b18386892a2f990121c4f5b.jpg",
+    "image_sha256": "f1faaa1b9abc7ddb23493de52dc35a4bbd0badc57b18386892a2f990121c4f5b"
+  },
+  {
+    "source_id": "teachers_day:tools:a2dccd0557d5148b7df1",
+    "name": "匠心·固甲",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170825ie41n1hve4p91u1r.jpg.thumb_bec6d44.jpg",
+    "image_path": "icons/0e64a56ced74b57fa30f4ee0138ac6719582918e79914126a123097d66ea9d6b.jpg",
+    "image_sha256": "0e64a56ced74b57fa30f4ee0138ac6719582918e79914126a123097d66ea9d6b"
+  },
+  {
+    "source_id": "teachers_day:tools:1a882aeb375779b20048",
+    "name": "匠心·蓄锐",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170829l7yn5jhawhdmgtz4.jpg.thumb_bcbfa29.jpg",
+    "image_path": "icons/2ff09ecf24d256ddd35c37c53279bf1af809bf914b5b8c31f43fcb786255331c.jpg",
+    "image_sha256": "2ff09ecf24d256ddd35c37c53279bf1af809bf914b5b8c31f43fcb786255331c"
+  },
+  {
+    "source_id": "teachers_day:tools:e6d06067ff85a4e383c7",
+    "name": "锋芒毕露",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170833tr34tbpbpzc84qcc.jpg.thumb_9abf644.jpg",
+    "image_path": "icons/14bf46d208faa275b8188d51b99e43894ea0d52268a34d087ae37e68248d91b0.jpg",
+    "image_sha256": "14bf46d208faa275b8188d51b99e43894ea0d52268a34d087ae37e68248d91b0"
+  },
+  {
+    "source_id": "teachers_day:tools:c62a52207f4ab9314076",
+    "name": "鬼斧神工",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170935gizeszrdpkgzgrsy.jpg.thumb_4e4bf5b.jpg",
+    "image_path": "icons/906fc87135463754db4a45062981a7a835bc1c47d5d467c6c4b76c532b6aab3e.jpg",
+    "image_sha256": "906fc87135463754db4a45062981a7a835bc1c47d5d467c6c4b76c532b6aab3e"
+  },
+  {
+    "source_id": "teachers_day:tools:0fc223267e6ded49725b",
+    "name": "移山填海",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170940pq0lg8j8txj5l7sw.jpg.thumb_156daef.jpg",
+    "image_path": "icons/4e23353227196e1b136a418d7be3d41fdaf62cba496c57d1d061481c67e474f7.jpg",
+    "image_sha256": "4e23353227196e1b136a418d7be3d41fdaf62cba496c57d1d061481c67e474f7"
+  },
+  {
+    "source_id": "teachers_day:tools:4db59537ee25cda92ab4",
+    "name": "一发而动",
+    "category": "天机城",
+    "category_code": "tjc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130050dusx5snmu5ttcnc5.png.thumb_0a6d076.jpg",
+    "image_path": "icons/5db9379e634b5dae38d91fe8e32ab60d5d060e8ff13584ebb003f8bc907db920.png",
+    "image_sha256": "5db9379e634b5dae38d91fe8e32ab60d5d060e8ff13584ebb003f8bc907db920"
+  },
+  {
+    "source_id": "teachers_day:tools:ac9a3b7b29e0abb2e7f5",
+    "name": "飞行符",
+    "category": "方寸山",
+    "category_code": "fcs",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083107509a4f28b585237dd5_7575453.png",
+    "image_path": "icons/b6c763aa5f9188ab42615f412262ae3bb70c51955acdeb3f7b9f77817b37067e.png",
+    "image_sha256": "b6c763aa5f9188ab42615f412262ae3bb70c51955acdeb3f7b9f77817b37067e"
+  },
+  {
+    "source_id": "teachers_day:tools:d86959b3e2a3a744f0df",
+    "name": "龙附",
+    "category": "龙宫",
+    "category_code": "lg",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130831075189cb27658a873b71_b6db747.png",
+    "image_path": "icons/7fe726dd28960dc199cfa2b7987790f8cee42786167100b9dc41dd830ad67a0f.png",
+    "image_sha256": "7fe726dd28960dc199cfa2b7987790f8cee42786167100b9dc41dd830ad67a0f"
+  },
+  {
+    "source_id": "teachers_day:tools:33d461eb3f684a5d3f8e",
+    "name": "五雷轰顶",
+    "category": "天宫",
+    "category_code": "tg",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130831075208300c0709152e32_4dca471.png",
+    "image_path": "icons/4bbff4339c1a1a10566071eb916dfb9f2b1116ac8073ecc86951ab9747edf67d.png",
+    "image_sha256": "4bbff4339c1a1a10566071eb916dfb9f2b1116ac8073ecc86951ab9747edf67d"
+  },
+  {
+    "source_id": "teachers_day:tools:fc195d77e48e9b544260",
+    "name": "错乱",
+    "category": "天宫",
+    "category_code": "tg",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/1308310752d659ea0b60c1d88a_d10933b.png",
+    "image_path": "icons/f927904dcbd15c1a83b295f31debd0569e9732220f0f3fd2c53b9241c835754d.png",
+    "image_sha256": "f927904dcbd15c1a83b295f31debd0569e9732220f0f3fd2c53b9241c835754d"
+  },
+  {
+    "source_id": "teachers_day:tools:8f33884887bea5f1b859",
+    "name": "知己知彼",
+    "category": "天宫",
+    "category_code": "tg",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/1308310752a807017f60716322_08fa47f.png",
+    "image_path": "icons/e345e93a92d7aaed8895aea983bfa5c3c7aa06280b8cb0b78d49c6cac4bceaa3.png",
+    "image_sha256": "e345e93a92d7aaed8895aea983bfa5c3c7aa06280b8cb0b78d49c6cac4bceaa3"
+  },
+  {
+    "source_id": "teachers_day:tools:5b4c072cbedccc4119a4",
+    "name": "灵动九天",
+    "category": "普陀山",
+    "category_code": "pts",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083107522996d9aa72ed2fa8_ce2e007.png",
+    "image_path": "icons/933e91014b1781fd093ff351b8a87f9912403a2b36b9b988b8112b8e8360df45.png",
+    "image_sha256": "933e91014b1781fd093ff351b8a87f9912403a2b36b9b988b8112b8e8360df45"
+  },
+  {
+    "source_id": "teachers_day:tools:d13e969e261930d3f7bb",
+    "name": "三花聚顶",
+    "category": "五庄观",
+    "category_code": "wzg",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083107535a06f97085b779c4_1ed0e27.png",
+    "image_path": "icons/50f3710760e1e6d123aa5dd4a698c537f9ea2bde0d123b12036aadf5385e2ec6.png",
+    "image_sha256": "50f3710760e1e6d123aa5dd4a698c537f9ea2bde0d123b12036aadf5385e2ec6"
+  },
+  {
+    "source_id": "teachers_day:tools:d368f475dc7e2c24635b",
+    "name": "尸腐毒",
+    "category": "阴曹地府",
+    "category_code": "df",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083107548b0c440a9e20bfc7_c474e65.png",
+    "image_path": "icons/40b71d1914037867467cc83b62ec91e085aeb791fce888482647ffc8fa7baea7.png",
+    "image_sha256": "40b71d1914037867467cc83b62ec91e085aeb791fce888482647ffc8fa7baea7"
+  },
+  {
+    "source_id": "teachers_day:tools:64e13d41672f95f8896d",
+    "name": "复苏",
+    "category": "盘丝洞",
+    "category_code": "psd",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/1308310755a454a24def943694_c0eda1f.png",
+    "image_path": "icons/cf5138a5b45dcb2600686aee6231f61997ce6dff9ea10b4998fe5388b758cbee.png",
+    "image_sha256": "cf5138a5b45dcb2600686aee6231f61997ce6dff9ea10b4998fe5388b758cbee"
+  },
+  {
+    "source_id": "teachers_day:tools:1f36bc4c93a656ad00c0",
+    "name": "幻镜术",
+    "category": "盘丝洞",
+    "category_code": "psd",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202109_01_140141bgzj7x70jx3ig0i8_18e8fd0.png",
+    "image_path": "icons/8ece461abb283fe38cba8dbee2afb629dd2ae3d94028376a44a1fe950c58510e.png",
+    "image_sha256": "8ece461abb283fe38cba8dbee2afb629dd2ae3d94028376a44a1fe950c58510e"
+  },
+  {
+    "source_id": "teachers_day:tools:761fe0f3e955cdea957a",
+    "name": "穿云破空",
+    "category": "凌波城",
+    "category_code": "lbc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130831075372d025bf45327032_a96c6a3.png",
+    "image_path": "icons/21e34c6eba88ece603d2d314756d6e5dbdb6c43e379c84d5b571056adee29892.png",
+    "image_sha256": "21e34c6eba88ece603d2d314756d6e5dbdb6c43e379c84d5b571056adee29892"
+  },
+  {
+    "source_id": "teachers_day:tools:64d599ca97553ca3c551",
+    "name": "惊涛怒",
+    "category": "凌波城",
+    "category_code": "lbc",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130831075335080bc786e94090_7d2daaf.png",
+    "image_path": "icons/cc2e3ac3845c4cc78e60288722eccabe90d25de28a846b4590da131ae3b7375d.png",
+    "image_sha256": "cc2e3ac3845c4cc78e60288722eccabe90d25de28a846b4590da131ae3b7375d"
+  },
+  {
+    "source_id": "teachers_day:tools:a7e934828901af9fffd3",
+    "name": "万木凋枯",
+    "category": "无底洞",
+    "category_code": "wdd",
+    "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/1308310756de83f5ea043483c8_7200578.png",
+    "image_path": "icons/1dab13fcec9a7e4b99212378fa327c9326a7c69899d727e57ea532327bda3c31.png",
+    "image_sha256": "1dab13fcec9a7e4b99212378fa327c9326a7c69899d727e57ea532327bda3c31"
+  }
+]

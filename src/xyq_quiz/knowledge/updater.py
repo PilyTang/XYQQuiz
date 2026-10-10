@@ -21,6 +21,10 @@ import pyjson5
 from xyq_quiz import __version__
 from xyq_quiz.knowledge.models import QuestionRecord, normalize_text
 from xyq_quiz.knowledge.store import QuestionBank
+from xyq_quiz.knowledge.supplements import (
+    load_question_supplements,
+    merge_question_supplements,
+)
 from xyq_quiz.runtime.portable import (
     STATE_SCHEMA_VERSION,
     migrate_metadata_document,
@@ -427,6 +431,17 @@ def load_current_generation(data_dir: Path) -> CurrentGeneration:
         raise ValueError("generation question-bank SHA-256 mismatch")
     if metadata.get("published_record_count") != question_bank.count:
         raise ValueError("generation metadata record count mismatch")
+    supplement = load_question_supplements(data_dir)
+    if supplement is not None:
+        supplement_bank, supplement_metadata = supplement
+        official_count = question_bank.count
+        question_bank = merge_question_supplements(question_bank, supplement_bank)
+        metadata = dict(
+            metadata,
+            effective_record_count=question_bank.count,
+            supplement_record_count=question_bank.count - official_count,
+            supplement=supplement_metadata,
+        )
     return CurrentGeneration(
         generation_id=generation_id,
         question_bank=question_bank,
@@ -460,6 +475,7 @@ class QuestionBankUpdater:
             self._update_lock.release()
 
     def _update_locked(self) -> UpdateResult:
+        supplement = load_question_supplements(self.data_dir)
         generations_dir = self.data_dir / "generations"
         generations_dir.mkdir(parents=True, exist_ok=True)
         self._cleanup_safe_temporaries(generations_dir)
@@ -475,6 +491,8 @@ class QuestionBankUpdater:
             extracted = _extract_keju_records_with_audit(chunk_js, module_id)
             records = extracted.records
             duplicate_rate = self._validate(records)
+            if supplement is not None:
+                merge_question_supplements(QuestionBank(records), supplement[0])
 
             question_path = staging_dir / "keju_questions.json"
             question_bytes = self._question_bytes(records)

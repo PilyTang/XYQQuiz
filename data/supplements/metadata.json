@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "generation_id": "20261003-official-tools-text",
+  "source_url": "https://xyq.163.com/tools/",
+  "updated_at": "2026-10-03T08:25:55.830432+00:00",
+  "source_html_sha256": "60de4190b08b9fc7cab4b2f0e7d33982bb98b30de3c7541537035866b3765920",
+  "record_count": 580,
+  "sha256": "db49224c4063a15acb41db5951aefc4fde5450b59e65ca3ff689e113e1a6632a",
+  "source_category_counts": {
+    "yuanxiao": 383,
+    "keju": 208
+  },
+  "added_category_counts": {
+    "yuanxiao": 372,
+    "keju": 208
+  },
+  "skipped_existing_count": 11,
+  "conflict_count": 0,
+  "topic_prefix_variant_count": 195,
+  "recovered_source_rows": [
+    {
+      "source_id": "2469",
+      "original_question": "四川省\u0000\u0000积48.6万平\u0000\u0000千\u0000\u0000，居全国第几？",
+      "original_answer": "5",
+      "question": "四川省面积48.6万平方千米，居全国第几？",
+      "answer": "5"
+    },
+    {
+      "source_id": "2470",
+      "original_question": "下列中国四\u0000\u0000古城中位于四川省的是？",
+      "original_answer": "阀中古城",
+      "question": "下列中国四大古城中位于四川省的是？",
+      "answer": "阀中古城"
+    },
+    {
+      "source_id": "2471",
+      "original_question": "下列哪座城市享有“巴\u0000\u0000故\u0000\u0000、中国\u0000\u0000都”之称？",
+      "original_answer": "达州",
+      "question": "下列哪座城市享有“巴人故里、中国气都”之称？",
+      "answer": "达州"
+    },
+    {
+      "source_id": "2472",
+      "original_question": "四川\u0000\u0000被称为“天府之国”。“天府”\u0000\u0000词，最早见于？",
+      "original_answer": "《周礼》",
+      "question": "四川又被称为“天府之国”。“天府”一词，最早见于？",
+      "answer": "《周礼》"
+    },
+    {
+      "source_id": "2473",
+      "original_question": "四川哪个地级市被称为南国灯城？",
+      "original_answer": "\u0000\u0000贡",
+      "question": "四川哪个地级市被称为南国灯城？",
+      "answer": "自贡"
+    },
+    {
+      "source_id": "2474",
+      "original_question": "下列四处世界\u0000\u0000化与\u0000\u0000然双遗产中，位于四川省的是？",
+      "original_answer": "峨眉\u0000\u0000乐\u0000\u0000\u0000\u0000佛",
+      "question": "下列四处世界文化与自然双遗产中，位于四川省的是？",
+      "answer": "峨眉山乐山大佛"
+    }
+  ]
+}

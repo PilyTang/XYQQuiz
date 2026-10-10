@@ -377,6 +377,13 @@ def test_coordinator_passes_measured_layout_to_capable_pipeline() -> None:
         assert pipeline.calls == [7]
         assert pipeline.received_layouts == [LAYOUT]
         assert len(pipeline.received_layout_ms) == 1
+        wait_until(lambda: coordinator.latest_diagnostic_snapshot() is not None)
+        scene = coordinator.latest_diagnostic_snapshot()
+        assert scene.frame.frame_id == scene.runtime.frame_id
+        assert scene.layout == LAYOUT
+        assert np.array_equal(scene.crops[0], scene.frame.bgr[:8, :9])
+        store.clear_question("test_transition")
+        assert coordinator.latest_diagnostic_snapshot() is None
         assert pipeline.received_layout_ms[0] >= 0.0
         assert detector.calls == 2
     finally:

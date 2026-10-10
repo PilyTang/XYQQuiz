@@ -5,6 +5,7 @@ from collections.abc import Callable
 from concurrent.futures import Executor, Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
 import hashlib
+import logging
 import threading
 import time
 from typing import Protocol
@@ -122,6 +123,38 @@ class RecognitionCoordinator:
         self._worker: threading.Thread | None = None
         self._executor: Executor | None = None
         self._restart_forbidden = False
+        self._diagnostic_lock = threading.Lock()
+        self._diagnostic_snapshot = None
+        self.diagnostic_metadata = lambda: {}
+        self.diagnostic_config = None
+
+    def latest_diagnostic_snapshot(self):
+        with self._diagnostic_lock:
+            snapshot = self._diagnostic_snapshot
+        current = self._store.snapshot()
+        if (snapshot is not None and snapshot.runtime.generation_id == current.generation_id
+                and snapshot.runtime.frame_id == current.frame_id):
+            return snapshot
+        return None
+
+    def _record_diagnostic(self, frame, layout):
+        from xyq_quiz.diagnostics import DiagnosticSnapshot
+        state = self._store.snapshot()
+        if state.frame_id != frame.frame_id:
+            return
+        rects = (layout.icon_rect or layout.question_rect, *layout.option_rects)
+        height, width = frame.bgr.shape[:2]
+        crops = []
+        for rect in rects:
+            if rect.x < 0 or rect.y < 0 or rect.x + rect.width > width or rect.y + rect.height > height:
+                return
+            crop = frame.bgr[rect.y:rect.y + rect.height, rect.x:rect.x + rect.width].copy()
+            crop.setflags(write=False)
+            crops.append(crop)
+        snapshot = DiagnosticSnapshot(frame, state, tuple(crops), self.diagnostic_config,
+                                      self.diagnostic_metadata(), layout)
+        with self._diagnostic_lock:
+            self._diagnostic_snapshot = snapshot
 
     def invalidate_cache(self) -> None:
         """Invalidate cached answers and any result still running on an old bank."""
@@ -217,6 +250,8 @@ class RecognitionCoordinator:
             int,
             int,
             Future[RecognitionResult],
+            CapturedFrame,
+            DetectedLayout,
         ] | None = None
         observed_cache_epoch = self._current_cache_epoch()
 
@@ -501,6 +536,10 @@ class RecognitionCoordinator:
                                         ),
                                     )
                                     active_result_level = ConfidenceLevel.HIGH
+                                    try:
+                                        self._record_diagnostic(frame, layout)
+                                    except Exception:
+                                        logging.getLogger(__name__).warning("缓存诊断现场保存失败", exc_info=False)
                                 else:
                                     pending = (
                                         active_hash,
@@ -549,6 +588,10 @@ class RecognitionCoordinator:
                                             ),
                                         ):
                                             active_result_level = ConfidenceLevel.HIGH
+                                            try:
+                                                self._record_diagnostic(frame, layout)
+                                            except Exception:
+                                                logging.getLogger(__name__).warning("缓存诊断现场保存失败", exc_info=False)
                                     else:
                                         pending = (
                                             active_hash,
@@ -600,6 +643,8 @@ class RecognitionCoordinator:
                     generation,
                     result_epoch,
                     future,
+                    result_frame,
+                    result_layout,
                 ) = running
                 running = None
                 try:
@@ -632,6 +677,10 @@ class RecognitionCoordinator:
                         and self._store.complete(generation, result)
                     ):
                         active_result_level = result.confidence_level
+                        try:
+                            self._record_diagnostic(result_frame, result_layout)
+                        except Exception:
+                            logging.getLogger(__name__).warning("识别诊断现场保存失败", exc_info=False)
 
             if running is None and pending is not None:
                 (
@@ -677,6 +726,8 @@ class RecognitionCoordinator:
                     generation,
                     cache_epoch,
                     future,
+                    recognition_frame,
+                    recognition_layout,
                 )
                 last_attempt_at = time.monotonic()
 

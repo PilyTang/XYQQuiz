@@ -29,7 +29,7 @@ from xyq_quiz.recognition.models import (
     RecognitionResult,
     RecognitionTimings,
 )
-from xyq_quiz.runtime.state import RuntimePhase, RuntimeStore
+from xyq_quiz.runtime.state import RuntimePhase, RuntimeSnapshot, RuntimeStore
 from xyq_quiz.web.app import Services, _stream_frames, _stream_state, create_app
 from xyq_quiz.web.security import LocalWebSecurity, SESSION_COOKIE, TOKEN_HEADER
 
@@ -639,7 +639,7 @@ def test_both_bank_updates_report_independent_outcomes(tmp_path, failed_bank):
         assert payload["banks"]["keju"]["ok"] is (failed_bank != "keju")
         assert payload["banks"]["teachers_day"]["ok"] is (failed_bank != "teachers_day")
         status = client.get("/api/status").json()
-        assert status["question_banks"]["teachers_day"]["record_count"] == 367
+        assert status["question_banks"]["teachers_day"]["record_count"] == bank.count
         assert status["question_banks"]["keju"]["available"]
     assert fixture.services.teacher_bank is bank
 
@@ -1167,6 +1167,7 @@ def test_static_b_layout_contract(tmp_path: Path) -> None:
     assert "请关闭当前页面并重新打开 XYQQuiz" in javascript.text
     assert "重新双击 XYQQuiz.exe" not in javascript.text
     assert "完整游戏画面" in javascript.text
+    assert "autoFeedbackEnabled" not in html.text
     assert "function requestConfirmation" in javascript.text
     assert "confirmationDialog.showModal()" in javascript.text
     assert 'confirmationDialog.returnValue === "confirm"' in javascript.text
@@ -1526,3 +1527,19 @@ def test_websocket_sends_state_only_after_valid_authentication(tmp_path: Path) -
             state = socket.receive_json()
 
     assert state["phase"] == RuntimePhase.MONITORING.value
+
+
+def test_local_diagnostics_uses_fixed_scene_without_upload(tmp_path):
+    fixture = _services(tmp_path)
+    writer = FakeDiagnosticWriter(tmp_path / 'local.zip')
+    fixture.services.diagnostic_writer = writer
+    fixed = DiagnosticSnapshot(CapturedFrame.create(55, 1, np.zeros((10,10,3), np.uint8)),
+                               RuntimeSnapshot(frame_id=55), ())
+    fixture.services.coordinator.latest_diagnostic_snapshot = lambda: fixed
+    fixture.services.hub.publish(CapturedFrame.create(99, 2, np.ones((10,10,3), np.uint8)))
+    with TestClient(create_app(fixture.services)) as client:
+        assert client.get('/api/feedback').status_code == 404
+        assert client.post('/api/feedback/settings', json={'auto_enabled': False}).status_code in {404, 405}
+        response = client.post('/api/diagnostics')
+        assert response.json() == {"ok": True, "path": str(writer.path)}
+        assert writer.snapshots == [fixed]

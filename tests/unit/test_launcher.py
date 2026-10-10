@@ -294,6 +294,49 @@ def test_missing_real_layout_is_clear_and_creates_no_placeholder(tmp_path: Path)
     assert not layout.parent.exists()
 
 
+def test_first_start_with_copied_old_custom_data_imports_text_and_keeps_local_questions(tmp_path, monkeypatch):
+    import json
+    import shutil
+    from dataclasses import replace
+    from xyq_quiz.knowledge.updater import load_current_generation
+
+    discovered = RuntimePaths.discover()
+    bundled = load_current_generation(discovered.default_data_dir)
+    data = tmp_path / "自定义题库 旧版"
+    generation = data / "generations" / bundled.generation_id
+    shutil.copytree(bundled.question_path.parent, generation)
+    shutil.copy2(discovered.default_data_dir / "current.json", data / "current.json")
+    official_before = {p.relative_to(data): p.read_bytes() for p in data.rglob("*") if p.is_file()}
+    paths = replace(discovered, app_root=tmp_path, data_dir=data,
+                    config_path=tmp_path / "config.json", user_data_dir=tmp_path / "user-data",
+                    logs_dir=tmp_path / "logs", diagnostics_dir=tmp_path / "diagnostics", frozen=True)
+    paths.user_data_dir.mkdir()
+    local = paths.user_data_dir / "questions.json"
+    local.write_text(json.dumps(dict(schema_version=1, records=[dict(
+        id="kept-local", question="保留自有题目", answer="保留自有答案",
+        mode="supplement", enabled=True, answer_aliases=[],
+    )]), ensure_ascii=False), encoding="utf-8")
+    local_before = local.read_bytes()
+    config = AppConfig(data_dir=data, layout_paths=[
+        discovered.default_data_dir / "layouts/keju-default.json",
+        discovered.default_data_dir / "layouts/keju-picture.json",
+    ])
+    # The existing teacher asset upgrade is covered independently.
+    monkeypatch.setattr(launcher_module, "initialize_teacher_assets", lambda *args: None)
+    for _ in range(2):
+        services = build_services(config, runtime_paths=paths)
+        try:
+            assert services.official_bank.count == 3166
+            match = services.pipeline._matcher.match_question("中国古代的“上元节”指的是哪个节日")
+            assert match is not None and match.record.answer == "元宵节"
+            local_match = services.pipeline._matcher.match_question("保留自有题目")
+            assert local_match is not None and local_match.record.answer == "保留自有答案"
+            assert local.read_bytes() == local_before
+            assert all((data / name).read_bytes() == raw for name, raw in official_before.items())
+        finally:
+            services.pipeline.close()
+
+
 def test_unreadable_anchor_is_rejected_during_startup_validation(tmp_path: Path) -> None:
     anchors = tmp_path / "anchors"
     anchors.mkdir()

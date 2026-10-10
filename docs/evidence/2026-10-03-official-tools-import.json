@@ -1,0 +1,577 @@
+{
+  "source_url": "https://xyq.163.com/tools/",
+  "source_html_sha256": "60de4190b08b9fc7cab4b2f0e7d33982bb98b30de3c7541537035866b3765920",
+  "retrieved_at": "2026-10-03T08:25:55.830432+00:00",
+  "text_before": 2586,
+  "text_after": 3166,
+  "text_added": 580,
+  "text_added_by_category": {
+    "yuanxiao": 372,
+    "keju": 208
+  },
+  "existing_pairs": 11,
+  "existing_answer_conflicts": 0,
+  "topic_prefix_variant_count": 195,
+  "recovered_source_rows": [
+    {
+      "source_id": "2469",
+      "original_question": "四川省\u0000\u0000积48.6万平\u0000\u0000千\u0000\u0000，居全国第几？",
+      "original_answer": "5",
+      "question": "四川省面积48.6万平方千米，居全国第几？",
+      "answer": "5"
+    },
+    {
+      "source_id": "2470",
+      "original_question": "下列中国四\u0000\u0000古城中位于四川省的是？",
+      "original_answer": "阀中古城",
+      "question": "下列中国四大古城中位于四川省的是？",
+      "answer": "阀中古城"
+    },
+    {
+      "source_id": "2471",
+      "original_question": "下列哪座城市享有“巴\u0000\u0000故\u0000\u0000、中国\u0000\u0000都”之称？",
+      "original_answer": "达州",
+      "question": "下列哪座城市享有“巴人故里、中国气都”之称？",
+      "answer": "达州"
+    },
+    {
+      "source_id": "2472",
+      "original_question": "四川\u0000\u0000被称为“天府之国”。“天府”\u0000\u0000词，最早见于？",
+      "original_answer": "《周礼》",
+      "question": "四川又被称为“天府之国”。“天府”一词，最早见于？",
+      "answer": "《周礼》"
+    },
+    {
+      "source_id": "2473",
+      "original_question": "四川哪个地级市被称为南国灯城？",
+      "original_answer": "\u0000\u0000贡",
+      "question": "四川哪个地级市被称为南国灯城？",
+      "answer": "自贡"
+    },
+    {
+      "source_id": "2474",
+      "original_question": "下列四处世界\u0000\u0000化与\u0000\u0000然双遗产中，位于四川省的是？",
+      "original_answer": "峨眉\u0000\u0000乐\u0000\u0000\u0000\u0000佛",
+      "question": "下列四处世界文化与自然双遗产中，位于四川省的是？",
+      "answer": "峨眉山乐山大佛"
+    }
+  ],
+  "teacher_before": 367,
+  "teacher_after": 449,
+  "teacher_source_count": 320,
+  "teacher_same_bytes": 237,
+  "teacher_added": 82,
+  "teacher_excluded": [
+    {
+      "name": "佛法无边",
+      "image_sha256": "11e47e325fe0b80d5729795472fb9a80731128be16dc4d0bbf81f9300e027970",
+      "reason": "Previously verified incorrect source rendition"
+    }
+  ],
+  "teacher_imported": [
+    {
+      "name": "铜墙铁壁",
+      "source_name": "铜墙铁壁",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083108004360ffa919fb2c28_b323b5d.png",
+      "image_sha256": "517b2a97e71c77d89cb01c16e4f5fa31bfe2ba507ab3d7b2892055da3d34116d"
+    },
+    {
+      "name": "冥想",
+      "source_name": "冥想",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083108005ad6d8d1dd76753a_75808de.png",
+      "image_sha256": "8f008767c947eb831c70ba82ead5c4211a8ad773484b9fb2c96ba4974690c1f7"
+    },
+    {
+      "name": "枫影二刃",
+      "source_name": "枫影二刃",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_1_b62ca19.png",
+      "image_sha256": "b85fd9e3361053549050a01680880533255e31b09d6db43ddbbbc37b33f397d8"
+    },
+    {
+      "name": "故壤归心",
+      "source_name": "故壤归心",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_2_75feb7d.png",
+      "image_sha256": "2cf5b9f8c7d8245bfbde08bda51b0ba5384b8bd588e9bb0e6c2b4d1320087111"
+    },
+    {
+      "name": "黎魂",
+      "source_name": "黎魂",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_3_4de9a9d.png",
+      "image_sha256": "baa4b67e71dbf33f847442e729dffea1c2e3c5632c4b704817692417ff8eea7c"
+    },
+    {
+      "name": "力辟苍穹",
+      "source_name": "力辟苍穹",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_4_eaca105.png",
+      "image_sha256": "edea9184f3561dbefde301850226e191f12fda90a5d07e193e91d5fbc9d37bc2"
+    },
+    {
+      "name": "怒哮",
+      "source_name": "怒哮",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_5_4969995.png",
+      "image_sha256": "1358eeaf69792307fd2f41fc9bef123a027507356faa3fb6c0391ec008fb6602"
+    },
+    {
+      "name": "三荒尽灭",
+      "source_name": "三荒尽灭",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_6_c4110bd.png",
+      "image_sha256": "b01ad1def7d526436e0ab5b5f41814c3d4e9e978cce6de5e46095ed159bf7836"
+    },
+    {
+      "name": "铁血生风",
+      "source_name": "铁血生风",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_7_861bd0c.png",
+      "image_sha256": "eeb0b6b071ce04fe8ea91766aa08ff83c12426d3c124679002189e6f793fcdb8"
+    },
+    {
+      "name": "炎魂",
+      "source_name": "炎魂",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_8_b0bc986.png",
+      "image_sha256": "0122a31d3c77f8433e1b58773bdc6f1342c8ee5067b4c4c5b152a03932116b80"
+    },
+    {
+      "name": "一斧开天",
+      "source_name": "一斧开天",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_9_38f5422.png",
+      "image_sha256": "66276f9b4ee5c5bb6a546b011f278d8d9eb39efab19e0b09313ef70b2825dd95"
+    },
+    {
+      "name": "战鼓",
+      "source_name": "战鼓",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202309_07_10_3565861.png",
+      "image_sha256": "62f2ed67228f6ad771fa659f356a14344f78b20fdbd309c6bdf46ab0df023f07"
+    },
+    {
+      "name": "虫之噬",
+      "source_name": "虫之噬",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150219mogftg1z1gdugn3g_c5fcd7a.png",
+      "image_sha256": "3de9f30dfc5d0b1188fdb4cc0b1938ac1d3967ea956c46352b198edd565c8544"
+    },
+    {
+      "name": "蛙之影",
+      "source_name": "蛙之影",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150219gw1z6lr4jo3z6fjw_dbca8e7.png",
+      "image_sha256": "b28510887d8d813ebc9ebd840b02d25bc1d5619a1b139a189f638a7a7c4e0289"
+    },
+    {
+      "name": "龟之象",
+      "source_name": "龟之象",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150219oszvhh4vs6tz5969_0424d0c.png",
+      "image_sha256": "a837e6d9cd30ec68eb9b8436473efa4af1ba1839b44cea494c5ca464a8cc4c62"
+    },
+    {
+      "name": "沉没",
+      "source_name": "沉没",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220yfmv9gh5mmqxfufx_b7c7aff.png",
+      "image_sha256": "52ee9eebec9350ced674476b616c87f356661cd96a6cbb191f3678c465907302"
+    },
+    {
+      "name": "汹涌",
+      "source_name": "汹涌",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220gom9ookk1mym0ytc_87ef442.png",
+      "image_sha256": "7cb586a80605852f28d3697392cb9897f5a04e6fe249f3fea9d96e44e1cbc506"
+    },
+    {
+      "name": "聆音",
+      "source_name": "聆音",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220qqff1imno1no16rn_1ed58bd.png",
+      "image_sha256": "616a2168555f492eb2de69f0b0cbea72d163fff874ae37681c59431a92a83a20"
+    },
+    {
+      "name": "随波逐浪",
+      "source_name": "随波逐浪",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220tii7wsmy7si8bszw_16ba6a3.png",
+      "image_sha256": "d65ce08b9a9f0c7d62db85f3168a7f3d76f70a15259cbe751cde2eec17ab35b9"
+    },
+    {
+      "name": "万里烟波",
+      "source_name": "万里烟波",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150220dz91cbc47k1re55q_86d76e8.png",
+      "image_sha256": "cb6966df23609ba41d95a344f2bb87ae2c7d09df16d3bed49496e4c87f2807db"
+    },
+    {
+      "name": "涤荡",
+      "source_name": "涤荡",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221gly3lbsd0llblnfd_679560b.png",
+      "image_sha256": "fbd6fff8ac2ea7ad4280cade296deb804040b7f6d5635b68776ba193d7678c67"
+    },
+    {
+      "name": "暗涌",
+      "source_name": "暗涌",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221v1f2ejj6dvjtg73s_83a5b80.png",
+      "image_sha256": "2632c7af85582539e7f74bbfcdf9a9c8edbbff034a7066c4738a049c143d785a"
+    },
+    {
+      "name": "森罗万象",
+      "source_name": "森罗万象",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221bjnveap1c2abqjfn_9a5f544.png",
+      "image_sha256": "3159fe9e3ed5128236ba8a5c5450c471fd2a921d5c77636f6186303f106332a7"
+    },
+    {
+      "name": "神游物外",
+      "source_name": "神游物外",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221r8me4w8dg5r8hwgh_f742fff.png",
+      "image_sha256": "df4b754a18ef31c02d41b8cc0d9e71935f551ff6e2a397602fced53ef7c1d4f5"
+    },
+    {
+      "name": "海市蜃楼",
+      "source_name": "海市蜃楼",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202108_27_150221ayofxtdqdhgpz7ff_5da0d32.png",
+      "image_sha256": "39f92b87599bbd08fd8cb7314d51e3890ef404908d8782b2d4fd84d56d012698"
+    },
+    {
+      "name": "炽火流离",
+      "source_name": "炽火流离",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173356qnr17uokdn45arng.jpg.thumb_1b5cac4.jpg",
+      "image_sha256": "85d7fbd426901bf2827d8812740b4581f03da25c0541e64e8eba85e45234a00c"
+    },
+    {
+      "name": "极天炼焰",
+      "source_name": "极天炼焰",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173352f4xlbqdibxtoztto.jpg.thumb_c27f711.jpg",
+      "image_sha256": "4bee40a687eeb624ac74c6726891afc8fd3d4e11d224915e4d2087c217c32320"
+    },
+    {
+      "name": "唤灵·魂火",
+      "source_name": "唤灵·魂火",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/174023pmnidip3qupsipdi.jpg.thumb_f057cc6.jpg",
+      "image_sha256": "9164a6b735e32aab4df5e99407647962ba8d5c7cb8aaa6f436dbf3aff5e065d3"
+    },
+    {
+      "name": "唤魔·堕羽",
+      "source_name": "唤魔·堕羽",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/174028lhiq73j6xtbstqel.jpg.thumb_bb4088d.jpg",
+      "image_sha256": "1393ef70a0f0243585b2bbf72c383750574b8b5cef8c1549305786c5dca6040f"
+    },
+    {
+      "name": "幽影灵魄",
+      "source_name": "幽影灵魄",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173403az99n9sh6uh6es40.jpg.thumb_b05e469.jpg",
+      "image_sha256": "a59532e8bb54db12aea9b826a77b2e67d2fe1175c5fe2a4faed14fee59f73bbb"
+    },
+    {
+      "name": "魂兮归来",
+      "source_name": "魂兮归来",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173411v4eg1p6jz6iimmgz.jpg.thumb_c0daf52.jpg",
+      "image_sha256": "5798a984e35b0942938a2b9326018f1ae79419b966cb04917165912a965b248f"
+    },
+    {
+      "name": "净世煌火",
+      "source_name": "净世煌火",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173415sju55yfd21lljldu.jpg.thumb_442bdae.jpg",
+      "image_sha256": "243825120bb7623a8d6aee2a412a055eedaeb39cfc01c25ee365ebe635c59593"
+    },
+    {
+      "name": "焚魔烈焰",
+      "source_name": "焚魔烈焰",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173419wqodn80azbj0zmik.jpg.thumb_1524e37.jpg",
+      "image_sha256": "109161d68ad217931c7577121e8b5c9ff4b8b05f8485bdce258271aeb5aecbb0"
+    },
+    {
+      "name": "谜毒之缚",
+      "source_name": "谜毒之缚",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173424af4g8ht0dd3bjajh.jpg.thumb_5026b1f.jpg",
+      "image_sha256": "f32f31003b42e2108e512fc08fbcfc38c925bdc9bd5515837f66a31cacf5b808"
+    },
+    {
+      "name": "诡蝠之刑",
+      "source_name": "诡蝠之刑",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173428qlbch3ij8lzcifiv.jpg.thumb_36819e1.jpg",
+      "image_sha256": "a18777199a90ee77be5df9ecb11fcebdcb5bf634d0dabf8be203b6b94b64b3cb"
+    },
+    {
+      "name": "怨怖之泣",
+      "source_name": "怨怖之泣",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173432dc0ahsz1eccz8ehm.jpg.thumb_024df36.jpg",
+      "image_sha256": "b348ab4945dbf5aea8f270d8d8fedb78509c28d62dc60e109852b0388aff3c4b"
+    },
+    {
+      "name": "誓血之祭",
+      "source_name": "誓血之祭",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/173439tffs7snssnrob2os.jpg.thumb_e2545ca.jpg",
+      "image_sha256": "33bdc56203699a8f86caae44fd868dba0131ce53beee57d5427eac1a55676d89"
+    },
+    {
+      "name": "唤魔·毒魅",
+      "source_name": "唤魔·毒魅",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/174032fnuzsgzuuvt8leag.jpg.thumb_f1b4291.jpg",
+      "image_sha256": "b36403f898feb165f9c85de956ff70cf7f588bf01e9388d438ca8247fa97e142"
+    },
+    {
+      "name": "唤灵·焚魂",
+      "source_name": "唤灵·焚魂",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/174036jwti2hblltcko6gk.jpg.thumb_347844a.jpg",
+      "image_sha256": "b654fe18806b263acd49c42bab3c419821ecb6eb379b9971e5e260c106ec754d"
+    },
+    {
+      "name": "天魔觉醒",
+      "source_name": "天魔觉醒",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/125217ebq2zqqhhqqbdnta.png.thumb_b0c168e.jpg",
+      "image_sha256": "a1b24de41eb6fea333b0a5748b909fa83491c756a4d31c98e299ab3aa12c0295"
+    },
+    {
+      "name": "当头一棒",
+      "source_name": "当头一棒",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172027tgd202lv10h2dbeg.jpg.thumb_370436f.jpg",
+      "image_sha256": "4a26f036a16876225e164440cc52b61a7ed46b98d9338353b5e5ff31137cc340"
+    },
+    {
+      "name": "神针撼海",
+      "source_name": "神针撼海",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172048hjukdai3wuiizid0.jpg.thumb_6c9a88c.jpg",
+      "image_sha256": "923d98c22ac9a84768d3aeb87860545b4cbb2808fcf7a6bccc60c048a7c48ad4"
+    },
+    {
+      "name": "杀威铁棒",
+      "source_name": "杀威铁棒",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172053fc17dw2aazzoi0cu.jpg.thumb_f4bd471.jpg",
+      "image_sha256": "10ce0b23cd42b6ede2760ea048fe69558ddb714593fb3385515b91f1f965c6b6"
+    },
+    {
+      "name": "泼天乱棒",
+      "source_name": "泼天乱棒",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172057uav66b789waacwpz.jpg.thumb_0ba1cfa.jpg",
+      "image_sha256": "7d2f7ffa93f4cba2e26c1ec808f3a888558c77974a024b46a2792434cad01fe9"
+    },
+    {
+      "name": "担山赶月",
+      "source_name": "担山赶月",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172101bqwcrawqcfrbaady.jpg.thumb_d360f97.jpg",
+      "image_sha256": "5208b7171297bc597c5f8767045b89fe9e5073eabaf498f3e0c46cd79e5a48df"
+    },
+    {
+      "name": "铜头铁臂",
+      "source_name": "铜头铁臂",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172105xfuxzcq8y6nk4cuu.jpg.thumb_dc5315b.jpg",
+      "image_sha256": "2e0473ddf47fd410d416787fd1317456400d7ce75b39b46ac0f6cd76884ff8a9"
+    },
+    {
+      "name": "呼子唤孙",
+      "source_name": "呼子唤孙",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172110aui9zhtk55trwwmk.jpg.thumb_0b35b6d.jpg",
+      "image_sha256": "8414debfb04a6f280a6a13a754a34179348ed88751081b9ab7b42be3db1daebe"
+    },
+    {
+      "name": "八戒上身",
+      "source_name": "八戒上身",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172118kii11o1030tl9ois.jpg.thumb_cf5016b.jpg",
+      "image_sha256": "6d85e6a8c283ff8be31c43c6370ea7446e5e53905ee9508214b973703973ab8a"
+    },
+    {
+      "name": "无所遁形",
+      "source_name": "无所遁形",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172123lhskfslysl9xa9kf.jpg.thumb_12c0883.jpg",
+      "image_sha256": "5e64d6cf37ac24d5dc994b2075170405f6e394d1822862d893fa2cf3204bb04f"
+    },
+    {
+      "name": "除光息焰",
+      "source_name": "除光息焰",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172131pr888rzrtgkoh2gr.jpg.thumb_27dc11a.jpg",
+      "image_sha256": "cc6f6a884051c4993e32c01289945391a59a1f2b764e13e4e2b1c6ab060d81d7"
+    },
+    {
+      "name": "九幽除名",
+      "source_name": "九幽除名",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172137j1d2inmf1a4iudui.jpg.thumb_26e4e49.jpg",
+      "image_sha256": "2050b71b225f1b99fd338c60e5f2e7e95ecc0ce2edf1297fa5dc1a0086a0ee0f"
+    },
+    {
+      "name": "移星换斗",
+      "source_name": "移星换斗",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172143k9hx2hkbl76x23r6.jpg.thumb_3dab1ee.jpg",
+      "image_sha256": "760450ee2d6168b85f6117a90eb7425bb05adba055b4157b0bac8f5208626617"
+    },
+    {
+      "name": "云暗天昏",
+      "source_name": "云暗天昏",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172148xo1iw7o5p4uxxnox.jpg.thumb_f273a9d.jpg",
+      "image_sha256": "deb7789c8328c1a5343af96ce19f48c6eee969ac228b691c0e5112076675c63f"
+    },
+    {
+      "name": "筋斗云",
+      "source_name": "筋斗云",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172153n4dw74fhzfwpfdly.jpg.thumb_55659bd.jpg",
+      "image_sha256": "dc5de0c5a99e7325dd0fd0d6ca137b5b479a03d9e1030f59fec65ac5641dac78"
+    },
+    {
+      "name": "威震凌霄",
+      "source_name": "威震灵霄",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172157vo232w19o9m2oluu.jpg.thumb_24322bf.jpg",
+      "image_sha256": "b7d7cfae694a9cdce2ff94aef90eb59253378daae1db23920e294d9affd77ff1"
+    },
+    {
+      "name": "气慑天军",
+      "source_name": "气慑天军",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/172201a3car5asowh83skg.jpg.thumb_941b590.jpg",
+      "image_sha256": "b250ab97b17b04c6962bc9c297ac24c8ccd65d2c533473e63f543c153bdca7f7"
+    },
+    {
+      "name": "天地洞明",
+      "source_name": "天地洞明",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/125035fxiibekbemzw8feb.png.thumb_8799624.jpg",
+      "image_sha256": "485172756a00d3ad493db454a9f1b6d4a857797a4585e72d9eae8a91fcdced07"
+    },
+    {
+      "name": "诱袭",
+      "source_name": "诱袭",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170754mh6gk5zwjbvhzhiw.jpg.thumb_4f3add1.jpg",
+      "image_sha256": "398e7a66ff7934b1bc0921cc4f1b8712ff4a73d550c9a38bdc4e6e521df99fc0"
+    },
+    {
+      "name": "破击",
+      "source_name": "破击",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170758zooku84bhobkymo4.jpg.thumb_52c7ae8.jpg",
+      "image_sha256": "db84cf0dde1467636b44a64dd66b9e2dafb4944f543d4644fac21b9aa6ac4934"
+    },
+    {
+      "name": "针锋相对",
+      "source_name": "针锋相对",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170807gj4ewziwklhe00ll.jpg.thumb_ab6b9bc.jpg",
+      "image_sha256": "a5b0e8e3a22379b138f3233ee62281e20ac0e36d6f49f0c28fb8cfd229f159bf"
+    },
+    {
+      "name": "攻守易位",
+      "source_name": "攻守易位",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170811zzjjjjvpmfcq7x7n.jpg.thumb_cbbbc5d.jpg",
+      "image_sha256": "3c01cd654e16a943318497e4fdd34bdbd568682d9c198840cd3456d31dc19542"
+    },
+    {
+      "name": "天马行空",
+      "source_name": "天马行空",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170815ozrirazfwbwaaeae.jpg.thumb_80b7317.jpg",
+      "image_sha256": "c545268b6605bc1a3af3bd160d304f6e179e3619c7aa5ade557c7ea39012e446"
+    },
+    {
+      "name": "匠心·削铁",
+      "source_name": "匠心·削铁",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170820e17rrz0p021yr2xs.jpg.thumb_aed7e02.jpg",
+      "image_sha256": "f1faaa1b9abc7ddb23493de52dc35a4bbd0badc57b18386892a2f990121c4f5b"
+    },
+    {
+      "name": "匠心·固甲",
+      "source_name": "匠心·固甲",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170825ie41n1hve4p91u1r.jpg.thumb_bec6d44.jpg",
+      "image_sha256": "0e64a56ced74b57fa30f4ee0138ac6719582918e79914126a123097d66ea9d6b"
+    },
+    {
+      "name": "匠心·蓄锐",
+      "source_name": "匠心·蓄锐",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170829l7yn5jhawhdmgtz4.jpg.thumb_bcbfa29.jpg",
+      "image_sha256": "2ff09ecf24d256ddd35c37c53279bf1af809bf914b5b8c31f43fcb786255331c"
+    },
+    {
+      "name": "锋芒毕露",
+      "source_name": "锋芒毕露",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170833tr34tbpbpzc84qcc.jpg.thumb_9abf644.jpg",
+      "image_sha256": "14bf46d208faa275b8188d51b99e43894ea0d52268a34d087ae37e68248d91b0"
+    },
+    {
+      "name": "鬼斧神工",
+      "source_name": "鬼斧神工",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170935gizeszrdpkgzgrsy.jpg.thumb_4e4bf5b.jpg",
+      "image_sha256": "906fc87135463754db4a45062981a7a835bc1c47d5d467c6c4b76c532b6aab3e"
+    },
+    {
+      "name": "移山填海",
+      "source_name": "移山填海",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/170940pq0lg8j8txj5l7sw.jpg.thumb_156daef.jpg",
+      "image_sha256": "4e23353227196e1b136a418d7be3d41fdaf62cba496c57d1d061481c67e474f7"
+    },
+    {
+      "name": "一发而动",
+      "source_name": "一发而动",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130050dusx5snmu5ttcnc5.png.thumb_0a6d076.jpg",
+      "image_sha256": "5db9379e634b5dae38d91fe8e32ab60d5d060e8ff13584ebb003f8bc907db920"
+    },
+    {
+      "name": "飞行符",
+      "source_name": "飞行符",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083107509a4f28b585237dd5_7575453.png",
+      "image_sha256": "b6c763aa5f9188ab42615f412262ae3bb70c51955acdeb3f7b9f77817b37067e"
+    },
+    {
+      "name": "龙附",
+      "source_name": "龙附",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130831075189cb27658a873b71_b6db747.png",
+      "image_sha256": "7fe726dd28960dc199cfa2b7987790f8cee42786167100b9dc41dd830ad67a0f"
+    },
+    {
+      "name": "五雷轰顶",
+      "source_name": "五雷轰顶",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130831075208300c0709152e32_4dca471.png",
+      "image_sha256": "4bbff4339c1a1a10566071eb916dfb9f2b1116ac8073ecc86951ab9747edf67d"
+    },
+    {
+      "name": "错乱",
+      "source_name": "错乱",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/1308310752d659ea0b60c1d88a_d10933b.png",
+      "image_sha256": "f927904dcbd15c1a83b295f31debd0569e9732220f0f3fd2c53b9241c835754d"
+    },
+    {
+      "name": "知己知彼",
+      "source_name": "知己知彼",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/1308310752a807017f60716322_08fa47f.png",
+      "image_sha256": "e345e93a92d7aaed8895aea983bfa5c3c7aa06280b8cb0b78d49c6cac4bceaa3"
+    },
+    {
+      "name": "灵动九天",
+      "source_name": "灵动九天",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083107522996d9aa72ed2fa8_ce2e007.png",
+      "image_sha256": "933e91014b1781fd093ff351b8a87f9912403a2b36b9b988b8112b8e8360df45"
+    },
+    {
+      "name": "三花聚顶",
+      "source_name": "三花聚顶",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083107535a06f97085b779c4_1ed0e27.png",
+      "image_sha256": "50f3710760e1e6d123aa5dd4a698c537f9ea2bde0d123b12036aadf5385e2ec6"
+    },
+    {
+      "name": "尸腐毒",
+      "source_name": "尸腐毒",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/13083107548b0c440a9e20bfc7_c474e65.png",
+      "image_sha256": "40b71d1914037867467cc83b62ec91e085aeb791fce888482647ffc8fa7baea7"
+    },
+    {
+      "name": "复苏",
+      "source_name": "复苏",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/1308310755a454a24def943694_c0eda1f.png",
+      "image_sha256": "cf5138a5b45dcb2600686aee6231f61997ce6dff9ea10b4998fe5388b758cbee"
+    },
+    {
+      "name": "幻镜术",
+      "source_name": "幻镜术",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/xyq_forum_202109_01_140141bgzj7x70jx3ig0i8_18e8fd0.png",
+      "image_sha256": "8ece461abb283fe38cba8dbee2afb629dd2ae3d94028376a44a1fe950c58510e"
+    },
+    {
+      "name": "穿云破空",
+      "source_name": "穿云破空",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130831075372d025bf45327032_a96c6a3.png",
+      "image_sha256": "21e34c6eba88ece603d2d314756d6e5dbdb6c43e379c84d5b571056adee29892"
+    },
+    {
+      "name": "惊涛怒",
+      "source_name": "惊涛怒",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/130831075335080bc786e94090_7d2daaf.png",
+      "image_sha256": "cc2e3ac3845c4cc78e60288722eccabe90d25de28a846b4590da131ae3b7375d"
+    },
+    {
+      "name": "万木凋枯",
+      "source_name": "万木凋枯",
+      "source_url": "https://xyq.res.netease.com/pc/zt/20220406145527/img/quest/1308310756de83f5ea043483c8_7200578.png",
+      "image_sha256": "1dab13fcec9a7e4b99212378fa327c9326a7c69899d727e57ea532327bda3c31"
+    }
+  ],
+  "scholar_imported_count": 574,
+  "scholar_runtime_enabled": false,
+  "validation": {
+    "related_tests_passed_across_targeted_runs": 233,
+    "teacher_feedback_replay_tests_passed": 33,
+    "official_text_rows_covered": 591,
+    "official_valid_icons_covered": 319,
+    "original_question_snapshot_unchanged": true,
+    "original_teacher_supplements_preserved": true,
+    "new_public_files_audited": 126,
+    "deeply_cropped_new_icons_may_safely_reject": true
+  }
+}

@@ -50,6 +50,7 @@ class DiagnosticSnapshot:
     crops: tuple[NDArray[np.uint8], ...] = ()
     config: Any = None
     metadata: Any = None
+    layout: Any = None
 
 
 class DiagnosticUnavailable(RuntimeError):
@@ -90,6 +91,8 @@ class DiagnosticWriter:
                 for name, crop in zip(crop_names, snapshot.crops, strict=False):
                     archive.writestr(name, _encode_image(crop, ".png"))
                 archive.writestr("state.json", _json_bytes(snapshot.runtime))
+                if snapshot.layout is not None:
+                    archive.writestr("layout.json", _json_bytes(snapshot.layout))
                 archive.writestr(
                     "config.json",
                     _json_bytes(_redact(snapshot.config if snapshot.config is not None else {})),

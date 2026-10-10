@@ -762,6 +762,8 @@ def create_app(
                 status_code=503,
                 content={"ok": False, "error": "诊断导出服务未配置"},
             )
+        latest_scene = getattr(services.coordinator, "latest_diagnostic_snapshot", None)
+        scene = latest_scene() if latest_scene is not None else None
         latest_crops = getattr(services.pipeline, "latest_crops", None)
         crops = latest_crops() if latest_crops is not None else ()
         metadata = await asyncio.to_thread(services.snapshot_diagnostic_metadata)
@@ -772,6 +774,12 @@ def create_app(
             config=services.diagnostic_config,
             metadata=metadata,
         )
+        if scene is not None:
+            snapshot = scene
+        elif latest_scene is not None:
+            # No matching completed result: retain a local frame without mixing OCR from another frame.
+            snapshot = DiagnosticSnapshot(frame=services.hub.snapshot(), runtime=RuntimeSnapshot(),
+                                          config=services.diagnostic_config, metadata=metadata)
         try:
             path = await asyncio.to_thread(writer.write, snapshot)
         except DiagnosticUnavailable as error:

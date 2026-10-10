@@ -1,0 +1,2872 @@
+[
+  {
+    "source_id": "tools:scholar:1:true",
+    "question": "成语昙花一现原本出自佛经?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:1:false",
+    "question": "成语昙花一现原本出自诗经?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:2:true",
+    "question": "《孔雀东南飞》是中国第一部.长篇叙事诗?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:2:false",
+    "question": "《木兰诗》是中国第一部.长篇叙事诗?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:3:true",
+    "question": "诗人杨炯是初唐四杰之一?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:3:false",
+    "question": "诗人李白是初唐四杰之一?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:4:true",
+    "question": "诗句“问世间，情是何物，直教生死相许”的原作者是元好问?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:4:false",
+    "question": "诗句“问世间，情是何物，直教生死相许”的原作者是金庸?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:5:true",
+    "question": "“逼上梁山”的典故出自文学著作《水浒》?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:5:false",
+    "question": "“逼上梁山”的典故出自文学著作《西游记》?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:6:true",
+    "question": "《诗经》分为风、雅、颂三部分，共有305篇?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:6:false",
+    "question": "《诗经》分为风、雅、颂三部分，共有300篇?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:7:true",
+    "question": "名诗句“山外青山楼外楼”的下句是“西湖歌舞几时休”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:7:false",
+    "question": "名诗句“山外青山楼外楼”的下句是“疑是银河落九天”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:8:true",
+    "question": "名诗句“我自横刀向天笑”的下句是“去留肝胆两昆仑”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:8:false",
+    "question": "名诗句“我自横刀向天笑”的下句是“留取丹心照汗青”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:9:true",
+    "question": "名诗句“嘈嘈切切错杂弹”的下句是“大珠小珠落玉盘”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:9:false",
+    "question": "名诗句“嘈嘈切切错杂弹”的下句是“芳草萋萋鹦鹉洲”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:10:true",
+    "question": "名诗句“仰天大笑出门去”的下句是“吾辈岂是蓬蒿人”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:10:false",
+    "question": "名诗句“仰天大笑出门去”的下句是“千金散去还复来”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:11:true",
+    "question": "名诗句“落霞与孤骛齐飞”的下句是“秋水共长天一色”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:11:false",
+    "question": "名诗句“落霞与孤骛齐飞”的下句是“多少楼台风雨中”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:12:true",
+    "question": "“老吾老以及人之老，幼吾幼以及人之幼”出自孟子?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:12:false",
+    "question": "“老吾老以及人之老，幼吾幼以及人之幼”出自韩非子?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:13:true",
+    "question": "唐代传述奇闻异事的短篇小说称为“唐传奇”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:13:false",
+    "question": "唐代传述奇闻异事的短篇小说称为“拍案惊奇”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:14:true",
+    "question": "《木兰诗》和《孔雀东南飞》合称“乐府双璧”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:14:false",
+    "question": "《诗经》和《孔雀东南飞》合称“乐府双璧”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:15:true",
+    "question": "古代许多诗句中都有“折柳”二字，表达的是送别的意境?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:15:false",
+    "question": "古代许多诗句中都有“折柳”二字，表达的是喜悦相逢的意境?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:16:true",
+    "question": "“上穷碧落下黄泉”中的“碧落”指天界、天宫?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:16:false",
+    "question": "“上穷碧落下黄泉”中的“黄泉”指天界、天宫?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:17:true",
+    "question": "成语“并日而食”是形容生活穷困?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:17:false",
+    "question": "成语“并日而食”是形容衣食无忧?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:18:true",
+    "question": "成语“一曝十寒”是形容没有恒心?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:18:false",
+    "question": "成语“一曝十寒”是形容很有毅力?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:19:true",
+    "question": "成语“一日三秋”是形容思念心切?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:19:false",
+    "question": "成语“一日三秋”是形容时间飞逝?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:20:true",
+    "question": "成语“一衣带水”是形容相隔甚近?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:20:false",
+    "question": "成语“一衣带水”是形容相隔甚远?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:21:true",
+    "question": "“大弦嘈嘈如急雨，小弦切切如私语”描述的乐器是琵琶?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:21:false",
+    "question": "“大弦嘈嘈如急雨，小弦切切如私语”描述的乐器是扬琴?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:22:true",
+    "question": "“何以解忧，惟有杜康”的作者是曹操?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:22:false",
+    "question": "“何以解忧，惟有杜康”的作者是杜康?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:23:true",
+    "question": "苏轼不是苏门四学士之一?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:23:false",
+    "question": "苏轼是苏门四学士之一?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:24:true",
+    "question": "“三人行，必有我师”出自论语?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:24:false",
+    "question": "“三人行，必有我师”出自三字经?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:25:true",
+    "question": "“轻于鸿毛”中的鸿毛是大雁的毛?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:25:false",
+    "question": "“轻于鸿毛”中的鸿毛是麻雀的毛?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:26:true",
+    "question": "“老臣今者殊不欲食。”中的“殊”是副词，很、非常的意思。",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:26:false",
+    "question": "“老臣今者殊不欲食。”中的“殊”是形容词，特殊的意思。",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:27:true",
+    "question": "“王若隐其无罪而就死地 ，则牛羊何择焉？”中的“隐”的文中义是怜悯。",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:27:false",
+    "question": "“王若隐其无罪而就死地 ，则牛羊何择焉？”中的“隐”的文中义是隐瞒。",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:28:true",
+    "question": "“途有饿殍而不知发。”中的“发”字文中义为开仓赈济。",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:28:false",
+    "question": "“途有饿殍而不知发。”中的“发”字文中义为发财。",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:29:true",
+    "question": "成语中“惊弓之鸟”的“鸟”应是一只雁?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:29:false",
+    "question": "成语中“惊弓之鸟”的“鸟”应是一只鹰?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:30:true",
+    "question": "“寿比南山”一词中的“南山”指的是终南山？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:30:false",
+    "question": "“寿比南山”一词中的“南山”指的是黔南山？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:31:true",
+    "question": "九歌是屈原的作品？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:31:false",
+    "question": "九歌是杜甫的作品？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:32:true",
+    "question": "“名落孙山”中的“孙山”是一个人名？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:32:false",
+    "question": "“名落孙山”中的“孙山”是一个地名？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:33:true",
+    "question": "成语“趋之若鹜”中的鹜是野鸭？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:33:false",
+    "question": "成语“趋之若鹜”中的鹜是老鹰？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:34:true",
+    "question": "《史记》和《资治通鉴》被誉为“史学双璧”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:34:false",
+    "question": "《春秋》和《国语》被誉为“史学双璧”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:35:true",
+    "question": "“己所不欲，勿施于人“是孔子的名言？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:35:false",
+    "question": "“己所不欲，勿施于人“是孟子的名言？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:36:true",
+    "question": "《大风歌》中“大风起兮云飞扬，威加海内兮归故乡”出自刘邦之手？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:36:false",
+    "question": "《大风歌》中“大风起兮云飞扬，威加海内兮归故乡”出自项羽之手？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:37:true",
+    "question": "两人交往不含任何功利之心贴切地形容了“君子之交淡如水”这种关系？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:37:false",
+    "question": "两人很少联系，但一直是好友贴切地形容了“君子之交淡如水”这种关系？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:38:true",
+    "question": "“弟子不必不如师，师不必贤于弟子”是韩愈最早提出的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:38:false",
+    "question": "“弟子不必不如师，师不必贤于弟子”是孔子最早提出的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:39:true",
+    "question": "“黄粱一梦”中“黄粱”指的是“小米”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:39:false",
+    "question": "“黄粱一梦”中“黄粱”指的是“高粱”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:40:true",
+    "question": "“白日依山尽，黄河入海流”，诗人上的是鹳雀楼？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:40:false",
+    "question": "“白日依山尽，黄河入海流”，诗人上的是岳阳楼？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:41:true",
+    "question": "“床前明月光”，“床”指的是井上的围栏？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:41:false",
+    "question": "“床前明月光”，“床”指的是窗户？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:42:true",
+    "question": "除“毛遂自荐”外，与毛遂此人有关的成语还有脱颖而出？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:42:false",
+    "question": "除“毛遂自荐”外，与毛遂此人有关的成语还有刮目相看？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:43:true",
+    "question": "“弄璋之喜”是指妻子生了个男孩？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:43:false",
+    "question": "“弄璋之喜”是指新婚？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:44:true",
+    "question": "“黄河远上白云间，一片孤城万仞山”中“一仞”相当于一个成年人的高度？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:44:false",
+    "question": "“黄河远上白云间，一片孤城万仞山”中“一仞”相当于成年人一臂的长度？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:45:true",
+    "question": "《诗经》分为风、雅、颂三部，其中记载宗庙祭祀乐歌的是颂？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:45:false",
+    "question": "《诗经》分为风、雅、颂三部，其中记载宗庙祭祀乐歌的是雅？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:46:true",
+    "question": "“近日颇怀风树之悲”表达的心情是长辈去世 ，心里难过？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:46:false",
+    "question": "“近日颇怀风树之悲”表达的心情是怀念家乡，但回不去？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:47:true",
+    "question": "欧阳修《醉翁亭记》“风霜高洁，水落而石出者，山间之四时也”基中“四时”指的是春夏秋冬？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:47:false",
+    "question": "欧阳修《醉翁亭记》“风霜高洁，水落而石出者，山间之四时也”基中“四时”指的是子卯午酉？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:48:true",
+    "question": "“故人西辞黄鹤楼，烟花三月下扬州”出自李白的送别诗，他送的故人是孟浩然？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:48:false",
+    "question": "“故人西辞黄鹤楼，烟花三月下扬州”出自李白的送别诗，他送的故人是张九龄？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:49:true",
+    "question": "“海内存知己，天涯若比邻”出自王勃？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:49:false",
+    "question": "“海内存知己，天涯若比邻”出自张九龄？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:50:true",
+    "question": "唐诗人卢照邻“接汉疑星落，依楼似月悬”描写了元宵节的盛况，它所描写的是燃灯习俗？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:50:false",
+    "question": "唐诗人卢照邻“接汉疑星落，依楼似月悬”描写了元宵节的盛况，它所描写的是放烟花习俗？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:51:true",
+    "question": "“一身归朔漠，数代靖兵戎，若以功名论，几与卫霍同“这位人物是王昭君？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:51:false",
+    "question": "“一身归朔漠，数代靖兵戎，若以功名论，几与卫霍同“这位人物是班超？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:52:true",
+    "question": "“山重水复疑无路，柳暗花明又一村”是陆游的诗作？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:52:false",
+    "question": "“山重水复疑无路，柳暗花明又一村”是李白的诗作？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:53:true",
+    "question": "“闻名遐迩”用来形容名声很大，其中的“迩”表示近？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:53:false",
+    "question": "“闻名遐迩”用来形容名声很大，其中的“迩”表示远？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:54:true",
+    "question": "“凡有井水处，即能歌柳词”中的“柳”指的是柳永？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:54:false",
+    "question": "“凡有井水处，即能歌柳词”中的“柳”指的是柳宗元？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:55:true",
+    "question": "《洛神赋》歌咏了洛神的美貌，它的作者是曹植？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:55:false",
+    "question": "《洛神赋》歌咏了洛神的美貌，它的作者是柳永？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:56:true",
+    "question": "“易安居士”是李清照的号？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:56:false",
+    "question": "“易安居士”是白居易的号？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:57:true",
+    "question": "成语“勾心斗角”原本形容建筑精巧？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:57:false",
+    "question": "成语“勾心斗角”原本形容官场险恶？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:58:true",
+    "question": "“青梅竹马，两小无猜”这个典故出自李白的诗？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:58:false",
+    "question": "“青梅竹马，两小无猜”这个典故出自白居易的诗？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:59:true",
+    "question": "《礼记》最早用“先生”称呼老师？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:59:false",
+    "question": "《论语》最早用“先生”称呼老师？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:60:true",
+    "question": "“天时不如地利，地利不如人和”出自《孟子》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:60:false",
+    "question": "“天时不如地利，地利不如人和”出自《庄子》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:61:true",
+    "question": "文学史上被称作“小李杜”的是杜牧和李商隐？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:61:false",
+    "question": "文学史上被称作“小李杜”的是杜牧和李贺？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:62:true",
+    "question": "唐代诗人贾岛“二句三年得，一吟双泪流”的诗句是“独行潭底影，数息树边身”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:62:false",
+    "question": "唐代诗人贾岛“二句三年得，一吟双泪流”的诗句是“鸟宿池边树，僧敲月下门”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:63:true",
+    "question": "“水”字属于象形字构成方式？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:63:false",
+    "question": "“水”字属于表意字构成方式？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:64:true",
+    "question": "“独乐乐，与人乐乐，熟乐？”出自《孟子》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:64:false",
+    "question": "“水能载舟，亦能覆舟”出自《孟子》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:65:true",
+    "question": "“桃花潭水深千尺，不及汪伦送我情”诗中的“我”指的是李白？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:65:false",
+    "question": "“桃花潭水深千尺，不及汪伦送我情”诗中的“我”指的是杜甫？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:66:true",
+    "question": "“一门父子三词客，千古文章八大家”这幅对联中提到的“三父子”是苏洵、苏轼、苏辙？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:66:false",
+    "question": "“一门父子三词客，千古文章八大家”这幅对联中提到的“三父子”是曹操、曹丕、曹植？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:67:true",
+    "question": "成语“望梅止渴”和曹操有关？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:67:false",
+    "question": "成语“画饼充饥”和曹操有关？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:68:true",
+    "question": "成语“白驹过隙”比喻时光飞逝？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:68:false",
+    "question": "成语“白驹过隙”比喻速度飞快？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:69:true",
+    "question": "俗语说“化干戈为玉帛”，干戈都是兵器，其中“干”指的是防御武器？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:69:false",
+    "question": "俗语说“化干戈为玉帛”，干戈都是兵器，其中“戈\\\"指的是防御武器？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:70:true",
+    "question": "《尚书》中的“尚”是上古的意思？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:70:false",
+    "question": "《尚书》中的“尚”是崇尚的意思？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:71:true",
+    "question": "苏轼在《念奴娇·赤壁怀古》中提到了“羽扇纶巾，谈笑间，樯橹灰飞烟灭”，“羽扇纶巾”形容的是周瑜？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:71:false",
+    "question": "苏轼在《念奴娇·赤壁怀古》中提到了“羽扇纶巾，谈笑间，樯橹灰飞烟灭”，“羽扇纶巾”形容的是诸葛亮？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:72:true",
+    "question": "周敦颐在《爱莲说》中把菊花形容为花之隐逸者？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:72:false",
+    "question": "周敦颐在《爱莲说》中把菊花形容为花之君子者？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:73:true",
+    "question": "“路漫漫其修远兮，吾将上下而求索”是屈原的名言？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:73:false",
+    "question": "“路漫漫其修远兮，吾将上下而求索”是孔子的名言？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:74:true",
+    "question": "神话故事“夸父逐日”出自《山海经》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:74:false",
+    "question": "神话故事“夸父逐日”出自《拍案惊奇》",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:75:true",
+    "question": "“顷刻间千秋事业，方寸地万里江山；三五步行遍天下，六七人百万雄兵”描写的是戏台？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:75:false",
+    "question": "“顷刻间千秋事业，方寸地万里江山；三五步行遍天下，六七人百万雄兵”描写的是下棋？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:76:true",
+    "question": "“塞翁失马”这一典故出自《淮南子》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:76:false",
+    "question": "“塞翁失马”这一典故出自《庄子》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:77:true",
+    "question": "“疱丁解牛”形容做事得心应手，“疱丁”指的是一个名叫“丁”的厨师？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:77:false",
+    "question": "“疱丁解牛”形容做事得心应手，“疱丁”指的是一个年轻力壮的厨师？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:78:true",
+    "question": "“少壮不努力，老大徒伤悲”出自《长歌行》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:78:false",
+    "question": "“少壮不努力，老大徒伤悲”出自《短歌行》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:79:true",
+    "question": "“不以物喜，不以己悲”出自《岳阳楼记》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:79:false",
+    "question": "“不以物喜，不以己悲”出自《醉翁亭记》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:80:true",
+    "question": "“水则载舟，水则覆舟”是荀子的名言？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:80:false",
+    "question": "“水则载舟，水则覆舟”是老子的名言？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:81:true",
+    "question": "王勃是“初唐四杰”之一？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:81:false",
+    "question": "王维是“初唐四杰”之一？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:82:true",
+    "question": "“词苑千载，群芳竞秀，盛开一枝女儿花”说的是李清照？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:82:false",
+    "question": "“词苑千载，群芳竞秀，盛开一枝女儿花”说的是柳如是？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:83:true",
+    "question": "古人用“父母教，须敬听；父母责，须顺承”来劝谕人们要尊敬父母，这句话出自《弟子规》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:83:false",
+    "question": "古人用“父母教，须敬听；父母责，须顺承”来劝谕人们要尊敬父母，这句话出自《三字经》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:84:true",
+    "question": "“入木三分”这个成语原本是用来形容书法的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:84:false",
+    "question": "“入木三分”这个成语原本是用来形容文章的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:85:true",
+    "question": "《诗经》是我国第一部诗歌总集，《诗经》里面包括三百零五首诗？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:85:false",
+    "question": "《诗经》是我国第一部诗歌总集，《诗经》里面包括三百首诗？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:86:true",
+    "question": "“海上升明月，天涯共此时”是张九龄的名句？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:86:false",
+    "question": "“海上升明月，天涯共此时”是王勃的名句？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:87:true",
+    "question": "李清照词中的“绿肥红瘦”描写的是晚春的景色？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:87:false",
+    "question": "李清照词中的“绿肥红瘦”描写的是仲夏的景色？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:88:true",
+    "question": "成语“机不可失”出自张九龄之笔，它的下句是时不再来？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:88:false",
+    "question": "成语“机不可失”出自张九龄之笔，它的下句是失不再来？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:89:true",
+    "question": "“一琴一鹤”所形容的是为政清简？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:89:false",
+    "question": "“一琴一鹤”所形容的是淡泊名利？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:90:true",
+    "question": "“夕阳无限好，只是近黄昏”是李商隐的诗句？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:90:false",
+    "question": "“夕阳无限好，只是近黄昏”是李清照的诗句？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:91:true",
+    "question": "《红楼梦》是我国古代著名的长篇小说之一，它的别名是《石头记》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:91:false",
+    "question": "《红楼梦》是我国古代著名的长篇小说之一，它的别名是《金陵记》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:92:true",
+    "question": "成语“一衣带水”中的“水”原指长江？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:92:false",
+    "question": "成语“一衣带水”中的“水”原指黄河？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:93:true",
+    "question": "“问世间情为何物，直教生死相许”这句诗是元好问写的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:93:false",
+    "question": "“问世间情为何物，直教生死相许”这句诗是柳如是写的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:94:true",
+    "question": "“有朋自远方来，不亦乐乎！”是孔子说的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:94:false",
+    "question": "“天下兴亡，匹夫有责”是孔子说的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:95:true",
+    "question": "“在天愿做比翼鸟，在地愿为连理枝”这句诗描写的是唐明皇和杨贵妃的爱情故事？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:95:false",
+    "question": "“在天愿做比翼鸟，在地愿为连理枝”这句诗描写的是牛郎和织女的爱情故事？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:96:true",
+    "question": "“文章千古事，得失寸心知”是杜甫的名句？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:96:false",
+    "question": "“文章千古事，得失寸心知”是李商隐的名句？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:97:true",
+    "question": "“生当作人杰，死亦为鬼雄，至今思项羽，不肯过江东。”是李清照咏赞项羽的名句？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:97:false",
+    "question": "“生当作人杰，死亦为鬼雄，至今思项羽，不肯过江东。”是辛弃疾咏赞项羽的名句？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:98:true",
+    "question": "唐诗“东边日出西边雨”的下一句是“道是无晴却有晴”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:98:false",
+    "question": "唐诗“东边日出西边雨”的下一句是“天若有情天亦老”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:99:true",
+    "question": "《在水一方》的歌词来源于《诗经》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:99:false",
+    "question": "《在水一方》的歌词来源于《楚辞》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:100:true",
+    "question": "“金戈铁马，气吞万里如虎“是辛弃疾的词句？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:100:false",
+    "question": "“金戈铁马，气吞万里如虎“是岳飞的词句？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:101:true",
+    "question": "成语“咫尺天涯”中“咫”、“尺”都是古代计量单位，其中“尺”比“咫”更长？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:101:false",
+    "question": "成语“咫尺天涯”中“咫”、“尺”都是古代计量单位，其中“咫”比“尺”更长？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:102:true",
+    "question": "“及时当勉励，岁月不待人”是陶渊明的名句？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:102:false",
+    "question": "“及时当勉励，岁月不待人”是苏轼的名句？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:103:true",
+    "question": "“七月流火，九月授衣”，其中“七月流火”指的是天气渐渐转凉？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:103:false",
+    "question": "“七月流火，九月授衣”，其中“七月流火”指的是天气炎热似火？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:104:true",
+    "question": "“醉里挑灯看剑，梦回吹角连营”出自辛弃疾的作品？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:104:false",
+    "question": "“醉里挑灯看剑，梦回吹角连营”出自岳飞的作品？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:105:true",
+    "question": "“但愿人长久，千里共婵娟”，苏东坡借这首词表达了对兄弟的思念之情？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:105:false",
+    "question": "“但愿人长久，千里共婵娟”，苏东坡借这首词表达了对妻子的思念之情？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:106:true",
+    "question": "“君子成人之美”出自《论语》，请问这句话的后一句是“不成人之恶”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:106:false",
+    "question": "“君子成人之美”出自《论语》，请问这句话的后一句是“不成人之丑”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:107:true",
+    "question": "成语“文不加点”是形容写作技巧纯熟，文思敏捷？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:107:false",
+    "question": "成语“文不加点”是形容文笔简洁，没有废话？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:108:true",
+    "question": "成语典故“专心致志”和棋文化有关？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:108:false",
+    "question": "成语典故“泾渭分明”和棋文化有关？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:109:true",
+    "question": "成语“退避三舍”是说军队退让了九十里地？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:109:false",
+    "question": "成语“退避三舍”是说军队退让了30里地？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:110:true",
+    "question": "《短歌行》是曹操的名篇。《短歌行》比《长歌行》字数多？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:110:false",
+    "question": "《短歌行》是曹操的名篇。《长歌行》比《短歌行》字数多？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:111:true",
+    "question": "曹操写这首《短歌行》实际上是为了表达一种渴求人才的心情？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:111:false",
+    "question": "曹操写这首《短歌行》实际上是为了表达一种追求爱情的心情？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:112:true",
+    "question": "在《关雎》一诗中青年男子爱上的“窈窕淑女”在摘野菜？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:112:false",
+    "question": "在《关雎》一诗中青年男子爱上的“窈窕淑女”在跳舞？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:113:true",
+    "question": "《春秋》属于五经？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:113:false",
+    "question": "《春秋》属于四书？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:114:true",
+    "question": "《红楼梦》中，“滴翠亭杨妃戏彩蝶”说的是薛宝钗？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:114:false",
+    "question": "《红楼梦》中，“滴翠亭杨妃戏彩蝶”说的是杨玉环？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:115:true",
+    "question": "《红楼梦》中，“埋香冢飞燕泣残红”说的是林黛玉？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:115:false",
+    "question": "《红楼梦》中，“埋香冢飞燕泣残红”说的是赵飞燕？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:116:true",
+    "question": "《史记》的作者司马迁是西汉人?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:116:false",
+    "question": "《史记》的作者司马迁是东汉人?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:117:true",
+    "question": "三过家门而不入的故事是关于历史人物大禹的?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:117:false",
+    "question": "三过家门而不入的故事是关于历史人物尧的?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:118:true",
+    "question": "《三国演义》中，道号为“凤雏”的人庞统?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:118:false",
+    "question": "《三国演义》中，道号为“凤雏”的人是诸葛亮?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:119:true",
+    "question": "古代著名的水利工程都江堰建立于秦朝?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:119:false",
+    "question": "古代著名的水利工程都江堰建立于唐朝?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:120:true",
+    "question": "屈原是战国时代楚国人?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:120:false",
+    "question": "屈原是战国时代齐国人?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:121:true",
+    "question": "“十面埋伏”这个典故出自楚汉相争的垓下之战?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:121:false",
+    "question": "“破釜沉舟”这个典故出自楚汉相争的垓下之战?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:122:true",
+    "question": "在《三国演义》中，华佗是被曹操所杀?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:122:false",
+    "question": "在《三国演义》中，华佗是被刘备所杀?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:123:true",
+    "question": "被称为“画圣”的古代画家是吴道子?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:123:false",
+    "question": "被称为“画圣”的古代画家是顾恺之?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:124:true",
+    "question": "“身在曹营心在汉”讲的是关羽?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:124:false",
+    "question": "“身在曹营心在汉”讲的是刘邦?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:125:true",
+    "question": "“破釜沉舟”这个成语出自巨鹿之战?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:125:false",
+    "question": "“四面楚歌”这个成语出自巨鹿之战?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:126:true",
+    "question": "与颛顼争为帝，怒而触不周之山的是共工?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:126:false",
+    "question": "与颛顼争为帝，怒而触不周之山的是蚩尤?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:127:true",
+    "question": "“七擒七纵”讲述的是诸葛亮和孟获的故事?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:127:false",
+    "question": "“七擒七纵”讲述的是关羽和张飞的故事?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:128:true",
+    "question": "目前中国有文字可考的历史始于商朝?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:128:false",
+    "question": "目前中国有文字可考的历史始于夏朝?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:129:true",
+    "question": "三国演义里“木牛流马”是诸葛亮发明的?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:129:false",
+    "question": "三国演义里“木牛流马”是司马懿发明的?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:130:true",
+    "question": "北宋的沈括所著的《梦溪笔谈》主要记载的是古代科技?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:130:false",
+    "question": "北宋的沈括所著的《梦溪笔谈》主要记载的是古代风俗?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:131:true",
+    "question": "“杯酒释兵权”说的是宋太祖赵匡胤?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:131:false",
+    "question": "“杯酒释兵权”说的是唐太宗李世民?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:132:true",
+    "question": "战国时，提倡“仁政”、“王道”的儒家代表人物是孟子?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:132:false",
+    "question": "战国时，提倡“仁政”、“王道”的儒家代表人物是孔子?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:133:true",
+    "question": "西周的都城是镐京?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:133:false",
+    "question": "商朝的都城是镐京?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:134:true",
+    "question": "三国时期魏的都城是洛阳?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:134:false",
+    "question": "三国时期魏的都城是咸阳?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:135:true",
+    "question": "“空城计”里，诸葛亮在城楼上做的事是弹琴?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:135:false",
+    "question": "“空城计”里，诸葛亮在城楼上做的事是跳舞?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:136:true",
+    "question": "《 论语 》通行的注本有《论语注疏》，是魏时何晏集解，宋时邢昺疏。",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:136:false",
+    "question": "《 论语 》通行的注本有《论语注疏》，是魏时邢昺集解，宋时何晏疏。",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:137:true",
+    "question": "“苟利**生死以，岂因祸福避趋之”这是林则徐的名言？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:137:false",
+    "question": "“苟利**生死以，岂因祸福避趋之”这是范仲淹的名言？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:138:true",
+    "question": "“成也萧何，败也萧何”说得是韩信的经历？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:138:false",
+    "question": "“成也萧何，败也萧何”说得是刘邦的经历？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:139:true",
+    "question": "与“指鹿为马”典故有关的历史人物是赵高？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:139:false",
+    "question": "与“指鹿为马”典故有关的历史人物是赵括？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:140:true",
+    "question": "战国时，“纸上谈兵”招致兵败的赵国将领是赵括？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:140:false",
+    "question": "战国时，“纸上谈兵”招致兵败的赵国将领是赵高？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:141:true",
+    "question": "我国古代军事家孙膑是在“膑刑”后成为孙膑的，“膑”是指膝盖骨？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:141:false",
+    "question": "我国古代军事家孙膑是在“膑刑”后成为孙膑的，“膑”是指胫骨？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:142:true",
+    "question": "白马非马出自公孙龙之口？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:142:false",
+    "question": "白马非马出自韩非子之口？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:143:true",
+    "question": "《三国演义》中，赔了夫人又折兵的是周瑜？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:143:false",
+    "question": "《三国演义》中，赔了夫人又折兵的是孙权？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:144:true",
+    "question": "六国中，韩国最先被秦所灭？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:144:false",
+    "question": "六国中，燕国最先被秦所灭？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:145:true",
+    "question": "“天下兴亡，匹夫有责”是顾炎武的名言？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:145:false",
+    "question": "“天下兴亡，匹夫有责”是黄宗羲的名言？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:146:true",
+    "question": "“精忠报国，三字冤狱千古白”纪念的是岳飞？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:146:false",
+    "question": "“精忠报国，三字冤狱千古白”纪念的是文天祥？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:147:true",
+    "question": "“才高八斗”用来形容一个人学问高深，第一个被赞的人是曹植？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:147:false",
+    "question": "“才高八斗”用来形容一个人学问高深，第一个被赞的人是李白？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:148:true",
+    "question": "“破釜沉舟”成语典故与项羽有关？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:148:false",
+    "question": "“背水一战”成语典故与项羽有关？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:149:true",
+    "question": "“名不正则言不顺“是儒家的思想？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:149:false",
+    "question": "“名不正则言不顺“是法家的思想？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:150:true",
+    "question": "我国书法艺术博大精深，请问“欧体”是指欧阳洵的字体？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:150:false",
+    "question": "我国书法艺术博大精深，请问“欧体”是指欧阳修的字体？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:151:true",
+    "question": "“大禹治水”的故事家喻户晓，大禹治理的是黄河流域的洪水？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:151:false",
+    "question": "“大禹治水”的故事家喻户晓，大禹治理的是长江流域的洪水？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:152:true",
+    "question": "“阳春白雪”和“下里巴人”这两个成语最初指的是乐曲？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:152:false",
+    "question": "“阳春白雪”和“下里巴人”这两个成语最初指的是画作？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:153:true",
+    "question": "“讳疾忌医”典故中的君王是蔡桓公？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:153:false",
+    "question": "“讳疾忌医”典故中的君王是齐桓公？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:154:true",
+    "question": "墨子的主要思想是“兼爱”，他所反对的“爱有差等”这一观点是儒家学派的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:154:false",
+    "question": "墨子的主要思想是“兼爱”，他所反对的“爱有差等”这一观点是法家学派的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:155:true",
+    "question": "王羲之对鹅十分偏爱，并从它的体态姿势上领悟到书法执笔运笔的道理？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:155:false",
+    "question": "王羲之对鱼十分偏爱，并从它的体态姿势上领悟到书法执笔运笔的道理？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:156:true",
+    "question": "“美”字最初的含义是戴着头饰站立的人？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:156:false",
+    "question": "“美”字最初的含义是羊大即为美？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:157:true",
+    "question": "孔子为自己的教学定睛“孔门四教”，具体指的是文、行、忠、信？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:157:false",
+    "question": "孔子为自己的教学定睛“孔门四教”，具体指的是修身、齐家、治国、平天下？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:158:true",
+    "question": "“勿以恶小而为之，勿以善小而不为”语出《三国志》，这是刘备说的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:158:false",
+    "question": "“勿以恶小而为之，勿以善小而不为”语出《三国志》，这是诸葛亮说的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:159:true",
+    "question": "从事贸易活动的人叫做“商人”，这跟历史上的商代有关吗？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:159:false",
+    "question": "从事贸易活动的人叫做“商人”，这跟历史上的商代无关吗？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:160:true",
+    "question": "水浒一百单八将中有三位女性？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:160:false",
+    "question": "水浒一百单八将中有四位女性？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:161:true",
+    "question": "成语“请君入瓮”，“请”的是周兴？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:161:false",
+    "question": "成语“请君入瓮”，“请”的是来俊臣？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:162:true",
+    "question": "我国古代的很多事物都有自己的雅称，请问我们常说的“润笔”指的是文章书画稿费？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:162:false",
+    "question": "我国古代的很多事物都有自己的雅称，请问我们常说的“润笔”指的是为人作序？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:163:true",
+    "question": "《二十四史》是我国古代二十四史的总称，其中只有一部是完全意义上的通史，它是《史记》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:163:false",
+    "question": "《二十四史》是我国古代二十四史的总称，其中只有一部是完全意义上的通史，它是《三国志》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:164:true",
+    "question": "“洛阳纸贵”比喻作品风行一时，广为流传，这个成语与左思的《三都赋》有关？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:164:false",
+    "question": "“洛阳纸贵”比喻作品风行一时，广为流传，这个成语与司马相如的《长六赋》有关？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:165:true",
+    "question": "唐代边塞诗人王昌龄的“但使龙城飞将在，不教胡马度阴山”中的“飞将”指的是李广？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:165:false",
+    "question": "唐代边塞诗人王昌龄的“但使龙城飞将在，不教胡马度阴山”中的“飞将”指的是张飞？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:166:true",
+    "question": "度量衡是我国古代使用的计量单位，其中“衡”是指的重量方面的标准？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:166:false",
+    "question": "度量衡是我国古代使用的计量单位，其中“衡”是指的长度方面的标准？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:167:true",
+    "question": "“揭竿为旗，斩木为兵”形容的是陈胜吴广起*？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:167:false",
+    "question": "“揭竿为旗，斩木为兵”形容的是黄巾起*？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:168:true",
+    "question": "河姆渡遗址位于长江流域？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:168:false",
+    "question": "河姆渡遗址位于黄河流域？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:169:true",
+    "question": "“烽火连三月，家书抵万金”古代书信通过邮驿传递。唐代管理这类工作的中央管理机构是尚书省？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:169:false",
+    "question": "“烽火连三月，家书抵万金”古代书信通过邮驿传递。唐代管理这类工作的中央管理机构是中书省？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:170:true",
+    "question": "陕西省一块著名的“无字碑”，它与武则天有关？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:170:false",
+    "question": "陕西省一块著名的“无字碑”，它与秦始皇有关？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:171:true",
+    "question": "我国现在存最早的兵书是《孙子兵法》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:171:false",
+    "question": "我国现在存最早的兵书是《孙膑兵法》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:172:true",
+    "question": "“有志者、事竟成，破釜沉舟，百二秦关终属楚”描写的是项羽？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:172:false",
+    "question": "“有志者、事竟成，破釜沉舟，百二秦关终属楚”描写的是黄歇？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:173:true",
+    "question": "“苦心人，天不负，卧薪尝胆，三千越甲可吞吴”描写的是勾践？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:173:false",
+    "question": "“苦心人，天不负，卧薪尝胆，三千越甲可吞吴”描写的是伍子胥？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:174:true",
+    "question": "孔子“三月不知肉滋味”是因为听到一段好乐曲？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:174:false",
+    "question": "孔子“三月不知肉滋味”是因为读到一本好书？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:175:true",
+    "question": "草书、行书、楷书、隶书四种字体当中隶书是其余三种的起源？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:175:false",
+    "question": "草书、行书、楷书、隶书四种字体当中楷书是其余三种的起源？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:176:true",
+    "question": "吃年糕的习俗与伍子胥有关？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:176:false",
+    "question": "吃年糕的习俗与屈原有关？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:177:true",
+    "question": "甲骨文最早是在药材上发现的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:177:false",
+    "question": "甲骨文最早是在青铜器上发现的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:178:true",
+    "question": "《三国演义》中刘备见到诸葛亮家悬挂了一幅对联，写的是“淡泊以明志，宁静而致远”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:178:false",
+    "question": "《三国演义》中刘备见到诸葛亮家悬挂了一幅对联，写的是“鞠躬尽瘁，死而后已”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:179:true",
+    "question": "宣纸得名于它的产地？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:179:false",
+    "question": "宣纸得名于它的材质？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:180:true",
+    "question": "“草桥结拜”讲的是梁山伯和祝英台的故事？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:180:false",
+    "question": "“草桥结拜”讲的是刘邦与韩信的故事？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:181:true",
+    "question": "“乐府”最早是指音乐机构？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:181:false",
+    "question": "“乐府”最早是指文学体裁？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:182:true",
+    "question": "中国史上的第一位太后是芈八子？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:182:false",
+    "question": "中国史上的第一位太后是吕雉？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:183:true",
+    "question": "如果按流传至今的作品计算，我国史上写诗最多的诗人是陆游？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:183:false",
+    "question": "如果按流传至今的作品计算，我国史上写诗最多的诗人是李白？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:184:true",
+    "question": "道家思想在我国影响深远，历史上最接近道家所主张的无为而治的时期是文景之治？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:184:false",
+    "question": "道家思想在我国影响深远，历史上最接近道家所主张的无为而治的时期是贞观之治？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:185:true",
+    "question": "《三国演义》中有关羽“单刀赴会”的故事，历史上也确有“单刀赴会”一事，赴会的是鲁肃？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:185:false",
+    "question": "《三国演义》中有关羽“单刀赴会”的故事，历史上也确有“单刀赴会”一事，赴会的是吕蒙？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:186:true",
+    "question": "中国现存最早用纸作画的作品是《五牛图》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:186:false",
+    "question": "中国现存最早用纸作画的作品是《清明上河图》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:187:true",
+    "question": "我们常说的“鸿雁传书”源自苏武牧羊的历史故事？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:187:false",
+    "question": "我们常说的“鸿雁传书”源自文姬归汉的历史故事？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:188:true",
+    "question": "中国古代最大的一部百科全书是《永乐大典》？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:188:false",
+    "question": "中国古代最大的一部百科全书是《四库全书》？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:189:true",
+    "question": "《三国演义》中有诸葛亮“草船借箭”的故事，而历史上真正“草船借箭”的人是孙权？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:189:false",
+    "question": "《三国演义》中有诸葛亮“草船借箭”的故事，而历史上真正“草船借箭”的人是曹操？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:190:true",
+    "question": "古代医学著作《本草纲目》的作者是李时珍?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:190:false",
+    "question": "古代医学著作《本草纲目》的作者是扁鹊?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:191:true",
+    "question": "京剧中，饰演性格活泼、开朗的青年女性的是花旦?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:191:false",
+    "question": "京剧中，饰演性格活泼、开朗的青年女性的是老生?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:192:true",
+    "question": "重阳节有登高的习俗?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:192:false",
+    "question": "清明节有登高的习俗?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:193:true",
+    "question": "端午节有吃粽子的习俗?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:193:false",
+    "question": "清明节有吃粽子的习俗?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:194:true",
+    "question": "古琴和古筝不为同一种乐器?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:194:false",
+    "question": "古琴和古筝为同一种乐器?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:195:true",
+    "question": "“知天命”代指50岁?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:195:false",
+    "question": "“不惑”代指50岁?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:196:true",
+    "question": "“不惑”代指40岁?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:196:false",
+    "question": "“不惑”代指30岁?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:197:true",
+    "question": "鲁菜、川菜、粤菜、闽菜、苏菜、浙菜、湘菜、徽菜合成八大菜系?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:197:false",
+    "question": "鲁菜、川菜、粤菜、闽菜、客家菜、浙菜、湘菜、徽菜合成八大菜系?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:198:true",
+    "question": "在五行理论中，水生木，金生水?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:198:false",
+    "question": "在五行理论中，水生金，金生土?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:199:true",
+    "question": "在五行理论中，水克火，火克金?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:199:false",
+    "question": "在五行理论中，金克火，火克水?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:200:true",
+    "question": "普陀山是中国四大佛教名山之一?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:200:false",
+    "question": "武当山是中国四大佛教名山之一?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:201:true",
+    "question": "梅、兰、竹、菊被誉为花中四jun子?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:201:false",
+    "question": "梅、松、竹、菊被誉为花中四jun子?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:202:true",
+    "question": "中药不能用铁锅来煎?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:202:false",
+    "question": "中药可以用铁锅来煎?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:203:true",
+    "question": "古人说的“一甲子”是指60年?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:203:false",
+    "question": "古人说的“一甲子”是指50年?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:204:true",
+    "question": "“送戒指”不是中国古代订婚的习俗?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:204:false",
+    "question": "“送戒指”是中国古代订婚的习俗?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:205:true",
+    "question": "古人讲究谦辞礼让，谈到自己儿子时一般称为“犬子”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:205:false",
+    "question": "古人讲究谦辞礼让，谈到自己儿子时一般称为“不才”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:206:true",
+    "question": "古人讲究谦辞礼让，谈到对方父亲是一般称为“令尊”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:206:false",
+    "question": "古人讲究谦辞礼让，谈到对方母亲是一般称为“令尊”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:207:true",
+    "question": "古人所称的“拙荆”是指自己的妻子?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:207:false",
+    "question": "古人所称的“拙荆”是指自己的母亲?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:208:true",
+    "question": "“圆寂”是指佛门中的人去世?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:208:false",
+    "question": "“羽化”是指佛门中的人去世?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:209:true",
+    "question": "廉颇和蔺相如是战国时期赵国人?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:209:false",
+    "question": "廉颇和蔺相如是战国时期魏国人?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:210:true",
+    "question": "绿茶、白茶、表茶、红茶是以“茶叶的发酵程度”来划分的?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:210:false",
+    "question": "绿茶、白茶、表茶、红茶是以“茶叶的颜色”来划分的?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:211:true",
+    "question": "配制世界上最早的麻醉药剂“麻沸散”是华佗?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:211:false",
+    "question": "配制世界上最早的麻醉药剂“麻沸散”是扁鹊?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:212:true",
+    "question": "《论语》不是孔子自己写的书?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:212:false",
+    "question": "《论语》是孔子自己写的书?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:213:true",
+    "question": "八卦中代表雷的卦象叫震?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:213:false",
+    "question": "八卦中代表雷的卦象叫坎?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:214:true",
+    "question": "“中同长也”是墨子对几何图形“圆”的描绘?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:214:false",
+    "question": "“中同长也”是墨子对几何图形“方”的描绘?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:215:true",
+    "question": "“沉鱼落雁，闭月羞花”中的“沉鱼”是指“西施”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:215:false",
+    "question": "“沉鱼落雁，闭月羞花”中的“沉鱼”是指“王昭君”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:216:true",
+    "question": "“沉鱼落雁，闭月羞花”中的“羞花”是指“杨玉环”?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:216:false",
+    "question": "“沉鱼落雁，闭月羞花”中的“羞花”是指“王昭君”?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:217:true",
+    "question": "韩湘子是“八仙过海”中的八仙之一?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:217:false",
+    "question": "韩非子是“八仙过海”中的八仙之一?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:218:true",
+    "question": "“精卫填海”中的“精卫”是炎帝的女儿?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:218:false",
+    "question": "“精卫填海”中的“精卫”是黄帝的女儿?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:219:true",
+    "question": "“心有灵犀”中的“灵犀”是指犀牛的角?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:219:false",
+    "question": "“心有灵犀”中的“灵犀”是指犀牛的心?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:220:true",
+    "question": "古时候，一个时辰在现在2小时？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:220:false",
+    "question": "古时候，一个时辰在现在1小时？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:221:true",
+    "question": "孙膑的老师是鬼谷子？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:221:false",
+    "question": "孙膑的老师是孙武？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:222:true",
+    "question": "古代所说的促织是指现在的蟋蟀？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:222:false",
+    "question": "古代所说的促织是指现在的蝈蝈？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:223:true",
+    "question": "“三十年河东，三十年河西”中的“河”最初指的是黄河？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:223:false",
+    "question": "“三十年河东，三十年河西”中的“河”最初指的是淮河？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:224:true",
+    "question": "古代人们用来当酒杯的青铜器叫爵？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:224:false",
+    "question": "古代人们用来当酒杯的青铜器叫尊？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:225:true",
+    "question": "将“千钧一发”中的“钧”换算成现代计算单位，一钧是指15公斤？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:225:false",
+    "question": "将“千钧一发”中的“钧”换算成现代计算单位，一钧是指10公斤？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:226:true",
+    "question": "“高屋建瓴”一词中的“瓴”是指瓶子？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:226:false",
+    "question": "“高屋建瓴”一词中的“瓴”是指屋檐？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:227:true",
+    "question": "古代称呼不才是称呼自己的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:227:false",
+    "question": "古代称呼足下是称呼自己的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:228:true",
+    "question": "“爆竹声中一岁除，春风送暖入屠苏”，“屠苏”指的是酒?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:228:false",
+    "question": "“爆竹声中一岁除，春风送暖入屠苏”，“屠苏”指的是房屋？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:229:true",
+    "question": "一般来说男子行拱手礼时应该左手在外？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:229:false",
+    "question": "一般来说男子行拱手礼时应该右手在外？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:230:true",
+    "question": "“风声雨声读书声，声声入耳，家事国事天下事事事关心”悬挂于东林书院？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:230:false",
+    "question": "“风声雨声读书声，声声入耳，家事国事天下事事事关心”悬挂于石鼓书院？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:231:true",
+    "question": "《百家姓》中没有肖姓？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:231:false",
+    "question": "《百家姓》中没有潇姓？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:232:true",
+    "question": "“生旦净末丑”是京剧的行当，其中“净”是男角？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:232:false",
+    "question": "“生旦净末丑”是京剧的行当，其中“净”是女角？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:233:true",
+    "question": "“望闻问切“是中医上扁鹊最早使用的此法？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:233:false",
+    "question": "“望闻问切“是中医上华佗最早使用的此法？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:234:true",
+    "question": "“戊”字常用作表示顺序的第五位？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:234:false",
+    "question": "“戍”字常用作表示顺序的第五位？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:235:true",
+    "question": "古人的婚礼在傍晚举行？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:235:false",
+    "question": "古人的婚礼在中午举行？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:236:true",
+    "question": "东汉早期发明的水排，主要功能是冶铁?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:236:false",
+    "question": "东汉早期发明的水排，主要功能是灌溉？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:237:true",
+    "question": "我国古代能工巧匠的杰出代表鲁班不姓“鲁”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:237:false",
+    "question": "我国古代能工巧匠的杰出代表鲁班姓“鲁”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:238:true",
+    "question": "“翡”和“翠”指的不是同一种颜色？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:238:false",
+    "question": "“翡”和“翠”指的是同一种颜色？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:239:true",
+    "question": "“唐三彩”的三彩是指黄白绿三种颜色？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:239:false",
+    "question": "“唐三彩”的三彩是指红白绿三种颜色？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:240:true",
+    "question": "古代宫殿大门前成对的石狮一般都是左雄右雌？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:240:false",
+    "question": "古代宫殿大门前成对的石狮一般都是左雌右雄？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:241:true",
+    "question": "“鄂尔多斯”在蒙古语中是众多宫殿的意思？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:241:false",
+    "question": "“鄂尔多斯”在蒙古语中是美丽的地方的意思？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:242:true",
+    "question": "《西游记》中唐僧的原型是玄奘？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:242:false",
+    "question": "《西游记》中唐僧的原型是鉴真？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:243:true",
+    "question": "我国传统表示次序的“天干”共有十个字？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:243:false",
+    "question": "我国传统表示次序的“天干”共有十二个字？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:244:true",
+    "question": "被誉为“万园之园”的是圆明园？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:244:false",
+    "question": "被誉为“万园之园”的是颐和园？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:245:true",
+    "question": "京剧《贵妃醉酒》是根据《长生殿》改编而成的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:245:false",
+    "question": "京剧《贵妃醉酒》是根据《牡丹亭》改编而成的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:246:true",
+    "question": "大都是北京的别称？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:246:false",
+    "question": "上都是北京的别称？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:247:true",
+    "question": "我们熟悉的《百家姓》是按照政治地位排列的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:247:false",
+    "question": "我们熟悉的《百家姓》是按照人口数量排列的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:248:true",
+    "question": "孔子提倡中庸之道的理论基础是天人合一？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:248:false",
+    "question": "孔子提倡中庸之道的理论基础是道法自然？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:249:true",
+    "question": "《霸王别姬》是京剧中的名段，“虞姬”这一角色在京剧中属于青衣?",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:249:false",
+    "question": "《霸王别姬》是京剧中的名段，“虞姬”这一角色在京剧中属于花旦?",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:250:true",
+    "question": "张衡发明的地动仪上有八条龙？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:250:false",
+    "question": "张衡发明的地动仪上有十二条龙？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:251:true",
+    "question": "在古代人们尊称对方的妻子为“令正”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:251:false",
+    "question": "在古代人们尊称对方的妻子为“令爱”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:252:true",
+    "question": "按照戏曲界的行话，大轴戏表示最后一出？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:252:false",
+    "question": "按照戏曲界的行话，压轴戏表示最后一出？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:253:true",
+    "question": "琵琶本名“批把”，“批把”一词来源于演奏琵琶的方式？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:253:false",
+    "question": "琵琶本名“批把”，“批把”一词来源于制造琵琶的材料？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:254:true",
+    "question": "切脉是中医独创的诊法，中医把脉时摸的是动脉？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:254:false",
+    "question": "切脉是中医独创的诊法，中医把脉时摸的是静脉？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:255:true",
+    "question": "“杏林”指代的是医学界？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:255:false",
+    "question": "“杏林”指代的是教育界？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:256:true",
+    "question": "根据中国传统建筑的特点，面对大院的门口，你的左手边是西？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:256:false",
+    "question": "根据中国传统建筑的特点，面对大院的门口，你的左手边是东？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:257:true",
+    "question": "孔子弟子中擅长做生意的是子贡？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:257:false",
+    "question": "孔子弟子中擅长做生意的是子路？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:258:true",
+    "question": "我们常用“社稷”来指代国家，其中“社”字代表的是土地之神？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:258:false",
+    "question": "我们常用“社稷”来指代国家，其中“社”字代表的是五谷之神？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:259:true",
+    "question": "向别人介绍自己的弟弟妹妹应该用舍弟舍妹？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:259:false",
+    "question": "向别人介绍自己的弟弟妹妹应该用家弟家妹？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:260:true",
+    "question": "登高采菊不是端午节的习俗？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:260:false",
+    "question": "插艾蒿不是端午节的习俗？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:261:true",
+    "question": "“态生两靥之愁，娇袭一身之病”玉对黛玉的第一印象，其中“靥”是指酒窝？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:261:false",
+    "question": "“态生两靥之愁，娇袭一身之病”玉对黛玉的第一印象，其中“靥”是指腮帮？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:262:true",
+    "question": "“弱冠”指的是男子二十岁？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:262:false",
+    "question": "“弱冠”指的是男子十六岁？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:263:true",
+    "question": "《孙子兵法》的作者是孙武？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:263:false",
+    "question": "《孙子兵法》的作者是孙膑？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:264:true",
+    "question": "唱念做打是中国戏曲表演的四种艺术手段，也是戏曲表演的四项基本功，其中“做”指的是舞蹈动作？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:264:false",
+    "question": "唱念做打是中国戏曲表演的四种艺术手段，也是戏曲表演的四项基本功，其中“做”指的是面部表情？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:265:true",
+    "question": "西湖的白堤的得名与白居易有关？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:265:false",
+    "question": "西湖的白堤的得名与李白有关？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:266:true",
+    "question": "孟子说：“不以规矩，不成方圆”，这里“规矩”的意思是圆规曲尺？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:266:false",
+    "question": "孟子说：“不以规矩，不成方圆”，这里“规矩”的意思是法律条文？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:267:true",
+    "question": "中国史上被誉为“药王“的是孙思邈？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:267:false",
+    "question": "中国史上被誉为“药王“的是李时珍？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:268:true",
+    "question": "在古代，人们将乐器分为“丝”、“竹”，分别指弹弦乐器和吹奏乐器，其中竹是指吹奏乐器？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:268:false",
+    "question": "在古代，人们将乐器分为“丝”、“竹”，分别指弹弦乐器和吹奏乐器，其中丝是指吹奏乐器？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:269:true",
+    "question": "“信言不美，美言不信”体现出辩证法思想？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:269:false",
+    "question": "“信言不美，美言不信”体现出怀疑精神？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:270:true",
+    "question": "中国人常说“五福临门”，其中品德高尚是属于“五福”之一？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:270:false",
+    "question": "中国人常说“五福临门”，其中子孙成群是属于“五福”之一？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:271:true",
+    "question": "陛下是古时对君王的尊称，其中“陛”的意思是宫殿的台阶？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:271:false",
+    "question": "陛下是古时对君王的尊称，其中“陛”的意思是天的别称？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:272:true",
+    "question": "昆曲被称为“中国百戏之师”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:272:false",
+    "question": "京剧被称为“中国百戏之师”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:273:true",
+    "question": "我国古代对于年龄有很多独特的称呼，其中满一百岁被称为“期颐”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:273:false",
+    "question": "我国古代对于年龄有很多独特的称呼，其中满一百岁被称为“耄耋”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:274:true",
+    "question": "唐朝文宗御封的“三绝”指的是李白的诗歌、张旭的草书和裴旻的剑舞？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:274:false",
+    "question": "唐朝文宗御封的“三绝”指的是李白的诗歌、张旭的草书和吴道子的画？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:275:true",
+    "question": "天干地支纪年始于汉代，请问这种纪年是以“立春”为起点的？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:275:false",
+    "question": "天干地支纪年始于汉代，请问这种纪年是以“正月初一”为起点的？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:276:true",
+    "question": "“三更半夜”中的“三更”指的是23点至凌晨1点？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:276:false",
+    "question": "“三更半夜”中的“三更”指的是凌晨0点至2点？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:277:true",
+    "question": "“鼎”的最初用途是烹煮器具？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:277:false",
+    "question": "“鼎”的最初用途是祭祀用礼器？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:278:true",
+    "question": "《论语》中认为“为仁之本”的是“孝悌”？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:278:false",
+    "question": "《论语》中认为“为仁之本”的是“忠义”？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:279:true",
+    "question": "青铜器“尊”是盛酒器？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:279:false",
+    "question": "青铜器“鼎”是盛酒器？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:280:true",
+    "question": "榴月是农历五月的别称？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:280:false",
+    "question": "杏月是农历五月的别称？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:281:true",
+    "question": "“双簧”是我们一门独特的曲艺艺术，它得名于初演的两个人都姓黄？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:281:false",
+    "question": "“双簧”是我们一门独特的曲艺艺术，它得名于表演者巧舌如簧？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:282:true",
+    "question": "古琴最初只有五根弦，代表着金、木、水、火、土。后来又增加了两根弦，这两根弦代表文、武？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:282:false",
+    "question": "古琴最初只有五根弦，代表着金、木、水、火、土。后来又增加了两根弦，这两根弦代表阴、阳？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:283:true",
+    "question": "“一旗一枪”通常用来指茶叶？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:283:false",
+    "question": "“一旗一枪”通常用来指书法？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:284:true",
+    "question": "“乞巧节”就是向织女乞求一双巧手的意思，乞巧最普遍的方式是对月穿针？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:284:false",
+    "question": "“乞巧节”就是向织女乞求一双巧手的意思，乞巧最普遍的方式是月下采摘？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:285:true",
+    "question": "《梅花三弄》是传世名曲，其中“三弄”指的是演奏次数？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:285:false",
+    "question": "《梅花三弄》是传世名曲，其中“三弄”指的是演奏技巧？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:286:true",
+    "question": "张贴“乾坤定矣，钟鼓乐之”的对联表明有人结婚？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:286:false",
+    "question": "张贴“乾坤定矣，钟鼓乐之”的对联表明有人升迁？",
+    "answer": false
+  },
+  {
+    "source_id": "tools:scholar:287:true",
+    "question": "“三个臭皮匠，顶个诸葛亮”中的皮匠指的是副将？",
+    "answer": true
+  },
+  {
+    "source_id": "tools:scholar:287:false",
+    "question": "“三个臭皮匠，顶个诸葛亮”中的皮匠指的是制鞋匠？",
+    "answer": false
+  }
+]

@@ -53,13 +53,30 @@ def load_question_bank_manifest(package_root: Path) -> dict[str, object]:
     digest = hashlib.sha256(question_path.read_bytes()).hexdigest()
     if digest != metadata["sha256"]:
         raise ValueError("question-bank file SHA-256 does not match metadata")
-    return {
+    result = {
         "generation_id": generation_id,
         "source_url": metadata["source_url"],
         "retrieved_at": metadata["updated_at"],
         "record_count": metadata["published_record_count"],
         "sha256": digest,
     }
+    from xyq_quiz.knowledge.store import QuestionBank
+    from xyq_quiz.knowledge.supplements import (
+        load_question_supplements,
+        merge_question_supplements,
+    )
+    supplement = load_question_supplements(data_root)
+    if supplement is not None:
+        supplement_bank, supplement_metadata = supplement
+        combined = merge_question_supplements(
+            QuestionBank.load(question_path), supplement_bank,
+        )
+        result.update(
+            effective_record_count=combined.count,
+            supplement_record_count=combined.count - metadata["published_record_count"],
+            supplement=supplement_metadata,
+        )
+    return result
 
 
 def build_manifest(
